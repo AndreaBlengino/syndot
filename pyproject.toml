@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "syndot"
+dynamic = ["version"]
+requires-python = ">=3.11"
+authors = [
+  {name = "Andrea Blengino", email = "ing.andrea.blengino@protonmail.com"},
+]
+maintainers = [
+  {name = "Andrea Blengino", email = "ing.andrea.blengino@protonmail.com"},
+]
+description = "Dotfiles management"
+readme = "README.md"
+classifiers = [
+  "Development Status :: 1 - Planning",
+  "Environment :: Console",
+  "Intended Audience :: End Users/Desktop",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Desktop Environment :: File Managers"
+]
