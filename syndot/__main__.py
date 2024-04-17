@@ -9,8 +9,10 @@ command_parser = parser.add_subparsers(dest = 'command')
 init_parser = command_parser.add_parser('init')
 init_parser.add_argument('-p', '--path', required = False)
 
-args = parser.parse_args()
+link_parser = command_parser.add_parser('link')
+link_parser.add_argument('-m', '--mapfile', required = False)
 
+args = parser.parse_args()
 
 if args.command == 'init':
     destination = os.path.expanduser(args.path if args.path is not None else '~/Settings')
