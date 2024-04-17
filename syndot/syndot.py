@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from configparser import ConfigParser
 import os
 
 
@@ -16,3 +17,10 @@ if args.command == 'init':
     if os.path.exists(destination):
         raise ValueError(f"Destination folder {destination} already exists.")
     os.mkdir(destination)
+
+    config = ConfigParser()
+    config.read(os.path.join('..', 'templates', 'map.ini'))
+    config['Paths']['destination'] = destination
+
+    with open(os.path.join(destination, 'map.ini'), 'w') as map_file:
+        config.write(map_file)
