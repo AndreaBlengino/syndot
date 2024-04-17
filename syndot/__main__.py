@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 from configparser import ConfigParser
 import os
+import shutil
 
 
 parser = ArgumentParser()
@@ -26,3 +27,21 @@ if args.command == 'init':
 
     with open(os.path.join(destination, 'map.ini'), 'w') as map_file:
         config.write(map_file)
+
+elif args.command == 'link':
+    map_file_path = os.path.expanduser(args.mapfile if args.mapfile is not None else 'map.ini')
+    if not os.path.exists(map_file_path):
+        raise FileNotFoundError(f"Missing map.ini file in current directory.")
+    config = ConfigParser()
+    config.read(map_file_path)
+    source = config['Paths']['source']
+    destination = config['Paths']['destination']
+    target_directories = config['Targets']['directories'].split()
+    target_files = config['Targets']['files'].split()
+
+    for file in target_files:
+        source_file_path = os.path.join(os.path.expanduser(source), file)
+        destination_file_path = os.path.join(os.path.expanduser(destination), file)
+        shutil.copy(source_file_path, destination_file_path)
+        os.rename(source_file_path, os.path.join(os.path.expanduser(source), file + '.bak'))
+        os.symlink(destination_file_path, source_file_path)
