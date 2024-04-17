@@ -50,3 +50,13 @@ elif args.command == 'link':
         else:
             shutil.move(source_file_path, destination_file_path)
         os.symlink(destination_file_path, source_file_path)
+
+    for directory in target_directories:
+        source_directory_path = os.path.join(os.path.expanduser(source), directory)
+        destination_directory_path = os.path.join(os.path.expanduser(destination), directory)
+        if args.backup:
+            shutil.copytree(source_directory_path, destination_directory_path)
+            os.rename(source_directory_path, os.path.join(os.path.expanduser(source), directory + '_bak'))
+        else:
+            shutil.move(source_directory_path, destination_directory_path)
+        os.symlink(destination_directory_path, source_directory_path)
