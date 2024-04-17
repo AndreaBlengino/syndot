@@ -12,8 +12,10 @@ init_parser.add_argument('-p', '--path', required = False)
 
 link_parser = command_parser.add_parser('link')
 link_parser.add_argument('-m', '--mapfile', required = False)
+link_parser.add_argument('-b', '--backup', action = 'store_true', default = False, required = False)
 
 args = parser.parse_args()
+
 
 if args.command == 'init':
     destination = os.path.expanduser(args.path if args.path is not None else '~/Settings')
@@ -42,6 +44,9 @@ elif args.command == 'link':
     for file in target_files:
         source_file_path = os.path.join(os.path.expanduser(source), file)
         destination_file_path = os.path.join(os.path.expanduser(destination), file)
-        shutil.copy(source_file_path, destination_file_path)
-        os.rename(source_file_path, os.path.join(os.path.expanduser(source), file + '.bak'))
+        if args.backup:
+            shutil.copy(source_file_path, destination_file_path)
+            os.rename(source_file_path, os.path.join(os.path.expanduser(source), file + '.bak'))
+        else:
+            shutil.move(source_file_path, destination_file_path)
         os.symlink(destination_file_path, source_file_path)
