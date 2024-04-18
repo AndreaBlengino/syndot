@@ -91,3 +91,13 @@ elif args.command == 'unlink':
             backup_path = os.path.join(os.path.expanduser(source), target + '_bak')
             if os.path.exists(backup_path):
                 shutil.rmtree(backup_path)
+
+elif args.command == 'diffuse':
+    source, destination, targets = read_map_file()
+
+    for target in targets:
+        source_target_path = os.path.join(os.path.expanduser(source), target)
+        destination_target_path = os.path.join(os.path.expanduser(destination), target)
+
+        if not os.path.exists(source_target_path):
+            os.symlink(destination_target_path, source_target_path)
