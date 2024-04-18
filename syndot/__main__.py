@@ -40,25 +40,21 @@ elif args.command == 'link':
     destination = config['Paths']['destination']
     target_directories = config['Targets']['directories'].split()
     target_files = config['Targets']['files'].split()
+    targets = [*target_files, *target_directories]
 
-    for file in target_files:
-        source_file_path = os.path.join(os.path.expanduser(source), file)
-        destination_file_path = os.path.join(os.path.expanduser(destination), file)
-        if not os.path.exists(destination_file_path):
+    for target in targets:
+        source_target_path = os.path.join(os.path.expanduser(source), target)
+        destination_target_path = os.path.join(os.path.expanduser(destination), target)
+        if not os.path.exists(destination_target_path):
             if args.backup:
-                shutil.copy(source_file_path, destination_file_path)
-                os.rename(source_file_path, os.path.join(os.path.expanduser(source), file + '.bak'))
+                backup_extension = ''
+                if os.path.isfile(source_target_path):
+                    shutil.copy(source_target_path, destination_target_path)
+                    backup_extension = '.bak'
+                elif os.path.isdir(source_target_path):
+                    shutil.copytree(source_target_path, destination_target_path)
+                    backup_extension = '_bak'
+                os.rename(source_target_path, os.path.join(os.path.expanduser(source), target + backup_extension))
             else:
-                shutil.move(source_file_path, destination_file_path)
-            os.symlink(destination_file_path, source_file_path)
-
-    for directory in target_directories:
-        source_directory_path = os.path.join(os.path.expanduser(source), directory)
-        destination_directory_path = os.path.join(os.path.expanduser(destination), directory)
-        if not os.path.exists(destination_directory_path):
-            if args.backup:
-                shutil.copytree(source_directory_path, destination_directory_path)
-                os.rename(source_directory_path, os.path.join(os.path.expanduser(source), directory + '_bak'))
-            else:
-                shutil.move(source_directory_path, destination_directory_path)
-            os.symlink(destination_directory_path, source_directory_path)
+                shutil.move(source_target_path, destination_target_path)
+            os.symlink(destination_target_path, source_target_path)
