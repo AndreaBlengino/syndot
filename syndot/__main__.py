@@ -19,8 +19,11 @@ unlink_parser.add_argument('-m', '--mapfile', required = False)
 
 diffuse_parser = command_parser.add_parser('diffuse')
 diffuse_parser.add_argument('-m', '--mapfile', required = False)
+diffuse_parser.add_argument('-f', '--force', action = 'store_true', default = False, required = False)
 
 args = parser.parse_args()
+
+VALID_CHOICES = {'y': True, 'ye': True, 'yes': True, 'n': False, 'no': False}
 
 
 def read_map_file() -> tuple[str, str, list[str]]:
@@ -101,3 +104,31 @@ elif args.command == 'diffuse':
 
         if not os.path.exists(source_target_path):
             os.symlink(destination_target_path, source_target_path)
+        else:
+            if args.force:
+                if os.path.islink(source_target_path):
+                    os.unlink(source_target_path)
+                elif os.path.isfile(source_target_path):
+                    os.remove(source_target_path)
+                elif os.path.isdir(source_target_path):
+                    shutil.rmtree(source_target_path)
+                os.symlink(destination_target_path, source_target_path)
+            else:
+                force_diffuse = ''
+                prompt_question = ''
+                if os.path.isfile(source_target_path):
+                    prompt_question = f"Source file {target} already exists. Force diffuse (Y/n)? "
+                elif os.path.isdir(source_target_path):
+                    prompt_question = f"Source directory {target} already exists. Force diffuse (Y/n)? "
+                while force_diffuse not in VALID_CHOICES:
+                    force_diffuse = input(prompt_question).lower()
+                    if force_diffuse == '':
+                        force_diffuse = 'y'
+                if VALID_CHOICES[force_diffuse]:
+                    if os.path.islink(source_target_path):
+                        os.unlink(source_target_path)
+                    elif os.path.isfile(source_target_path):
+                        os.remove(source_target_path)
+                    elif os.path.isdir(source_target_path):
+                        shutil.rmtree(source_target_path)
+                    os.symlink(destination_target_path, source_target_path)
