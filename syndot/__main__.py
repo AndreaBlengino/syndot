@@ -14,6 +14,9 @@ link_parser = command_parser.add_parser('link')
 link_parser.add_argument('-m', '--mapfile', required = False)
 link_parser.add_argument('-b', '--backup', action = 'store_true', default = False, required = False)
 
+unlink_parser = command_parser.add_parser('unlink')
+unlink_parser.add_argument('-m', '--mapfile', required = False)
+
 args = parser.parse_args()
 
 
