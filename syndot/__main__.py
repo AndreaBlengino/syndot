@@ -25,6 +25,8 @@ diffuse_parser.add_argument('-f', '--force', action = 'store_true', default = Fa
 args = parser.parse_args()
 
 VALID_CHOICES = {'y': True, 'ye': True, 'yes': True, 'n': False, 'no': False}
+DEFAULT_DESTINATION = '~/Settings'
+MAP_TEMPLATE_PATH = os.path.join('..', 'templates', 'map.ini')
 
 
 def read_map_file() -> tuple[str, str, list[str]]:
@@ -43,13 +45,13 @@ def read_map_file() -> tuple[str, str, list[str]]:
 
 
 if args.command == 'init':
-    destination = os.path.expanduser(args.path if args.path is not None else '~/Settings')
+    destination = os.path.expanduser(args.path if args.path is not None else DEFAULT_DESTINATION)
     if os.path.exists(destination):
         raise ValueError(f"Destination directory {destination} already exists.")
     os.mkdir(destination)
 
     config = ConfigParser()
-    config.read(os.path.join('..', 'templates', 'map.ini'))
+    config.read(MAP_TEMPLATE_PATH)
     config['Paths']['destination'] = destination
 
     with open(os.path.join(destination, 'map.ini'), 'w') as map_file:
