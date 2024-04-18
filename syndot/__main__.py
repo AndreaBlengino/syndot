@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 from configparser import ConfigParser
 import os
 import shutil
+from syndot import utils
 
 
 parser = ArgumentParser()
@@ -62,14 +63,9 @@ elif args.command == 'link':
         destination_target_path = os.path.join(os.path.expanduser(destination), target)
         if not os.path.exists(destination_target_path):
             if args.backup:
-                backup_extension = ''
-                if os.path.isfile(source_target_path):
-                    shutil.copy(source_target_path, destination_target_path)
-                    backup_extension = '.bak'
-                elif os.path.isdir(source_target_path):
-                    shutil.copytree(source_target_path, destination_target_path)
-                    backup_extension = '_bak'
-                os.rename(source_target_path, os.path.join(os.path.expanduser(source), target + backup_extension))
+                utils.copy(source = source_target_path, destination = destination_target_path)
+                backup_path = utils.generate_backup_path(path = source_target_path)
+                os.rename(source_target_path, backup_path)
             else:
                 shutil.move(source_target_path, destination_target_path)
             os.symlink(destination_target_path, source_target_path)
@@ -80,20 +76,10 @@ elif args.command == 'unlink':
     for target in targets:
         source_target_path = os.path.join(os.path.expanduser(source), target)
         destination_target_path = os.path.join(os.path.expanduser(destination), target)
-
-        if os.path.exists(source_target_path):
-            os.unlink(source_target_path)
-
+        utils.remove(path = source_target_path)
         shutil.move(destination_target_path, source_target_path)
-
-        if os.path.isfile(source_target_path):
-            backup_path = os.path.join(os.path.expanduser(source), target + '.bak')
-            if os.path.exists(backup_path):
-                os.remove(backup_path)
-        elif os.path.isdir(source_target_path):
-            backup_path = os.path.join(os.path.expanduser(source), target + '_bak')
-            if os.path.exists(backup_path):
-                shutil.rmtree(backup_path)
+        backup_path = utils.generate_backup_path(path = source_target_path)
+        utils.remove(path = backup_path)
 
 elif args.command == 'diffuse':
     source, destination, targets = read_map_file()
@@ -106,12 +92,7 @@ elif args.command == 'diffuse':
             os.symlink(destination_target_path, source_target_path)
         else:
             if args.force:
-                if os.path.islink(source_target_path):
-                    os.unlink(source_target_path)
-                elif os.path.isfile(source_target_path):
-                    os.remove(source_target_path)
-                elif os.path.isdir(source_target_path):
-                    shutil.rmtree(source_target_path)
+                utils.remove(path = source_target_path)
                 os.symlink(destination_target_path, source_target_path)
             else:
                 force_diffuse = ''
@@ -125,10 +106,5 @@ elif args.command == 'diffuse':
                     if force_diffuse == '':
                         force_diffuse = 'y'
                 if VALID_CHOICES[force_diffuse]:
-                    if os.path.islink(source_target_path):
-                        os.unlink(source_target_path)
-                    elif os.path.isfile(source_target_path):
-                        os.remove(source_target_path)
-                    elif os.path.isdir(source_target_path):
-                        shutil.rmtree(source_target_path)
+                    utils.remove(path = source_target_path)
                     os.symlink(destination_target_path, source_target_path)
