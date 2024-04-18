@@ -61,3 +61,33 @@ elif args.command == 'link':
             else:
                 shutil.move(source_target_path, destination_target_path)
             os.symlink(destination_target_path, source_target_path)
+
+elif args.command == 'unlink':
+    map_file_path = os.path.expanduser(args.mapfile if args.mapfile is not None else 'map.ini')
+    if not os.path.exists(map_file_path):
+        raise FileNotFoundError(f"Missing map.ini file in current directory.")
+    config = ConfigParser()
+    config.read(map_file_path)
+    source = config['Paths']['source']
+    destination = config['Paths']['destination']
+    target_directories = config['Targets']['directories'].split()
+    target_files = config['Targets']['files'].split()
+    targets = [*target_files, *target_directories]
+
+    for target in targets:
+        source_target_path = os.path.join(os.path.expanduser(source), target)
+        destination_target_path = os.path.join(os.path.expanduser(destination), target)
+
+        if os.path.exists(source_target_path):
+            os.unlink(source_target_path)
+
+        shutil.move(destination_target_path, source_target_path)
+
+        if os.path.isfile(source_target_path):
+            backup_path = os.path.join(os.path.expanduser(source), target + '.bak')
+            if os.path.exists(backup_path):
+                os.remove(backup_path)
+        elif os.path.isdir(source_target_path):
+            backup_path = os.path.join(os.path.expanduser(source), target + '_bak')
+            if os.path.exists(backup_path):
+                shutil.rmtree(backup_path)
