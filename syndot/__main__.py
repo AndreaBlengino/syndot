@@ -20,6 +20,21 @@ unlink_parser.add_argument('-m', '--mapfile', required = False)
 args = parser.parse_args()
 
 
+def read_map_file() -> tuple[str, str, list[str]]:
+    map_file_path = os.path.expanduser(args.mapfile if args.mapfile is not None else 'map.ini')
+    if not os.path.exists(map_file_path):
+        raise FileNotFoundError(f"Missing map.ini file in current directory.")
+    config = ConfigParser()
+    config.read(map_file_path)
+    source = config['Paths']['source']
+    destination = config['Paths']['destination']
+    target_directories = config['Targets']['directories'].split()
+    target_files = config['Targets']['files'].split()
+    targets = [*target_files, *target_directories]
+
+    return source, destination, targets
+
+
 if args.command == 'init':
     destination = os.path.expanduser(args.path if args.path is not None else '~/Settings')
     if os.path.exists(destination):
@@ -34,16 +49,7 @@ if args.command == 'init':
         config.write(map_file)
 
 elif args.command == 'link':
-    map_file_path = os.path.expanduser(args.mapfile if args.mapfile is not None else 'map.ini')
-    if not os.path.exists(map_file_path):
-        raise FileNotFoundError(f"Missing map.ini file in current directory.")
-    config = ConfigParser()
-    config.read(map_file_path)
-    source = config['Paths']['source']
-    destination = config['Paths']['destination']
-    target_directories = config['Targets']['directories'].split()
-    target_files = config['Targets']['files'].split()
-    targets = [*target_files, *target_directories]
+    source, destination, targets = read_map_file()
 
     for target in targets:
         source_target_path = os.path.join(os.path.expanduser(source), target)
@@ -63,16 +69,7 @@ elif args.command == 'link':
             os.symlink(destination_target_path, source_target_path)
 
 elif args.command == 'unlink':
-    map_file_path = os.path.expanduser(args.mapfile if args.mapfile is not None else 'map.ini')
-    if not os.path.exists(map_file_path):
-        raise FileNotFoundError(f"Missing map.ini file in current directory.")
-    config = ConfigParser()
-    config.read(map_file_path)
-    source = config['Paths']['source']
-    destination = config['Paths']['destination']
-    target_directories = config['Targets']['directories'].split()
-    target_files = config['Targets']['files'].split()
-    targets = [*target_files, *target_directories]
+    source, destination, targets = read_map_file()
 
     for target in targets:
         source_target_path = os.path.join(os.path.expanduser(source), target)
