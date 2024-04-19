@@ -60,3 +60,14 @@ diffuse_parser.add_argument('-f', '--force',
 diffuse_parser.add_argument('-m', '--mapfile',
                             required = False,
                             help = 'path to the map file')
+
+add_parser = command_parser.add_parser('add',
+                                       prog = 'syndot add',
+                                       usage = '%(prog)s [-t | --target] TARGET [-m | --mapfile] MAPFILE',
+                                       description = 'Add dotfiles to map file')
+add_parser.add_argument('-t', '--target',
+                        required = True,
+                        help = 'path to the target dotfile')
+add_parser.add_argument('-m', '--mapfile',
+                        required = False,
+                        help = 'path to the map file')
