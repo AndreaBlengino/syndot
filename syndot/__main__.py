@@ -65,7 +65,10 @@ elif args.command == 'unlink':
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,
                                                                                  destination = destination,
                                                                                  target = target)
-        commands.unlink(source_target_path = source_target_path, destination_target_path = destination_target_path)
+        if os.path.exists(destination_target_path):
+            commands.unlink(source_target_path = source_target_path, destination_target_path = destination_target_path)
+        else:
+            raise FileNotFoundError(f"Missing {destination_target_path} in current directory.")
 
 elif args.command == 'diffuse':
     source, destination, targets = utils.read_map_file(map_file = args.mapfile)
