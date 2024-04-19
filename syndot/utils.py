@@ -54,13 +54,13 @@ def compose_target_paths(source: str, destination: str, target: str) -> tuple[st
     return source_target_path, destination_target_path
 
 
-def compose_force_question(target_path: str, target: str, target_is_source: bool, command: str) -> str:
+def compose_force_question(target_path: str, target_is_source: bool, command: str) -> str:
     question = ''
     target_type = 'Source' if target_is_source else 'Destination'
     if os.path.isfile(target_path):
-        question = f"{target_type} file {target} already exists. Force {command}"
+        question = f"{target_type} file {target_path} already exists. Force {command}"
     elif os.path.isdir(target_path):
-        question = f"{target_type} directory {target} already exists. Force {command}"
+        question = f"{target_type} directory {target_path} already exists. Force {command}"
     return question
 
 

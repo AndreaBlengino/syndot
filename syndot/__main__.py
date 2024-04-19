@@ -45,7 +45,6 @@ elif args.command == 'link':
                                       backup = args.backup)
                     else:
                         question = utils.compose_force_question(target_path = destination_target_path,
-                                                                target = target,
                                                                 target_is_source = False,
                                                                 command = args.command)
                         force_link = utils.prompt_question(question = question, default = 'y')
@@ -84,7 +83,6 @@ elif args.command == 'diffuse':
                                  destination_target_path = destination_target_path)
             else:
                 question = utils.compose_force_question(target_path = destination_target_path,
-                                                        target = target,
                                                         target_is_source = True,
                                                         command = args.command)
                 force_diffuse = utils.prompt_question(question = question, default = 'y')
