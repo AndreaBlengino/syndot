@@ -32,29 +32,32 @@ elif args.command == 'link':
                                                                                  destination = destination,
                                                                                  target = target)
         if os.path.exists(source_target_path):
-            if not os.path.exists(destination_target_path):
-                commands.link(source_target_path = source_target_path,
-                              destination_target_path = destination_target_path,
-                              backup = args.backup)
-            else:
-                if args.force:
-                    utils.remove(path = destination_target_path)
+            if not os.path.islink(source_target_path):
+                if not os.path.exists(destination_target_path):
                     commands.link(source_target_path = source_target_path,
                                   destination_target_path = destination_target_path,
                                   backup = args.backup)
                 else:
-                    question = utils.compose_force_question(target_path = destination_target_path,
-                                                            target = target,
-                                                            target_is_source = False,
-                                                            command = args.command)
-                    force_link = utils.prompt_question(question = question, default = 'y')
-                    if force_link:
+                    if args.force:
                         utils.remove(path = destination_target_path)
                         commands.link(source_target_path = source_target_path,
                                       destination_target_path = destination_target_path,
                                       backup = args.backup)
+                    else:
+                        question = utils.compose_force_question(target_path = destination_target_path,
+                                                                target = target,
+                                                                target_is_source = False,
+                                                                command = args.command)
+                        force_link = utils.prompt_question(question = question, default = 'y')
+                        if force_link:
+                            utils.remove(path = destination_target_path)
+                            commands.link(source_target_path = source_target_path,
+                                          destination_target_path = destination_target_path,
+                                          backup = args.backup)
+            else:
+                print(f"Skipping source {source_target_path} because is a symlink")
         else:
-            print(f"Skipping missing source {source_target_path}.")
+            print(f"Skipping missing source {source_target_path}")
 
 elif args.command == 'unlink':
     source, destination, targets = utils.read_map_file(map_file = args.mapfile)
