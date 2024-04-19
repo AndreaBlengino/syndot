@@ -3,6 +3,9 @@ import os
 import shutil
 
 
+VALID_PROMPT_CHOICES = {'y': True, 'ye': True, 'yes': True, 'n': False, 'no': False}
+
+
 def read_map_file(map_file: str | None) -> tuple[str, str, list[str]]:
     map_file_path = os.path.expanduser(map_file if map_file is not None else 'map.ini')
     if not os.path.exists(map_file_path):
@@ -49,3 +52,30 @@ def compose_target_paths(source: str, destination: str, target: str) -> tuple[st
     source_target_path = os.path.join(os.path.expanduser(source), target)
     destination_target_path = os.path.join(os.path.expanduser(destination), target)
     return source_target_path, destination_target_path
+
+
+def compose_force_question(target_path: str, target: str, target_is_source: bool, command: str) -> str:
+    question = ''
+    target_type = 'Source' if target_is_source else 'Destination'
+    if os.path.isfile(target_path):
+        question = f"{target_type} file {target} already exists. Force {command}"
+    elif os.path.isdir(target_path):
+        question = f"{target_type} directory {target} already exists. Force {command}"
+    return question
+
+
+def prompt_question(question: str, default: str | None = None) -> bool:
+    choice = ''
+    if default is not None:
+        if VALID_PROMPT_CHOICES[default]:
+            default_text = ' (Y/n)? '
+        else:
+            default_text = ' (y/N)? '
+    else:
+        default_text = ' (y/n)? '
+    while choice not in VALID_PROMPT_CHOICES:
+        choice = input(question + default_text).lower()
+        if default is not None and choice == '':
+            choice = default
+
+    return VALID_PROMPT_CHOICES[choice]

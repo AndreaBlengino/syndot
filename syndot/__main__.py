@@ -25,7 +25,7 @@ diffuse_parser.add_argument('-f', '--force', action = 'store_true', default = Fa
 
 args = parser.parse_args()
 
-VALID_CHOICES = {'y': True, 'ye': True, 'yes': True, 'n': False, 'no': False}
+
 DEFAULT_DESTINATION = '~/Settings'
 MAP_TEMPLATE_PATH = os.path.join('..', 'templates', 'map.ini')
 
@@ -62,17 +62,12 @@ elif args.command == 'link':
                                   destination_target_path = destination_target_path,
                                   backup = args.backup)
                 else:
-                    force_link = ''
-                    prompt_question = ''
-                    if os.path.isfile(destination_target_path):
-                        prompt_question = f"Destination file {target} already exists. Force link (Y/n)? "
-                    elif os.path.isdir(destination_target_path):
-                        prompt_question = f"Destination directory {target} already exists. Force link (Y/n)? "
-                    while force_link not in VALID_CHOICES:
-                        force_link = input(prompt_question).lower()
-                        if force_link == '':
-                            force_link = 'y'
-                    if VALID_CHOICES[force_link]:
+                    question = utils.compose_force_question(target_path = destination_target_path,
+                                                            target = target,
+                                                            target_is_source = False,
+                                                            command = args.command)
+                    force_link = utils.prompt_question(question = question, default = 'y')
+                    if force_link:
                         utils.remove(path = destination_target_path)
                         commands.link(source_target_path = source_target_path,
                                       destination_target_path = destination_target_path,
@@ -104,17 +99,12 @@ elif args.command == 'diffuse':
                 commands.diffuse(source_target_path = source_target_path,
                                  destination_target_path = destination_target_path)
             else:
-                force_diffuse = ''
-                prompt_question = ''
-                if os.path.isfile(source_target_path):
-                    prompt_question = f"Source file {target} already exists. Force diffuse (Y/n)? "
-                elif os.path.isdir(source_target_path):
-                    prompt_question = f"Source directory {target} already exists. Force diffuse (Y/n)? "
-                while force_diffuse not in VALID_CHOICES:
-                    force_diffuse = input(prompt_question).lower()
-                    if force_diffuse == '':
-                        force_diffuse = 'y'
-                if VALID_CHOICES[force_diffuse]:
+                question = utils.compose_force_question(target_path = destination_target_path,
+                                                        target = target,
+                                                        target_is_source = True,
+                                                        command = args.command)
+                force_diffuse = utils.prompt_question(question = question, default = 'y')
+                if force_diffuse:
                     utils.remove(path = source_target_path)
                     commands.diffuse(source_target_path = source_target_path,
                                      destination_target_path = destination_target_path)
