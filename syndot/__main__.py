@@ -97,3 +97,32 @@ elif args.command == 'diffuse':
                     utils.remove(path = source_target_path)
                     commands.diffuse(source_target_path = source_target_path,
                                      destination_target_path = destination_target_path)
+
+elif args.command == 'add':
+    map_file_path = os.path.expanduser(args.mapfile if args.mapfile is not None else 'map.ini')
+    if not os.path.exists(map_file_path):
+        raise FileNotFoundError("Missing map.ini file in current directory.")
+
+    target = args.target
+    if not os.path.exists(target):
+        raise OSError(f"Target {target} not found.")
+
+    config = ConfigParser()
+    config.read(map_file_path)
+    current_targets = []
+    if os.path.isfile(target):
+        current_targets = config['Targets']['files'].split()
+    elif os.path.isdir(target):
+        current_targets = config['Targets']['directories'].split()
+
+    relative_target_path = os.path.expanduser(target).replace(os.path.expanduser(config['Paths']['source']), '')[1:]
+    current_targets.append(relative_target_path)
+    current_targets.sort()
+
+    if os.path.isfile(target):
+        config['Targets']['files'] = '\n' + '\n'.join(current_targets)
+    elif os.path.isdir(target):
+        config['Targets']['directories'] = '\n' + '\n'.join(current_targets)
+
+    with open(map_file_path, 'w') as map_file:
+        config.write(map_file)
