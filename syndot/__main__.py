@@ -30,21 +30,6 @@ DEFAULT_DESTINATION = '~/Settings'
 MAP_TEMPLATE_PATH = os.path.join('..', 'templates', 'map.ini')
 
 
-def read_map_file() -> tuple[str, str, list[str]]:
-    map_file_path = os.path.expanduser(args.mapfile if args.mapfile is not None else 'map.ini')
-    if not os.path.exists(map_file_path):
-        raise FileNotFoundError(f"Missing map.ini file in current directory.")
-    config = ConfigParser()
-    config.read(map_file_path)
-    source = config['Paths']['source']
-    destination = config['Paths']['destination']
-    target_directories = config['Targets']['directories'].split()
-    target_files = config['Targets']['files'].split()
-    targets = [*target_files, *target_directories]
-
-    return source, destination, targets
-
-
 if args.command == 'init':
     destination = os.path.expanduser(args.path if args.path is not None else DEFAULT_DESTINATION)
     if os.path.exists(destination):
@@ -59,7 +44,7 @@ if args.command == 'init':
         config.write(map_file)
 
 elif args.command == 'link':
-    source, destination, targets = read_map_file()
+    source, destination, targets = utils.read_map_file(map_file = args.mapfile)
 
     for target in targets:
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,
@@ -96,7 +81,7 @@ elif args.command == 'link':
             print(f"Skipping missing source {source_target_path}.")
 
 elif args.command == 'unlink':
-    source, destination, targets = read_map_file()
+    source, destination, targets = utils.read_map_file(map_file = args.mapfile)
 
     for target in targets:
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,
@@ -105,7 +90,7 @@ elif args.command == 'unlink':
         commands.unlink(source_target_path = source_target_path, destination_target_path = destination_target_path)
 
 elif args.command == 'diffuse':
-    source, destination, targets = read_map_file()
+    source, destination, targets = utils.read_map_file(map_file = args.mapfile)
 
     for target in targets:
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,
