@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 from configparser import ConfigParser
 import os
-import shutil
+from syndot import commands
 from syndot import utils
 
 
@@ -67,23 +67,15 @@ elif args.command == 'link':
                                                                                  target = target)
         if os.path.exists(source_target_path):
             if not os.path.exists(destination_target_path):
-                if args.backup:
-                    utils.copy(source = source_target_path, destination = destination_target_path)
-                    backup_path = utils.generate_backup_path(path = source_target_path)
-                    os.rename(source_target_path, backup_path)
-                else:
-                    shutil.move(source_target_path, destination_target_path)
-                os.symlink(destination_target_path, source_target_path)
+                commands.link(source_target_path = source_target_path,
+                              destination_target_path = destination_target_path,
+                              backup = args.backup)
             else:
                 if args.force:
-                    utils.remove(path = source_target_path)
-                    if args.backup:
-                        utils.copy(source = source_target_path, destination = destination_target_path)
-                        backup_path = utils.generate_backup_path(path = source_target_path)
-                        os.rename(source_target_path, backup_path)
-                    else:
-                        shutil.move(source_target_path, destination_target_path)
-                    os.symlink(destination_target_path, source_target_path)
+                    utils.remove(path = destination_target_path)
+                    commands.link(source_target_path = source_target_path,
+                                  destination_target_path = destination_target_path,
+                                  backup = args.backup)
                 else:
                     force_link = ''
                     prompt_question = ''
@@ -97,13 +89,9 @@ elif args.command == 'link':
                             force_link = 'y'
                     if VALID_CHOICES[force_link]:
                         utils.remove(path = destination_target_path)
-                        if args.backup:
-                            utils.copy(source = source_target_path, destination = destination_target_path)
-                            backup_path = utils.generate_backup_path(path = source_target_path)
-                            os.rename(source_target_path, backup_path)
-                        else:
-                            shutil.move(source_target_path, destination_target_path)
-                        os.symlink(destination_target_path, source_target_path)
+                        commands.link(source_target_path = source_target_path,
+                                      destination_target_path = destination_target_path,
+                                      backup = args.backup)
         else:
             print(f"Skipping missing source {source_target_path}.")
 
@@ -114,10 +102,7 @@ elif args.command == 'unlink':
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,
                                                                                  destination = destination,
                                                                                  target = target)
-        utils.remove(path = source_target_path)
-        shutil.move(destination_target_path, source_target_path)
-        backup_path = utils.generate_backup_path(path = source_target_path)
-        utils.remove(path = backup_path)
+        commands.unlink(source_target_path = source_target_path, destination_target_path = destination_target_path)
 
 elif args.command == 'diffuse':
     source, destination, targets = read_map_file()
@@ -127,11 +112,12 @@ elif args.command == 'diffuse':
                                                                                  destination = destination,
                                                                                  target = target)
         if not os.path.exists(source_target_path):
-            os.symlink(destination_target_path, source_target_path)
+            commands.diffuse(source_target_path = source_target_path, destination_target_path = destination_target_path)
         else:
             if args.force:
                 utils.remove(path = source_target_path)
-                os.symlink(destination_target_path, source_target_path)
+                commands.diffuse(source_target_path = source_target_path,
+                                 destination_target_path = destination_target_path)
             else:
                 force_diffuse = ''
                 prompt_question = ''
@@ -145,4 +131,5 @@ elif args.command == 'diffuse':
                         force_diffuse = 'y'
                 if VALID_CHOICES[force_diffuse]:
                     utils.remove(path = source_target_path)
-                    os.symlink(destination_target_path, source_target_path)
+                    commands.diffuse(source_target_path = source_target_path,
+                                     destination_target_path = destination_target_path)
