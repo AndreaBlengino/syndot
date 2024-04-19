@@ -27,3 +27,9 @@ def remove(path: str) -> None:
             os.remove(path)
         elif os.path.isdir(path):
             shutil.rmtree(path)
+
+
+def compose_target_paths(source: str, destination: str, target: str) -> tuple[str, str]:
+    source_target_path = os.path.join(os.path.expanduser(source), target)
+    destination_target_path = os.path.join(os.path.expanduser(destination), target)
+    return source_target_path, destination_target_path

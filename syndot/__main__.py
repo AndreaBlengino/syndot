@@ -61,8 +61,9 @@ elif args.command == 'link':
     source, destination, targets = read_map_file()
 
     for target in targets:
-        source_target_path = os.path.join(os.path.expanduser(source), target)
-        destination_target_path = os.path.join(os.path.expanduser(destination), target)
+        source_target_path, destination_target_path = utils.compose_target_paths(source = source,
+                                                                                 destination = destination,
+                                                                                 target = target)
         if not os.path.exists(destination_target_path):
             if args.backup:
                 utils.copy(source = source_target_path, destination = destination_target_path)
@@ -76,8 +77,9 @@ elif args.command == 'unlink':
     source, destination, targets = read_map_file()
 
     for target in targets:
-        source_target_path = os.path.join(os.path.expanduser(source), target)
-        destination_target_path = os.path.join(os.path.expanduser(destination), target)
+        source_target_path, destination_target_path = utils.compose_target_paths(source = source,
+                                                                                 destination = destination,
+                                                                                 target = target)
         utils.remove(path = source_target_path)
         shutil.move(destination_target_path, source_target_path)
         backup_path = utils.generate_backup_path(path = source_target_path)
@@ -87,9 +89,9 @@ elif args.command == 'diffuse':
     source, destination, targets = read_map_file()
 
     for target in targets:
-        source_target_path = os.path.join(os.path.expanduser(source), target)
-        destination_target_path = os.path.join(os.path.expanduser(destination), target)
-
+        source_target_path, destination_target_path = utils.compose_target_paths(source = source,
+                                                                                 destination = destination,
+                                                                                 target = target)
         if not os.path.exists(source_target_path):
             os.symlink(destination_target_path, source_target_path)
         else:
