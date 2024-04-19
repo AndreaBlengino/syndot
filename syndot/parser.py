@@ -1,20 +1,62 @@
 from argparse import ArgumentParser
 
 
-parser = ArgumentParser()
+parser = ArgumentParser(prog = 'syndot',
+                        usage = '%(prog)s [-v | --version] [-h | --help] <command> [<args>]',
+                        description = 'Manage symlinks to dotfiles')
+parser.add_argument('-v', '--version',
+                    action = 'version',
+                    version = '%(prog)s 0.0.0')
 command_parser = parser.add_subparsers(dest = 'command')
 
-init_parser = command_parser.add_parser('init')
-init_parser.add_argument('-p', '--path', required = False)
 
-link_parser = command_parser.add_parser('link')
-link_parser.add_argument('-m', '--mapfile', required = False)
-link_parser.add_argument('-b', '--backup', action = 'store_true', default = False, required = False)
-link_parser.add_argument('-f', '--force', action = 'store_true', default = False, required = False)
+init_parser = command_parser.add_parser('init',
+                                        prog = 'syndot init',
+                                        usage = '%(prog)s [-p | --path]',
+                                        description = 'Initialize destination directory in which to store dotfiles')
+init_parser.add_argument('-p', '--path',
+                         required = False,
+                         help = 'path to the destination directory')
 
-unlink_parser = command_parser.add_parser('unlink')
-unlink_parser.add_argument('-m', '--mapfile', required = False)
 
-diffuse_parser = command_parser.add_parser('diffuse')
-diffuse_parser.add_argument('-m', '--mapfile', required = False)
-diffuse_parser.add_argument('-f', '--force', action = 'store_true', default = False, required = False)
+link_parser = command_parser.add_parser('link',
+                                        prog = 'syndot link',
+                                        usage = '%(prog)s [-b | --backup] [-f | --force] [-m | --mapfile] MAPFILE',
+                                        description = 'Move dotfiles to destination directory and create symlinks to '
+                                                      'them')
+link_parser.add_argument('-b', '--backup',
+                         action = 'store_true',
+                         default = False,
+                         required = False,
+                         help = 'create a backup copy of the original dotfiles')
+link_parser.add_argument('-f', '--force',
+                         action = 'store_true',
+                         default = False,
+                         required = False,
+                         help = 'force link in case of already existing files')
+link_parser.add_argument('-m', '--mapfile',
+                         required = False,
+                         help = 'path to the map file')
+
+
+unlink_parser = command_parser.add_parser('unlink',
+                                          prog = 'syndot unlink',
+                                          usage = '%(prog)s [-m | --mapfile] MAPFILE',
+                                          description = 'Remove dotfiles symlinks and move them to original directory')
+unlink_parser.add_argument('-m', '--mapfile',
+                           required = False,
+                           help = 'path to the map file')
+
+
+diffuse_parser = command_parser.add_parser('diffuse',
+                                           prog = 'syndot diffuse',
+                                           usage = '%(prog)s [-f | --force] [-m | --mapfile] MAPFILE',
+                                           description = 'Create dotfiles symlinks')
+diffuse_parser.add_argument('-f', '--force',
+                            action = 'store_true',
+                            default = False,
+                            required = False,
+                            help = 'force diffuse in case of already existing files')
+diffuse_parser.add_argument('-m', '--mapfile',
+                            required = False,
+                            help = 'path to the map file')
