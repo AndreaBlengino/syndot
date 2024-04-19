@@ -68,7 +68,7 @@ elif args.command == 'unlink':
         if os.path.exists(destination_target_path):
             commands.unlink(source_target_path = source_target_path, destination_target_path = destination_target_path)
         else:
-            raise FileNotFoundError(f"Missing {destination_target_path} in current directory.")
+            raise FileNotFoundError(f"Missing {destination_target_path} in destination directory.")
 
 elif args.command == 'diffuse':
     source, destination, targets = utils.read_map_file(map_file = args.mapfile)
@@ -78,7 +78,11 @@ elif args.command == 'diffuse':
                                                                                  destination = destination,
                                                                                  target = target)
         if not os.path.exists(source_target_path):
-            commands.diffuse(source_target_path = source_target_path, destination_target_path = destination_target_path)
+            if os.path.exists(destination_target_path):
+                commands.diffuse(source_target_path = source_target_path,
+                                 destination_target_path = destination_target_path)
+            else:
+                raise FileNotFoundError(f"Missing {destination_target_path} in destination directory.")
         else:
             if args.force:
                 utils.remove(path = source_target_path)
