@@ -14,6 +14,7 @@ init_parser.add_argument('-p', '--path', required = False)
 link_parser = command_parser.add_parser('link')
 link_parser.add_argument('-m', '--mapfile', required = False)
 link_parser.add_argument('-b', '--backup', action = 'store_true', default = False, required = False)
+link_parser.add_argument('-f', '--force', action = 'store_true', default = False, required = False)
 
 unlink_parser = command_parser.add_parser('unlink')
 unlink_parser.add_argument('-m', '--mapfile', required = False)
@@ -64,14 +65,47 @@ elif args.command == 'link':
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,
                                                                                  destination = destination,
                                                                                  target = target)
-        if not os.path.exists(destination_target_path):
-            if args.backup:
-                utils.copy(source = source_target_path, destination = destination_target_path)
-                backup_path = utils.generate_backup_path(path = source_target_path)
-                os.rename(source_target_path, backup_path)
+        if os.path.exists(source_target_path):
+            if not os.path.exists(destination_target_path):
+                if args.backup:
+                    utils.copy(source = source_target_path, destination = destination_target_path)
+                    backup_path = utils.generate_backup_path(path = source_target_path)
+                    os.rename(source_target_path, backup_path)
+                else:
+                    shutil.move(source_target_path, destination_target_path)
+                os.symlink(destination_target_path, source_target_path)
             else:
-                shutil.move(source_target_path, destination_target_path)
-            os.symlink(destination_target_path, source_target_path)
+                if args.force:
+                    utils.remove(path = source_target_path)
+                    if args.backup:
+                        utils.copy(source = source_target_path, destination = destination_target_path)
+                        backup_path = utils.generate_backup_path(path = source_target_path)
+                        os.rename(source_target_path, backup_path)
+                    else:
+                        shutil.move(source_target_path, destination_target_path)
+                    os.symlink(destination_target_path, source_target_path)
+                else:
+                    force_link = ''
+                    prompt_question = ''
+                    if os.path.isfile(destination_target_path):
+                        prompt_question = f"Destination file {target} already exists. Force link (Y/n)? "
+                    elif os.path.isdir(destination_target_path):
+                        prompt_question = f"Destination directory {target} already exists. Force link (Y/n)? "
+                    while force_link not in VALID_CHOICES:
+                        force_link = input(prompt_question).lower()
+                        if force_link == '':
+                            force_link = 'y'
+                    if VALID_CHOICES[force_link]:
+                        utils.remove(path = destination_target_path)
+                        if args.backup:
+                            utils.copy(source = source_target_path, destination = destination_target_path)
+                            backup_path = utils.generate_backup_path(path = source_target_path)
+                            os.rename(source_target_path, backup_path)
+                        else:
+                            shutil.move(source_target_path, destination_target_path)
+                        os.symlink(destination_target_path, source_target_path)
+        else:
+            print(f"Skipping missing source {source_target_path}.")
 
 elif args.command == 'unlink':
     source, destination, targets = read_map_file()
