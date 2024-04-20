@@ -17,15 +17,13 @@ if args.command == 'init':
         raise ValueError(f"Destination directory {destination} already exists.")
     os.mkdir(destination)
 
-    config = ConfigParser()
-    config.read(MAP_TEMPLATE_PATH)
+    config = utils.read_map_file(MAP_TEMPLATE_PATH)
     config['Paths']['destination'] = destination
 
-    with open(os.path.join(destination, 'map.ini'), 'w') as map_file:
-        config.write(map_file)
+    utils.write_map_file(map_file_path = os.path.join(destination, 'map.ini'), config = config)
 
 elif args.command == 'link':
-    source, destination, targets = utils.read_map_file(map_file = args.mapfile)
+    source, destination, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile))
 
     for target in targets:
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,
@@ -59,7 +57,7 @@ elif args.command == 'link':
             print(f"Skipping missing source {source_target_path}")
 
 elif args.command == 'unlink':
-    source, destination, targets = utils.read_map_file(map_file = args.mapfile)
+    source, destination, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile))
 
     for target in targets:
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,
@@ -71,7 +69,7 @@ elif args.command == 'unlink':
             raise FileNotFoundError(f"Missing {destination_target_path} in destination directory.")
 
 elif args.command == 'diffuse':
-    source, destination, targets = utils.read_map_file(map_file = args.mapfile)
+    source, destination, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile))
 
     for target in targets:
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,
@@ -107,8 +105,7 @@ elif args.command == 'add':
     if not os.path.exists(target):
         raise OSError(f"Target {target} not found.")
 
-    config = ConfigParser()
-    config.read(map_file_path)
+    config = utils.read_map_file(map_file_path = map_file_path)
     current_targets = []
     if os.path.isfile(target):
         current_targets = config['Targets']['files'].split()
@@ -124,16 +121,14 @@ elif args.command == 'add':
     elif os.path.isdir(target):
         config['Targets']['directories'] = '\n' + '\n'.join(current_targets)
 
-    with open(map_file_path, 'w') as map_file:
-        config.write(map_file)
+    utils.write_map_file(map_file_path = map_file_path, config = config)
 
 elif args.command == 'remove':
     map_file_path = os.path.expanduser(args.mapfile if args.mapfile is not None else 'map.ini')
     if not os.path.exists(map_file_path):
         raise FileNotFoundError("Missing map.ini file in current directory.")
 
-    config = ConfigParser()
-    config.read(map_file_path)
+    config = utils.read_map_file(map_file_path = map_file_path)
     current_files = config['Targets']['files'].split()
     current_directories = config['Targets']['directories'].split()
 
@@ -147,5 +142,4 @@ elif args.command == 'remove':
     else:
         print(f"Target {target} not found in map file")
 
-    with open(map_file_path, 'w') as map_file:
-        config.write(map_file)
+    utils.write_map_file(map_file_path = map_file_path, config = config)

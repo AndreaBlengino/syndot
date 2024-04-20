@@ -6,12 +6,17 @@ import shutil
 VALID_PROMPT_CHOICES = {'y': True, 'ye': True, 'yes': True, 'n': False, 'no': False}
 
 
-def read_map_file(map_file: str | None) -> tuple[str, str, list[str]]:
-    map_file_path = os.path.expanduser(map_file if map_file is not None else 'map.ini')
+def read_map_file(map_file_path: str | None) -> ConfigParser:
+    map_file_path = os.path.expanduser(map_file_path if map_file_path is not None else 'map.ini')
     if not os.path.exists(map_file_path):
         raise FileNotFoundError("Missing map.ini file in current directory.")
     config = ConfigParser()
     config.read(map_file_path)
+
+    return config
+
+
+def get_map_info(config: ConfigParser) -> tuple[str, str, list[str]]:
     source = config['Paths']['source']
     destination = config['Paths']['destination']
     target_directories = config['Targets']['directories'].split()
@@ -19,6 +24,11 @@ def read_map_file(map_file: str | None) -> tuple[str, str, list[str]]:
     targets = [*target_files, *target_directories]
 
     return source, destination, targets
+
+
+def write_map_file(map_file_path: str | None, config: ConfigParser) -> None:
+    with open(map_file_path, 'w') as map_file:
+        config.write(map_file)
 
 
 def generate_backup_path(path: str) -> str:
