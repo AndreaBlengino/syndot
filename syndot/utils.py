@@ -45,6 +45,9 @@ def generate_backup_path(path: str) -> str:
 
 
 def copy(source: str, destination: str) -> None:
+    if not os.path.exists(os.path.dirname(destination)):
+        os.makedirs(os.path.dirname(destination))
+
     if os.path.isfile(source):
         shutil.copy(source, destination)
     elif os.path.isdir(source):

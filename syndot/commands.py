@@ -151,6 +151,8 @@ def link_dotfile(source_target_path: str, destination_target_path: str, backup: 
         backup_path = utils.generate_backup_path(path = source_target_path)
         os.rename(source_target_path, backup_path)
     else:
+        if not os.path.exists(os.path.dirname(destination_target_path)):
+            os.makedirs(os.path.dirname(destination_target_path))
         shutil.move(source_target_path, destination_target_path)
     os.symlink(destination_target_path, source_target_path)
 
