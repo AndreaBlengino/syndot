@@ -126,3 +126,26 @@ elif args.command == 'add':
 
     with open(map_file_path, 'w') as map_file:
         config.write(map_file)
+
+elif args.command == 'remove':
+    map_file_path = os.path.expanduser(args.mapfile if args.mapfile is not None else 'map.ini')
+    if not os.path.exists(map_file_path):
+        raise FileNotFoundError("Missing map.ini file in current directory.")
+
+    config = ConfigParser()
+    config.read(map_file_path)
+    current_files = config['Targets']['files'].split()
+    current_directories = config['Targets']['directories'].split()
+
+    target = args.target
+    if target in current_files:
+        current_files.remove(target)
+        config['Targets']['files'] = '\n' + '\n'.join(current_files)
+    elif target in current_directories:
+        current_directories.remove(target)
+        config['Targets']['directories'] = '\n' + '\n'.join(current_directories)
+    else:
+        print(f"Target {target} not found in map file")
+
+    with open(map_file_path, 'w') as map_file:
+        config.write(map_file)
