@@ -71,3 +71,14 @@ add_parser.add_argument('-t', '--target',
 add_parser.add_argument('-m', '--mapfile',
                         required = False,
                         help = 'path to the map file')
+
+remove_parser = command_parser.add_parser('remove',
+                                          prog = 'syndot remove',
+                                          usage = '%(prog)s [-t | --target] TARGET [-m | --mapfile] MAPFILE',
+                                          description = 'Remove dotfiles from map file')
+remove_parser.add_argument('-t', '--target',
+                           required = True,
+                           help = 'path to the target dotfile')
+remove_parser.add_argument('-m', '--mapfile',
+                           required = False,
+                           help = 'path to the map file')
