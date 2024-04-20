@@ -9,7 +9,10 @@ VALID_PROMPT_CHOICES = {'y': True, 'ye': True, 'yes': True, 'n': False, 'no': Fa
 def read_map_file(map_file_path: str | None) -> ConfigParser:
     map_file_path = os.path.expanduser(map_file_path if map_file_path is not None else 'map.ini')
     if not os.path.exists(map_file_path):
-        raise FileNotFoundError("Missing map.ini file in current directory.")
+        if map_file_path == 'map.ini':
+            raise FileNotFoundError("Missing map.ini file in current directory.")
+        else:
+            raise FileNotFoundError("Missing map.ini file at the specified path.")
     config = ConfigParser()
     config.read(map_file_path)
 

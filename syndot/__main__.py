@@ -1,4 +1,3 @@
-from configparser import ConfigParser
 import os
 from syndot import commands
 from syndot.parser import parser
@@ -98,8 +97,6 @@ elif args.command == 'diffuse':
 
 elif args.command == 'add':
     map_file_path = os.path.expanduser(args.mapfile if args.mapfile is not None else 'map.ini')
-    if not os.path.exists(map_file_path):
-        raise FileNotFoundError("Missing map.ini file in current directory.")
 
     target = args.target
     if not os.path.exists(target):
@@ -125,13 +122,10 @@ elif args.command == 'add':
 
 elif args.command == 'remove':
     map_file_path = os.path.expanduser(args.mapfile if args.mapfile is not None else 'map.ini')
-    if not os.path.exists(map_file_path):
-        raise FileNotFoundError("Missing map.ini file in current directory.")
 
     config = utils.read_map_file(map_file_path = map_file_path)
     current_files = config['Targets']['files'].split()
     current_directories = config['Targets']['directories'].split()
-
     target = args.target
     if target in current_files:
         current_files.remove(target)
