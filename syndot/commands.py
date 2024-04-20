@@ -63,7 +63,10 @@ def unlink(args: Namespace) -> None:
                                                                                  destination = destination,
                                                                                  target = target)
         if os.path.exists(destination_target_path):
-            unlink_dotfile(source_target_path = source_target_path, destination_target_path = destination_target_path)
+            unlink_dotfile(source_target_path = source_target_path,
+                           destination_target_path = destination_target_path,
+                           source = source,
+                           destination = destination)
         else:
             raise FileNotFoundError(f"Missing {destination_target_path} in destination directory.")
 
@@ -158,11 +161,19 @@ def link_dotfile(source_target_path: str, destination_target_path: str, backup: 
     os.symlink(destination_target_path, source_target_path)
 
 
-def unlink_dotfile(source_target_path: str, destination_target_path: str) -> None:
+def unlink_dotfile(source_target_path: str, destination_target_path: str, source: str, destination: str) -> None:
     utils.remove(path = source_target_path)
     shutil.move(destination_target_path, source_target_path)
     backup_path = utils.generate_backup_path(path = source_target_path)
     utils.remove(path = backup_path)
+
+    parent_directory = os.path.dirname(destination_target_path)
+    while (parent_directory != source) and (parent_directory != destination):
+        if not os.listdir(parent_directory):
+            shutil.rmtree(parent_directory)
+            parent_directory = os.path.dirname(parent_directory)
+        else:
+            break
 
 
 def diffuse_dotfile(source_target_path: str, destination_target_path: str) -> None:
