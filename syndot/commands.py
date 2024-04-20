@@ -112,6 +112,9 @@ def add(args: Namespace) -> None:
         current_targets = config['Targets']['directories'].split()
 
     relative_target_path = os.path.expanduser(target).replace(os.path.expanduser(config['Paths']['source']), '')[1:]
+    if relative_target_path in current_targets:
+        print(f"Target {target} already in map file.")
+        return
     current_targets.append(relative_target_path)
     current_targets.sort()
 
