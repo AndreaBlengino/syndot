@@ -116,6 +116,7 @@ def add(args: Namespace) -> None:
         print(f"Target {target} already in map file.")
         return
     current_targets.append(relative_target_path)
+    current_targets = list(set(current_targets))
     current_targets.sort()
 
     if os.path.isfile(target):
