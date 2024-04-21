@@ -199,7 +199,7 @@ def add(args: Namespace) -> None:
 
     target = args.target
     if not os.path.exists(target):
-        raise OSError(f"Target {target} not found.")
+        raise OSError(f"Target {target} not found")
 
     config = utils.read_map_file(map_file_path = map_file_path)
     current_targets = []
@@ -210,7 +210,7 @@ def add(args: Namespace) -> None:
 
     relative_target_path = os.path.expanduser(target).replace(os.path.expanduser(config['Paths']['source']), '')[1:]
     if relative_target_path in current_targets:
-        print(f"Target {target} already in map file.")
+        print(f"Target {target} already in map file")
         return
     current_targets.append(relative_target_path)
     current_targets = list(set(current_targets))
@@ -238,7 +238,7 @@ def remove(args: Namespace) -> None:
         current_directories.remove(target)
         config['Targets']['directories'] = '\n' + '\n'.join(current_directories)
     else:
-        print(f"Target {target} not found in map file")
+        raise NameError(f"Target {target} not found in map file")
 
     utils.write_map_file(map_file_path = map_file_path, config = config)
 
