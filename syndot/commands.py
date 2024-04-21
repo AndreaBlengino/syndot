@@ -59,28 +59,32 @@ def link(args: Namespace) -> None:
                 else:
                     print(f"{source_target_path} is a symlink to {destination_target_path}, which is missing")
             else:
-                if os.path.exists(destination_target_path):
-                    if args.force:
-                        utils.remove(path = source_target_path)
-                        diffuse_dotfile(source_target_path = source_target_path,
-                                        destination_target_path = destination_target_path)
-                        if args.backup:
-                            backup_path = utils.generate_backup_path(path = source_target_path)
-                            utils.copy(source = destination_target_path, destination = backup_path)
-                    else:
-                        question = f"{source_target_path} is a symlink to {os.readlink(source_target_path)}, " \
-                                   f"not to {destination_target_path} \nForce link to {destination_target_path}"
-                        force_link = utils.prompt_question(question = question, default = 'n')
-                        if force_link:
+                if not os.path.islink(destination_target_path):
+                    if os.path.exists(destination_target_path):
+                        if args.force:
                             utils.remove(path = source_target_path)
                             diffuse_dotfile(source_target_path = source_target_path,
                                             destination_target_path = destination_target_path)
                             if args.backup:
                                 backup_path = utils.generate_backup_path(path = source_target_path)
                                 utils.copy(source = destination_target_path, destination = backup_path)
+                        else:
+                            question = f"{source_target_path} is a symlink to {os.readlink(source_target_path)}, " \
+                                       f"not to {destination_target_path} \nForce link to {destination_target_path}"
+                            force_link = utils.prompt_question(question = question, default = 'n')
+                            if force_link:
+                                utils.remove(path = source_target_path)
+                                diffuse_dotfile(source_target_path = source_target_path,
+                                                destination_target_path = destination_target_path)
+                                if args.backup:
+                                    backup_path = utils.generate_backup_path(path = source_target_path)
+                                    utils.copy(source = destination_target_path, destination = backup_path)
+                    else:
+                        print(f"{source_target_path} is a symlink to {os.readlink(source_target_path)}, "
+                              f"not to {destination_target_path}, which does not exists")
                 else:
-                    print(f"{source_target_path} is a symlink to {os.readlink(source_target_path)}, "
-                          f"not to {destination_target_path}, which does not exists")
+                    print(f"Skipping {source_target_path} because is a symlink to {os.readlink(source_target_path)} and"
+                          f"{destination_target_path} is a symlink to {os.readlink(destination_target_path)}")
 
 
 def unlink(args: Namespace) -> None:
