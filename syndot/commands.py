@@ -61,7 +61,7 @@ def link(args: Namespace) -> None:
             else:
                 if os.path.exists(destination_target_path):
                     question = f"{source_target_path} is a symlink to {os.readlink(source_target_path)}, " \
-                               f"not to {destination_target_path} \nForce link to {destination_target_path}?"
+                               f"not to {destination_target_path} \nForce link to {destination_target_path}"
                     force_link = utils.prompt_question(question = question, default = 'n')
                     if force_link:
                         utils.remove(path = source_target_path)
@@ -83,13 +83,41 @@ def unlink(args: Namespace) -> None:
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,
                                                                                  destination = destination,
                                                                                  target = target)
-        if os.path.exists(destination_target_path):
-            unlink_dotfile(source_target_path = source_target_path,
-                           destination_target_path = destination_target_path,
-                           source = source,
-                           destination = destination)
+        if not os.path.islink(destination_target_path):
+            if os.path.exists(destination_target_path):
+                if os.path.islink(source_target_path):
+                    if os.readlink(source_target_path) == destination_target_path:
+                        unlink_dotfile(source_target_path = source_target_path,
+                                       destination_target_path = destination_target_path,
+                                       source = source,
+                                       destination = destination)
+                    else:
+                        question = f"{source_target_path} is a symlink to {os.readlink(source_target_path)}, " \
+                                   f"not to {destination_target_path} \nForce unlink of {destination_target_path}"
+                        force_unlink = utils.prompt_question(question = question, default = 'n')
+                        if force_unlink:
+                            unlink_dotfile(source_target_path = source_target_path,
+                                           destination_target_path = destination_target_path,
+                                           source = source,
+                                           destination = destination)
+                else:
+                    if not os.path.exists(source_target_path):
+                        unlink_dotfile(source_target_path = source_target_path,
+                                       destination_target_path = destination_target_path,
+                                       source = source,
+                                       destination = destination)
+                    else:
+                        question = f"{source_target_path} is not a symlink\nForce unlink of {destination_target_path}"
+                        force_unlink = utils.prompt_question(question = question, default = 'n')
+                        if force_unlink:
+                            unlink_dotfile(source_target_path = source_target_path,
+                                           destination_target_path = destination_target_path,
+                                           source = source,
+                                           destination = destination)
+            else:
+                print(f"Skipping missing {destination_target_path}")
         else:
-            raise FileNotFoundError(f"Missing {destination_target_path} in destination directory.")
+            print(f"Skipping {destination_target_path} because is a symlink to {os.readlink(destination_target_path)}")
 
 
 def diffuse(args: Namespace) -> None:
