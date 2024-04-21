@@ -34,7 +34,7 @@ link_parser.add_argument('-f', '--force',
                          action = 'store_true',
                          default = False,
                          required = False,
-                         help = 'force link in case of already existing files')
+                         help = 'force link in case of already existing dotfiles')
 link_parser.add_argument('-m', '--mapfile',
                          required = True,
                          help = 'path to the map file')
@@ -45,8 +45,14 @@ link_parser.add_argument('-t', '--target',
 
 unlink_parser = command_parser.add_parser('unlink',
                                           prog = 'syndot unlink',
-                                          usage = '%(prog)s [-m | --mapfile] MAPFILE [-t | --target] TARGET',
+                                          usage = '%(prog)s [-f | --force] [-m | --mapfile] MAPFILE '
+                                                  '[-t | --target] TARGET',
                                           description = 'Remove dotfiles symlinks and move them to original directory')
+unlink_parser.add_argument('-f', '--force',
+                           action = 'store_true',
+                           default = False,
+                           required = False,
+                           help = 'force unlink in case of already existing dotfiles')
 unlink_parser.add_argument('-m', '--mapfile',
                            required = True,
                            help = 'path to the map file')
@@ -64,7 +70,7 @@ diffuse_parser.add_argument('-f', '--force',
                             action = 'store_true',
                             default = False,
                             required = False,
-                            help = 'force diffuse in case of already existing files')
+                            help = 'force diffuse in case of already existing dotfiles')
 diffuse_parser.add_argument('-m', '--mapfile',
                             required = True,
                             help = 'path to the map file')
