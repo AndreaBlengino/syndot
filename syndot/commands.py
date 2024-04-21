@@ -128,26 +128,34 @@ def diffuse(args: Namespace) -> None:
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,
                                                                                  destination = destination,
                                                                                  target = target)
-        if not os.path.exists(source_target_path):
+        if not os.path.islink(destination_target_path):
             if os.path.exists(destination_target_path):
-                diffuse_dotfile(source_target_path = source_target_path,
-                                destination_target_path = destination_target_path)
+                if not os.path.islink(source_target_path):
+                    if not os.path.exists(source_target_path):
+                        diffuse_dotfile(source_target_path = source_target_path,
+                                        destination_target_path = destination_target_path)
+                    else:
+                        question = f"{source_target_path} already exists\nForce diffuse of {destination_target_path}"
+                        force_diffuse = utils.prompt_question(question = question, default = 'n')
+                        if force_diffuse:
+                            utils.remove(source_target_path)
+                            diffuse_dotfile(source_target_path = source_target_path,
+                                            destination_target_path = destination_target_path)
+                else:
+                    if os.readlink(source_target_path) == destination_target_path:
+                        print(f"Skipping {destination_target_path} because already linked by {source_target_path}")
+                    else:
+                        question = f"{source_target_path} is a symlink to {os.readlink(source_target_path)}, " \
+                                   f"not to {destination_target_path} \nForce diffuse of {destination_target_path}"
+                        force_diffuse = utils.prompt_question(question = question, default = 'n')
+                        if force_diffuse:
+                            utils.remove(source_target_path)
+                            diffuse_dotfile(source_target_path = source_target_path,
+                                            destination_target_path = destination_target_path)
             else:
-                raise FileNotFoundError(f"Missing {destination_target_path} in destination directory.")
+                print(f"Skipping missing {destination_target_path}")
         else:
-            if args.force:
-                utils.remove(path = source_target_path)
-                diffuse_dotfile(source_target_path = source_target_path,
-                                destination_target_path = destination_target_path)
-            else:
-                question = utils.compose_force_question(target_path = destination_target_path,
-                                                        target_is_source = True,
-                                                        command = args.command)
-                force_diffuse = utils.prompt_question(question = question, default = 'y')
-                if force_diffuse:
-                    utils.remove(path = source_target_path)
-                    diffuse_dotfile(source_target_path = source_target_path,
-                                    destination_target_path = destination_target_path)
+            print(f"Skipping {destination_target_path} because is a symlink to {os.readlink(destination_target_path)}")
 
 
 def add(args: Namespace) -> None:
