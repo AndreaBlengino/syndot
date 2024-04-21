@@ -28,33 +28,48 @@ def link(args: Namespace) -> None:
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,
                                                                                  destination = destination,
                                                                                  target = target)
-
-        if os.path.exists(source_target_path):
-            if not os.path.islink(source_target_path):
-                if not os.path.exists(destination_target_path):
+        if not os.path.islink(source_target_path):
+            if not os.path.exists(destination_target_path):
+                link_dotfile(source_target_path = source_target_path,
+                             destination_target_path = destination_target_path,
+                             backup = args.backup)
+            else:
+                if args.force:
+                    utils.remove(path = destination_target_path)
                     link_dotfile(source_target_path = source_target_path,
                                  destination_target_path = destination_target_path,
                                  backup = args.backup)
                 else:
-                    if args.force:
+                    question = utils.compose_force_question(target_path = destination_target_path,
+                                                            target_is_source = False,
+                                                            command = args.command)
+                    force_link = utils.prompt_question(question = question, default = 'n')
+                    if force_link:
                         utils.remove(path = destination_target_path)
                         link_dotfile(source_target_path = source_target_path,
                                      destination_target_path = destination_target_path,
                                      backup = args.backup)
-                    else:
-                        question = utils.compose_force_question(target_path = destination_target_path,
-                                                                target_is_source = False,
-                                                                command = args.command)
-                        force_link = utils.prompt_question(question = question, default = 'y')
-                        if force_link:
-                            utils.remove(path = destination_target_path)
-                            link_dotfile(source_target_path = source_target_path,
-                                         destination_target_path = destination_target_path,
-                                         backup = args.backup)
-            else:
-                print(f"Skipping source {source_target_path} because is a symlink")
         else:
-            print(f"Skipping missing source {source_target_path}")
+            if os.readlink(source_target_path) == destination_target_path:
+                if os.path.exists(source_target_path):
+                    print(f"Skipping already linked {source_target_path}")
+                else:
+                    print(f"{source_target_path} is a symlink to the missing {destination_target_path}")
+            else:
+                if os.path.exists(destination_target_path):
+                    question = f"{source_target_path} is a symlink to {os.readlink(source_target_path)}, " \
+                               f"not to {destination_target_path} \nForce link to {destination_target_path}?"
+                    force_link = utils.prompt_question(question = question, default = 'n')
+                    if force_link:
+                        utils.remove(path = source_target_path)
+                        diffuse_dotfile(source_target_path = source_target_path,
+                                        destination_target_path = destination_target_path)
+                        if args.backup:
+                            backup_path = utils.generate_backup_path(path = source_target_path)
+                            utils.copy(source = destination_target_path, destination = backup_path)
+                else:
+                    print(f"{source_target_path} is a symlink to {os.readlink(source_target_path)}, "
+                          f"not to {destination_target_path}, which does not exists")
 
 
 def unlink(args: Namespace) -> None:
