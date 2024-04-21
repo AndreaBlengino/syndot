@@ -21,12 +21,14 @@ def init(args: Namespace) -> None:
 
 
 def link(args: Namespace) -> None:
-    source, destination, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile))
+    source, destination, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile),
+                                                      target = args.target)
 
     for target in targets:
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,
                                                                                  destination = destination,
                                                                                  target = target)
+
         if os.path.exists(source_target_path):
             if not os.path.islink(source_target_path):
                 if not os.path.exists(destination_target_path):
@@ -56,7 +58,8 @@ def link(args: Namespace) -> None:
 
 
 def unlink(args: Namespace) -> None:
-    source, destination, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile))
+    source, destination, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile),
+                                                      target = args.target)
 
     for target in targets:
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,
@@ -72,7 +75,8 @@ def unlink(args: Namespace) -> None:
 
 
 def diffuse(args: Namespace) -> None:
-    source, destination, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile))
+    source, destination, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile),
+                                                      target = args.target)
 
     for target in targets:
         source_target_path, destination_target_path = utils.compose_target_paths(source = source,

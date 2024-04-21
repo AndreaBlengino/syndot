@@ -21,7 +21,8 @@ init_parser.add_argument('-p', '--path',
 
 link_parser = command_parser.add_parser('link',
                                         prog = 'syndot link',
-                                        usage = '%(prog)s [-b | --backup] [-f | --force] [-m | --mapfile] MAPFILE',
+                                        usage = '%(prog)s [-b | --backup] [-f | --force] [-m | --mapfile] MAPFILE '
+                                                '[-t | --target] TARGET',
                                         description = 'Move dotfiles to destination directory and create symlinks to '
                                                       'them')
 link_parser.add_argument('-b', '--backup',
@@ -35,22 +36,29 @@ link_parser.add_argument('-f', '--force',
                          required = False,
                          help = 'force link in case of already existing files')
 link_parser.add_argument('-m', '--mapfile',
-                         required = False,
+                         required = True,
                          help = 'path to the map file')
+link_parser.add_argument('-t', '--target',
+                         # required = True,
+                         help = 'path to the target dotfile')
 
 
 unlink_parser = command_parser.add_parser('unlink',
                                           prog = 'syndot unlink',
-                                          usage = '%(prog)s [-m | --mapfile] MAPFILE',
+                                          usage = '%(prog)s [-m | --mapfile] MAPFILE [-t | --target] TARGET',
                                           description = 'Remove dotfiles symlinks and move them to original directory')
 unlink_parser.add_argument('-m', '--mapfile',
-                           required = False,
+                           required = True,
                            help = 'path to the map file')
+unlink_parser.add_argument('-t', '--target',
+                           # required = True,
+                           help = 'path to the target dotfile')
 
 
 diffuse_parser = command_parser.add_parser('diffuse',
                                            prog = 'syndot diffuse',
-                                           usage = '%(prog)s [-f | --force] [-m | --mapfile] MAPFILE',
+                                           usage = '%(prog)s [-f | --force] [-m | --mapfile] MAPFILE '
+                                                   '[-t | --target] TARGET',
                                            description = 'Create dotfiles symlinks')
 diffuse_parser.add_argument('-f', '--force',
                             action = 'store_true',
@@ -58,27 +66,32 @@ diffuse_parser.add_argument('-f', '--force',
                             required = False,
                             help = 'force diffuse in case of already existing files')
 diffuse_parser.add_argument('-m', '--mapfile',
-                            required = False,
+                            required = True,
                             help = 'path to the map file')
+diffuse_parser.add_argument('-t', '--target',
+                            # required = True,
+                            help = 'path to the target dotfile')
+
 
 add_parser = command_parser.add_parser('add',
                                        prog = 'syndot add',
-                                       usage = '%(prog)s [-t | --target] TARGET [-m | --mapfile] MAPFILE',
+                                       usage = '%(prog)s [-m | --mapfile] MAPFILE [-t | --target] TARGET',
                                        description = 'Add dotfiles to map file')
-add_parser.add_argument('-t', '--target',
-                        required = True,
-                        help = 'path to the target dotfile')
 add_parser.add_argument('-m', '--mapfile',
                         required = False,
                         help = 'path to the map file')
+add_parser.add_argument('-t', '--target',
+                        required = True,
+                        help = 'path to the target dotfile')
+
 
 remove_parser = command_parser.add_parser('remove',
                                           prog = 'syndot remove',
-                                          usage = '%(prog)s [-t | --target] TARGET [-m | --mapfile] MAPFILE',
+                                          usage = '%(prog)s [-m | --mapfile] MAPFILE [-t | --target] TARGET',
                                           description = 'Remove dotfiles from map file')
-remove_parser.add_argument('-t', '--target',
-                           required = True,
-                           help = 'path to the target dotfile')
 remove_parser.add_argument('-m', '--mapfile',
                            required = False,
                            help = 'path to the map file')
+remove_parser.add_argument('-t', '--target',
+                           required = True,
+                           help = 'path to the target dotfile')

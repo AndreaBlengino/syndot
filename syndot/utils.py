@@ -19,12 +19,15 @@ def read_map_file(map_file_path: str | None) -> ConfigParser:
     return config
 
 
-def get_map_info(config: ConfigParser) -> tuple[str, str, list[str]]:
+def get_map_info(config: ConfigParser, target: str | None) -> tuple[str, str, list[str]]:
     source = config['Paths']['source']
     destination = config['Paths']['destination']
-    target_directories = config['Targets']['directories'].split()
-    target_files = config['Targets']['files'].split()
-    targets = [*target_files, *target_directories]
+    if target is None:
+        target_directories = config['Targets']['directories'].split()
+        target_files = config['Targets']['files'].split()
+        targets = [*target_files, *target_directories]
+    else:
+        targets = [target]
 
     return source, destination, targets
 
@@ -65,8 +68,14 @@ def remove(path: str) -> None:
 
 
 def compose_target_paths(source: str, destination: str, target: str) -> tuple[str, str]:
-    source_target_path = os.path.join(os.path.expanduser(source), target)
-    destination_target_path = os.path.join(os.path.expanduser(destination), target)
+    source = os.path.expanduser(source)
+    destination = os.path.expanduser(destination)
+    if target.startswith(source):
+        source_target_path = target
+        destination_target_path = os.path.join(destination, target.replace(source, '')[1:])
+    else:
+        source_target_path = os.path.join(source, target)
+        destination_target_path = os.path.join(destination, target)
     return source_target_path, destination_target_path
 
 
