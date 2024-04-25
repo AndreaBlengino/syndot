@@ -271,4 +271,6 @@ def unlink_dotfile(source_target_path: str, destination_target_path: str, source
 
 
 def diffuse_dotfile(source_target_path: str, destination_target_path: str) -> None:
+    if not os.path.exists(os.path.dirname(source_target_path)):
+        os.makedirs(os.path.dirname(source_target_path))
     os.symlink(destination_target_path, source_target_path)
