@@ -30,13 +30,15 @@ def link(args: Namespace) -> None:
         if not os.path.islink(system_target_path):
             if os.path.exists(system_target_path):
                 if not os.path.exists(settings_target_path):
-                    link_dotfile(system_target_path = system_target_path,
+                    link_dotfile(settings_dir = settings_dir,
+                                 system_target_path = system_target_path,
                                  settings_target_path = settings_target_path,
                                  backup = args.backup)
                 else:
                     if args.force:
                         utils.remove(path = settings_target_path)
-                        link_dotfile(system_target_path = system_target_path,
+                        link_dotfile(settings_dir = settings_dir,
+                                     system_target_path = system_target_path,
                                      settings_target_path = settings_target_path,
                                      backup = args.backup)
                     else:
@@ -46,7 +48,8 @@ def link(args: Namespace) -> None:
                         force_link = utils.prompt_question(question = question, default = 'n')
                         if force_link:
                             utils.remove(path = settings_target_path)
-                            link_dotfile(system_target_path = system_target_path,
+                            link_dotfile(settings_dir = settings_dir,
+                                         system_target_path = system_target_path,
                                          settings_target_path = settings_target_path,
                                          backup = args.backup)
             else:
@@ -234,9 +237,11 @@ def remove(args: Namespace) -> None:
     utils.write_map_file(map_file_path = map_file_path, config = config)
 
 
-def link_dotfile(system_target_path: str, settings_target_path: str, backup: bool) -> None:
+def link_dotfile(settings_dir: str, system_target_path: str, settings_target_path: str, backup: bool) -> None:
     if backup:
         utils.copy(source = system_target_path, destination = settings_target_path)
+        utils.change_parent_owner(source = system_target_path, destination = settings_target_path,
+                                  settings_dir = settings_dir)
         backup_path = utils.generate_backup_path(path = system_target_path)
         os.rename(system_target_path, backup_path)
     else:
