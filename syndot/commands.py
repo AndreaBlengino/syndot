@@ -260,7 +260,9 @@ def unlink_dotfile(system_target_path: str, settings_target_path: str, settings_
     parent_directory = os.path.dirname(settings_target_path)
     protected_directories = (settings_dir, utils.expand_home_path('~'), '/')
     while parent_directory not in protected_directories:
-        if not os.listdir(parent_directory):
+        parent_directory_content = os.listdir(parent_directory)
+        if not parent_directory_content or ((len(parent_directory_content) == 1) and
+                                            parent_directory_content[0] == '.directory'):
             shutil.rmtree(parent_directory)
             parent_directory = os.path.dirname(parent_directory)
         else:
