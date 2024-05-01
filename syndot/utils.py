@@ -77,6 +77,10 @@ def remove(path: str) -> None:
             shutil.rmtree(path)
 
 
+def split_path(path: str) -> list[str]:
+    return path.split(os.path.sep)[1:]
+
+
 def expand_home_path(path: str) -> str:
     sudo_user = os.getenv('SUDO_USER')
     if sudo_user:
@@ -87,6 +91,13 @@ def expand_home_path(path: str) -> str:
             return path
     else:
         return os.path.expanduser(path)
+
+
+def compose_target_paths(settings_dir: str, target: str) -> tuple[str, str]:
+    system_target_path = expand_home_path(target)
+    settings_dir = expand_home_path(settings_dir)
+    settings_target_path = os.path.join(settings_dir, *split_path(system_target_path))
+    return system_target_path, settings_target_path
 
 
 def compose_force_question(target_path: str, target_is_in_system: bool, command: str) -> str:
