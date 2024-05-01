@@ -79,6 +79,7 @@ def link_dotfile(settings_dir: str, system_target_path: str, settings_target_pat
         utils.copy(source = system_target_path, destination = settings_target_path)
         utils.change_parent_owner(source = system_target_path, destination = settings_target_path,
                                   settings_dir = settings_dir)
+        utils.change_child_owner(source = system_target_path, destination = settings_target_path)
         backup_path = utils.generate_backup_path(path = system_target_path)
         os.rename(system_target_path, backup_path)
     else:
