@@ -48,13 +48,24 @@ def generate_backup_path(path: str) -> str:
 
 
 def copy(source: str, destination: str) -> None:
-    if not os.path.exists(os.path.dirname(destination)):
-        os.makedirs(os.path.dirname(destination))
+    destination_parent = os.path.dirname(destination)
+    if not os.path.exists(destination_parent):
+        os.makedirs(destination_parent)
 
     if os.path.isfile(source):
-        shutil.copy(source, destination)
+        shutil.copy2(source, destination)
     elif os.path.isdir(source):
         shutil.copytree(source, destination)
+        st = os.stat(source)
+        os.chown(destination, st.st_uid, st.st_gid)
+
+
+def change_parent_owner(source: str, destination: str, settings_dir: str):
+    protected_directories = (expand_home_path(settings_dir), expand_home_path('~'), '/')
+    while destination not in protected_directories:
+        st = os.stat(source)
+        os.chown(destination, st.st_uid, st.st_gid)
+        destination = os.path.dirname(destination)
 
 
 def remove(path: str) -> None:
@@ -67,16 +78,16 @@ def remove(path: str) -> None:
             shutil.rmtree(path)
 
 
-def compose_target_paths(source: str, destination: str, target: str) -> tuple[str, str]:
-    source = os.path.expanduser(source)
-    destination = os.path.expanduser(destination)
-    if target.startswith(source):
-        source_target_path = target
-        destination_target_path = os.path.join(destination, target.replace(source, '')[1:])
+def expand_home_path(path: str) -> str:
+    sudo_user = os.getenv('SUDO_USER')
+    if sudo_user:
+        if '~' in path:
+            home = os.path.join(os.path.sep, 'home', sudo_user)
+            return path.replace('~', home)
+        else:
+            return path
     else:
-        source_target_path = os.path.join(source, target)
-        destination_target_path = os.path.join(destination, target)
-    return source_target_path, destination_target_path
+        return os.path.expanduser(path)
 
 
 def compose_force_question(target_path: str, target_is_source: bool, command: str) -> str:
