@@ -19,9 +19,8 @@ def read_map_file(map_file_path: str | None) -> ConfigParser:
     return config
 
 
-def get_map_info(config: ConfigParser, target: str | None) -> tuple[str, str, list[str]]:
-    source = config['Paths']['source']
-    destination = config['Paths']['destination']
+def get_map_info(config: ConfigParser, target: str | None) -> tuple[str, list[str]]:
+    settings_dir = config['Path']['settings_dir']
     if target is None:
         target_directories = config['Targets']['directories'].split()
         target_files = config['Targets']['files'].split()
@@ -29,7 +28,7 @@ def get_map_info(config: ConfigParser, target: str | None) -> tuple[str, str, li
     else:
         targets = [target]
 
-    return source, destination, targets
+    return settings_dir, targets
 
 
 def write_map_file(map_file_path: str | None, config: ConfigParser) -> None:
@@ -90,9 +89,9 @@ def expand_home_path(path: str) -> str:
         return os.path.expanduser(path)
 
 
-def compose_force_question(target_path: str, target_is_source: bool, command: str) -> str:
+def compose_force_question(target_path: str, target_is_in_system: bool, command: str) -> str:
     question = ''
-    target_type = 'Source' if target_is_source else 'Destination'
+    target_type = 'System' if target_is_in_system else 'Settings'
     if os.path.isfile(target_path):
         question = f"{target_type} file {target_path} already exists. Force {command}"
     elif os.path.isdir(target_path):

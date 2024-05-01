@@ -4,194 +4,185 @@ import shutil
 from syndot import utils
 
 
-DEFAULT_DESTINATION = '~/Settings'
-MAP_TEMPLATE_PATH = os.path.join('..', 'templates', 'map.ini')
+DEFAULT_SETTINGS_DIR = '~/Settings'
+MAP_TEMPLATE_PATH = os.path.join('templates', 'map.ini')
 
 
 def init(args: Namespace) -> None:
-    destination = os.path.expanduser(args.path if args.path is not None else DEFAULT_DESTINATION)
-    if os.path.exists(destination):
-        raise ValueError(f"Destination directory {destination} already exists.")
-    os.mkdir(destination)
+    settings_dir = os.path.expanduser(args.path if args.path is not None else DEFAULT_SETTINGS_DIR)
+    if os.path.exists(settings_dir):
+        raise ValueError(f"Settings directory {settings_dir} already exists.")
+    os.mkdir(settings_dir)
 
     config = utils.read_map_file(MAP_TEMPLATE_PATH)
-    config['Paths']['destination'] = destination
+    config['Path']['settings_dir'] = settings_dir
 
-    utils.write_map_file(map_file_path = os.path.join(destination, 'map.ini'), config = config)
+    utils.write_map_file(map_file_path = os.path.join(settings_dir, 'map.ini'), config = config)
 
 
 def link(args: Namespace) -> None:
-    source, destination, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile),
-                                                      target = args.target)
+    settings_dir, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile),
+                                               target = args.target)
 
     for target in targets:
-        source_target_path, destination_target_path = utils.compose_target_paths(source = source,
-                                                                                 destination = destination,
-                                                                                 target = target)
-        if not os.path.islink(source_target_path):
-            if os.path.exists(source_target_path):
-                if not os.path.exists(destination_target_path):
-                    link_dotfile(source_target_path = source_target_path,
-                                 destination_target_path = destination_target_path,
+        system_target_path, settings_target_path = utils.compose_target_paths(settings_dir = settings_dir,
+                                                                              target = target)
+        if not os.path.islink(system_target_path):
+            if os.path.exists(system_target_path):
+                if not os.path.exists(settings_target_path):
+                    link_dotfile(system_target_path = system_target_path,
+                                 settings_target_path = settings_target_path,
                                  backup = args.backup)
                 else:
                     if args.force:
-                        utils.remove(path = destination_target_path)
-                        link_dotfile(source_target_path = source_target_path,
-                                     destination_target_path = destination_target_path,
+                        utils.remove(path = settings_target_path)
+                        link_dotfile(system_target_path = system_target_path,
+                                     settings_target_path = settings_target_path,
                                      backup = args.backup)
                     else:
-                        question = utils.compose_force_question(target_path = destination_target_path,
-                                                                target_is_source = False,
+                        question = utils.compose_force_question(target_path = settings_target_path,
+                                                                target_is_in_system = False,
                                                                 command = args.command)
                         force_link = utils.prompt_question(question = question, default = 'n')
                         if force_link:
-                            utils.remove(path = destination_target_path)
-                            link_dotfile(source_target_path = source_target_path,
-                                         destination_target_path = destination_target_path,
+                            utils.remove(path = settings_target_path)
+                            link_dotfile(system_target_path = system_target_path,
+                                         settings_target_path = settings_target_path,
                                          backup = args.backup)
             else:
-                print(f"Skipping missing {source_target_path}")
+                print(f"Skipping missing {system_target_path}")
         else:
-            if os.readlink(source_target_path) == destination_target_path:
-                if os.path.exists(source_target_path):
-                    print(f"Skipping already linked {source_target_path}")
+            if os.readlink(system_target_path) == settings_target_path:
+                if os.path.exists(system_target_path):
+                    print(f"Skipping already linked {system_target_path}")
                 else:
-                    print(f"{source_target_path} is a symlink to {destination_target_path}, which is missing")
+                    print(f"{system_target_path} is a symlink to {settings_target_path}, which is missing")
             else:
-                if not os.path.islink(destination_target_path):
-                    if os.path.exists(destination_target_path):
+                if not os.path.islink(settings_target_path):
+                    if os.path.exists(settings_target_path):
                         if args.force:
-                            utils.remove(path = source_target_path)
-                            diffuse_dotfile(source_target_path = source_target_path,
-                                            destination_target_path = destination_target_path)
+                            utils.remove(path = system_target_path)
+                            diffuse_dotfile(system_target_path = system_target_path,
+                                            settings_target_path = settings_target_path)
                             if args.backup:
-                                backup_path = utils.generate_backup_path(path = source_target_path)
-                                utils.copy(source = destination_target_path, destination = backup_path)
+                                backup_path = utils.generate_backup_path(path = system_target_path)
+                                utils.copy(source = settings_target_path, destination = backup_path)
                         else:
-                            question = f"{source_target_path} is a symlink to {os.readlink(source_target_path)}, " \
-                                       f"not to {destination_target_path} \nForce link to {destination_target_path}"
+                            question = f"{system_target_path} is a symlink to {os.readlink(system_target_path)}, " \
+                                       f"not to {settings_target_path} \nForce link to {settings_target_path}"
                             force_link = utils.prompt_question(question = question, default = 'n')
                             if force_link:
-                                utils.remove(path = source_target_path)
-                                diffuse_dotfile(source_target_path = source_target_path,
-                                                destination_target_path = destination_target_path)
+                                utils.remove(path = system_target_path)
+                                diffuse_dotfile(system_target_path = system_target_path,
+                                                settings_target_path = settings_target_path)
                                 if args.backup:
-                                    backup_path = utils.generate_backup_path(path = source_target_path)
-                                    utils.copy(source = destination_target_path, destination = backup_path)
+                                    backup_path = utils.generate_backup_path(path = system_target_path)
+                                    utils.copy(source = settings_target_path, destination = backup_path)
                     else:
-                        print(f"{source_target_path} is a symlink to {os.readlink(source_target_path)}, "
-                              f"not to {destination_target_path}, which does not exists")
+                        print(f"{system_target_path} is a symlink to {os.readlink(system_target_path)}, "
+                              f"not to {settings_target_path}, which does not exists")
                 else:
-                    print(f"Skipping {source_target_path} because is a symlink to {os.readlink(source_target_path)} and"
-                          f"{destination_target_path} is a symlink to {os.readlink(destination_target_path)}")
+                    print(f"Skipping {system_target_path} because is a symlink to {os.readlink(system_target_path)} and"
+                          f"{settings_target_path} is a symlink to {os.readlink(settings_target_path)}")
 
 
 def unlink(args: Namespace) -> None:
-    source, destination, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile),
-                                                      target = args.target)
+    settings_dir, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile),
+                                               target = args.target)
 
     for target in targets:
-        source_target_path, destination_target_path = utils.compose_target_paths(source = source,
-                                                                                 destination = destination,
-                                                                                 target = target)
-        if not os.path.islink(destination_target_path):
-            if os.path.exists(destination_target_path):
-                if os.path.islink(source_target_path):
-                    if os.readlink(source_target_path) == destination_target_path:
-                        unlink_dotfile(source_target_path = source_target_path,
-                                       destination_target_path = destination_target_path,
-                                       source = source,
-                                       destination = destination)
+        system_target_path, settings_target_path = utils.compose_target_paths(settings_dir = settings_dir,
+                                                                              target = target)
+        if not os.path.islink(settings_target_path):
+            if os.path.exists(settings_target_path):
+                if os.path.islink(system_target_path):
+                    if os.readlink(system_target_path) == settings_target_path:
+                        unlink_dotfile(system_target_path = system_target_path,
+                                       settings_target_path = settings_target_path,
+                                       settings_dir = settings_dir)
                     else:
                         if args.force:
-                            unlink_dotfile(source_target_path = source_target_path,
-                                           destination_target_path = destination_target_path,
-                                           source = source,
-                                           destination = destination)
+                            unlink_dotfile(system_target_path = system_target_path,
+                                           settings_target_path = settings_target_path,
+                                           settings_dir = settings_dir)
                         else:
-                            question = f"{source_target_path} is a symlink to {os.readlink(source_target_path)}, " \
-                                       f"not to {destination_target_path} \nForce unlink of {destination_target_path}"
+                            question = f"{system_target_path} is a symlink to {os.readlink(system_target_path)}, " \
+                                       f"not to {settings_target_path} \nForce unlink of {settings_target_path}"
                             force_unlink = utils.prompt_question(question = question, default = 'n')
                             if force_unlink:
-                                unlink_dotfile(source_target_path = source_target_path,
-                                               destination_target_path = destination_target_path,
-                                               source = source,
-                                               destination = destination)
+                                unlink_dotfile(system_target_path = system_target_path,
+                                               settings_target_path = settings_target_path,
+                                               settings_dir = settings_dir)
                 else:
-                    if not os.path.exists(source_target_path):
-                        unlink_dotfile(source_target_path = source_target_path,
-                                       destination_target_path = destination_target_path,
-                                       source = source,
-                                       destination = destination)
+                    if not os.path.exists(system_target_path):
+                        unlink_dotfile(system_target_path = system_target_path,
+                                       settings_target_path = settings_target_path,
+                                       settings_dir = settings_dir)
                     else:
                         if args.force:
-                            unlink_dotfile(source_target_path = source_target_path,
-                                           destination_target_path = destination_target_path,
-                                           source = source,
-                                           destination = destination)
+                            unlink_dotfile(system_target_path = system_target_path,
+                                           settings_target_path = settings_target_path,
+                                           settings_dir = settings_dir)
                         else:
-                            question = f"{source_target_path} is not a symlink\n" \
-                                       f"Force unlink of {destination_target_path}"
+                            question = f"{system_target_path} is not a symlink\n" \
+                                       f"Force unlink of {settings_target_path}"
                             force_unlink = utils.prompt_question(question = question, default = 'n')
                             if force_unlink:
-                                unlink_dotfile(source_target_path = source_target_path,
-                                               destination_target_path = destination_target_path,
-                                               source = source,
-                                               destination = destination)
+                                unlink_dotfile(system_target_path = system_target_path,
+                                               settings_target_path = settings_target_path,
+                                               settings_dir = settings_dir)
             else:
-                print(f"Skipping missing {destination_target_path}")
+                print(f"Skipping missing {settings_target_path}")
         else:
-            print(f"Skipping {destination_target_path} because is a symlink to {os.readlink(destination_target_path)}")
+            print(f"Skipping {settings_target_path} because is a symlink to {os.readlink(settings_target_path)}")
 
 
 def diffuse(args: Namespace) -> None:
-    source, destination, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile),
-                                                      target = args.target)
+    settings_dir, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile),
+                                               target = args.target)
 
     for target in targets:
-        source_target_path, destination_target_path = utils.compose_target_paths(source = source,
-                                                                                 destination = destination,
-                                                                                 target = target)
-        if not os.path.islink(destination_target_path):
-            if os.path.exists(destination_target_path):
-                if not os.path.islink(source_target_path):
-                    if not os.path.exists(source_target_path):
-                        diffuse_dotfile(source_target_path = source_target_path,
-                                        destination_target_path = destination_target_path)
+        system_target_path, settings_target_path = utils.compose_target_paths(settings_dir = settings_dir,
+                                                                              target = target)
+        if not os.path.islink(settings_target_path):
+            if os.path.exists(settings_target_path):
+                if not os.path.islink(system_target_path):
+                    if not os.path.exists(system_target_path):
+                        diffuse_dotfile(system_target_path = system_target_path,
+                                        settings_target_path = settings_target_path)
                     else:
                         if args.force:
-                            utils.remove(source_target_path)
-                            diffuse_dotfile(source_target_path = source_target_path,
-                                            destination_target_path = destination_target_path)
+                            utils.remove(system_target_path)
+                            diffuse_dotfile(system_target_path = system_target_path,
+                                            settings_target_path = settings_target_path)
                         else:
-                            question = f"{source_target_path} already exists\n"\
-                                       f"Force diffuse of {destination_target_path}"
+                            question = f"{system_target_path} already exists\n"\
+                                       f"Force diffuse of {settings_target_path}"
                             force_diffuse = utils.prompt_question(question = question, default = 'n')
                             if force_diffuse:
-                                utils.remove(source_target_path)
-                                diffuse_dotfile(source_target_path = source_target_path,
-                                                destination_target_path = destination_target_path)
+                                utils.remove(system_target_path)
+                                diffuse_dotfile(system_target_path = system_target_path,
+                                                settings_target_path = settings_target_path)
                 else:
-                    if os.readlink(source_target_path) == destination_target_path:
-                        print(f"Skipping {destination_target_path} because already linked by {source_target_path}")
+                    if os.readlink(system_target_path) == settings_target_path:
+                        print(f"Skipping {settings_target_path} because already linked by {system_target_path}")
                     else:
                         if args.force:
-                            utils.remove(source_target_path)
-                            diffuse_dotfile(source_target_path = source_target_path,
-                                            destination_target_path = destination_target_path)
+                            utils.remove(system_target_path)
+                            diffuse_dotfile(system_target_path = system_target_path,
+                                            settings_target_path = settings_target_path)
                         else:
-                            question = f"{source_target_path} is a symlink to {os.readlink(source_target_path)}, " \
-                                       f"not to {destination_target_path} \nForce diffuse of {destination_target_path}"
+                            question = f"{system_target_path} is a symlink to {os.readlink(system_target_path)}, " \
+                                       f"not to {settings_target_path} \nForce diffuse of {settings_target_path}"
                             force_diffuse = utils.prompt_question(question = question, default = 'n')
                             if force_diffuse:
-                                utils.remove(source_target_path)
-                                diffuse_dotfile(source_target_path = source_target_path,
-                                                destination_target_path = destination_target_path)
+                                utils.remove(system_target_path)
+                                diffuse_dotfile(system_target_path = system_target_path,
+                                                settings_target_path = settings_target_path)
             else:
-                print(f"Skipping missing {destination_target_path}")
+                print(f"Skipping missing {settings_target_path}")
         else:
-            print(f"Skipping {destination_target_path} because is a symlink to {os.readlink(destination_target_path)}")
+            print(f"Skipping {settings_target_path} because is a symlink to {os.readlink(settings_target_path)}")
 
 
 def add(args: Namespace) -> None:
@@ -243,26 +234,27 @@ def remove(args: Namespace) -> None:
     utils.write_map_file(map_file_path = map_file_path, config = config)
 
 
-def link_dotfile(source_target_path: str, destination_target_path: str, backup: bool) -> None:
+def link_dotfile(system_target_path: str, settings_target_path: str, backup: bool) -> None:
     if backup:
-        utils.copy(source = source_target_path, destination = destination_target_path)
-        backup_path = utils.generate_backup_path(path = source_target_path)
-        os.rename(source_target_path, backup_path)
+        utils.copy(source = system_target_path, destination = settings_target_path)
+        backup_path = utils.generate_backup_path(path = system_target_path)
+        os.rename(system_target_path, backup_path)
     else:
-        if not os.path.exists(os.path.dirname(destination_target_path)):
-            os.makedirs(os.path.dirname(destination_target_path))
-        shutil.move(source_target_path, destination_target_path)
-    os.symlink(destination_target_path, source_target_path)
+        if not os.path.exists(os.path.dirname(settings_target_path)):
+            os.makedirs(os.path.dirname(settings_target_path))
+        shutil.move(system_target_path, settings_target_path)
+    os.symlink(settings_target_path, system_target_path)
 
 
-def unlink_dotfile(source_target_path: str, destination_target_path: str, source: str, destination: str) -> None:
-    utils.remove(path = source_target_path)
-    shutil.move(destination_target_path, source_target_path)
-    backup_path = utils.generate_backup_path(path = source_target_path)
+def unlink_dotfile(system_target_path: str, settings_target_path: str, settings_dir: str) -> None:
+    utils.remove(path = system_target_path)
+    shutil.move(settings_target_path, system_target_path)
+    backup_path = utils.generate_backup_path(path = system_target_path)
     utils.remove(path = backup_path)
 
-    parent_directory = os.path.dirname(destination_target_path)
-    while (parent_directory != source) and (parent_directory != destination):
+    parent_directory = os.path.dirname(settings_target_path)
+    protected_directories = (settings_dir, utils.expand_home_path('~'), '/')
+    while parent_directory not in protected_directories:
         if not os.listdir(parent_directory):
             shutil.rmtree(parent_directory)
             parent_directory = os.path.dirname(parent_directory)
@@ -270,7 +262,7 @@ def unlink_dotfile(source_target_path: str, destination_target_path: str, source
             break
 
 
-def diffuse_dotfile(source_target_path: str, destination_target_path: str) -> None:
-    if not os.path.exists(os.path.dirname(source_target_path)):
-        os.makedirs(os.path.dirname(source_target_path))
-    os.symlink(destination_target_path, source_target_path)
+def diffuse_dotfile(system_target_path: str, settings_target_path: str) -> None:
+    if not os.path.exists(os.path.dirname(system_target_path)):
+        os.makedirs(os.path.dirname(system_target_path))
+    os.symlink(settings_target_path, system_target_path)
