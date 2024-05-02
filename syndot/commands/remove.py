@@ -4,7 +4,7 @@ from syndot import utils
 
 
 def remove(args: Namespace) -> None:
-    map_file_path = os.path.expanduser(args.mapfile if args.mapfile is not None else 'map.ini')
+    map_file_path = utils.expand_home_path(args.mapfile if args.mapfile is not None else 'map.ini')
 
     config = utils.read_map_file(map_file_path = map_file_path)
     current_files = config['Targets']['files'].split()
