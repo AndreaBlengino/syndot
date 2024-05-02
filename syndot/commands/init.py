@@ -4,7 +4,7 @@ from syndot import utils
 
 
 DEFAULT_SETTINGS_DIR = '~/Settings'
-MAP_TEMPLATE_PATH = os.path.join('templates', 'map.ini')
+MAP_TEMPLATE_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), '_templates', 'map.ini')
 
 
 def init(args: Namespace) -> None:
