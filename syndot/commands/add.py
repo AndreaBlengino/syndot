@@ -4,7 +4,7 @@ from syndot import utils
 
 
 def add(args: Namespace) -> None:
-    map_file_path = os.path.expanduser(args.mapfile if args.mapfile is not None else 'map.ini')
+    map_file_path = utils.expand_home_path(args.mapfile if args.mapfile is not None else 'map.ini')
 
     target = args.target
     if not os.path.exists(target):
@@ -17,11 +17,11 @@ def add(args: Namespace) -> None:
     elif os.path.isdir(target):
         current_targets = config['Targets']['directories'].split()
 
-    relative_target_path = os.path.expanduser(target).replace(os.path.expanduser(config['Paths']['source']), '')[1:]
-    if relative_target_path in current_targets:
+    target_path = utils.expand_home_path(target)
+    if target_path in current_targets:
         print(f"Target {target} already in map file")
         return
-    current_targets.append(relative_target_path)
+    current_targets.append(target_path)
     current_targets = list(set(current_targets))
     current_targets.sort()
 
