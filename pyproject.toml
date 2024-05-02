@@ -24,3 +24,9 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Topic :: Desktop Environment :: File Managers"
 ]
+
+[tool.setuptools.packages.find]
+include = ["syndot", "syndot.*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.ini"]
