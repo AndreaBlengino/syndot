@@ -36,10 +36,10 @@ link_parser.add_argument('-f', '--force',
                          required = False,
                          help = 'force link in case of already existing dotfiles')
 link_parser.add_argument('-m', '--mapfile',
-                         required = True,
+                         required = False,
                          help = 'path to the map file')
 link_parser.add_argument('-t', '--target',
-                         # required = True,
+                         required = False,
                          help = 'path to the target dotfile')
 
 
@@ -54,10 +54,10 @@ unlink_parser.add_argument('-f', '--force',
                            required = False,
                            help = 'force unlink in case of already existing dotfiles')
 unlink_parser.add_argument('-m', '--mapfile',
-                           required = True,
+                           required = False,
                            help = 'path to the map file')
 unlink_parser.add_argument('-t', '--target',
-                           # required = True,
+                           required = False,
                            help = 'path to the target dotfile')
 
 
@@ -72,10 +72,10 @@ diffuse_parser.add_argument('-f', '--force',
                             required = False,
                             help = 'force diffuse in case of already existing dotfiles')
 diffuse_parser.add_argument('-m', '--mapfile',
-                            required = True,
+                            required = False,
                             help = 'path to the map file')
 diffuse_parser.add_argument('-t', '--target',
-                            # required = True,
+                            required = False,
                             help = 'path to the target dotfile')
 
 
