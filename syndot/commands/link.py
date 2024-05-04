@@ -75,15 +75,14 @@ def link(args: Namespace) -> None:
 
 
 def link_dotfile(settings_dir: str, system_target_path: str, settings_target_path: str, backup: bool) -> None:
-    if backup:
-        utils.copy(source = system_target_path, destination = settings_target_path)
-        utils.change_parent_owner(source = system_target_path, destination = settings_target_path,
-                                  settings_dir = settings_dir)
+    utils.copy(source = system_target_path, destination = settings_target_path)
+    utils.change_parent_owner(source = system_target_path, destination = settings_target_path,
+                              settings_dir = settings_dir)
+    if os.path.isdir(system_target_path):
         utils.change_child_owner(source = system_target_path, destination = settings_target_path)
+    if backup:
         backup_path = utils.generate_backup_path(path = system_target_path)
         os.rename(system_target_path, backup_path)
     else:
-        if not os.path.exists(os.path.dirname(settings_target_path)):
-            os.makedirs(os.path.dirname(settings_target_path))
-        shutil.move(system_target_path, settings_target_path)
+        utils.remove(system_target_path)
     os.symlink(settings_target_path, system_target_path)
