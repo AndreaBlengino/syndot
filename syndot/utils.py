@@ -54,7 +54,7 @@ def copy(source: str, destination: str) -> None:
     if os.path.isfile(source):
         shutil.copy2(source, destination)
     elif os.path.isdir(source):
-        shutil.copytree(source, destination)
+        shutil.copytree(source, destination, symlinks = True)
         st = os.stat(source)
         os.chown(destination, st.st_uid, st.st_gid)
 
