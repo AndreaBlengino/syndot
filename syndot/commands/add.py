@@ -17,6 +17,8 @@ def add(args: Namespace) -> None:
     elif os.path.isdir(target):
         current_targets = config['Targets']['directories'].split()
 
+    if target.endswith(os.sep):
+        target = target[:-1]
     target_path = utils.expand_home_path(target)
     if target_path in current_targets:
         print(f"Target {target} already in map file")
