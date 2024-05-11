@@ -22,7 +22,7 @@ init_parser.add_argument('-p', '--path',
 link_parser = command_parser.add_parser('link',
                                         prog = 'syndot link',
                                         usage = '%(prog)s [-b | --backup] [-m | --mapfile] MAPFILE '
-                                                '[-t | --target] TARGET',
+                                                '[[-a | --all] | TARGET_PATH_START]',
                                         description = 'Move dotfiles to destination directory and create symlinks to '
                                                       'them')
 link_parser.add_argument('-b', '--backup',
@@ -33,54 +33,72 @@ link_parser.add_argument('-b', '--backup',
 link_parser.add_argument('-m', '--mapfile',
                          required = False,
                          help = 'path to the map file')
-link_parser.add_argument('-t', '--target',
-                         required = False,
-                         help = 'path to the target dotfile')
+link_targets = link_parser.add_mutually_exclusive_group(required = True)
+link_targets.add_argument('TARGET_PATH_START',
+                          nargs = '?',
+                          help = 'targets starting path')
+link_targets.add_argument('-a', '--all',
+                          action = 'store_true',
+                          default = False,
+                          required = False,
+                          help = 'select all targets in the map file')
 
 
 unlink_parser = command_parser.add_parser('unlink',
                                           prog = 'syndot unlink',
-                                          usage = '%(prog)s [-m | --mapfile] MAPFILE [-t | --target] TARGET',
+                                          usage = '%(prog)s [-m | --mapfile] MAPFILE '
+                                                  '[[-a | --all] | TARGET_PATH_START]',
                                           description = 'Remove dotfiles symlinks and move them to original directory')
 unlink_parser.add_argument('-m', '--mapfile',
                            required = False,
                            help = 'path to the map file')
-unlink_parser.add_argument('-t', '--target',
-                           required = False,
-                           help = 'path to the target dotfile')
+unlink_targets = unlink_parser.add_mutually_exclusive_group(required = True)
+unlink_targets.add_argument('TARGET_PATH_START',
+                            nargs = '?',
+                            help = 'targets starting path')
+unlink_targets.add_argument('-a', '--all',
+                            action = 'store_true',
+                            default = False,
+                            required = False,
+                            help = 'select all targets in the map file')
 
 
 diffuse_parser = command_parser.add_parser('diffuse',
                                            prog = 'syndot diffuse',
-                                           usage = '%(prog)s [-m | --mapfile] MAPFILE [-t | --target] TARGET',
+                                           usage = '%(prog)s [-m | --mapfile] MAPFILE '
+                                                   '[[-a | --all] | TARGET_PATH_START]',
                                            description = 'Create dotfiles symlinks')
 diffuse_parser.add_argument('-m', '--mapfile',
                             required = False,
                             help = 'path to the map file')
-diffuse_parser.add_argument('-t', '--target',
-                            required = False,
-                            help = 'path to the target dotfile')
+diffuse_targets = diffuse_parser.add_mutually_exclusive_group(required = True)
+diffuse_targets.add_argument('TARGET_PATH_START',
+                             nargs = '?',
+                             help = 'targets starting path')
+diffuse_targets.add_argument('-a', '--all',
+                             action = 'store_true',
+                             default = False,
+                             required = False,
+                             help = 'select all targets in the map file')
 
 
 add_parser = command_parser.add_parser('add',
                                        prog = 'syndot add',
-                                       usage = '%(prog)s [-m | --mapfile] MAPFILE [-t | --target] TARGET',
+                                       usage = '%(prog)s [-m | --mapfile] MAPFILE TARGET_PATH',
                                        description = 'Add dotfiles to map file')
 add_parser.add_argument('-m', '--mapfile',
                         required = False,
                         help = 'path to the map file')
-add_parser.add_argument('-t', '--target',
-                        required = True,
+add_parser.add_argument('TARGET_PATH',
                         help = 'path to the target dotfile')
 
 
 remove_parser = command_parser.add_parser('remove',
                                           prog = 'syndot remove',
-                                          usage = '%(prog)s [-m | --mapfile] MAPFILE [-t | --target] TARGET',
+                                          usage = '%(prog)s [-m | --mapfile] MAPFILE TARGET_PATH',
                                           description = 'Remove dotfiles from map file')
 remove_parser.add_argument('-m', '--mapfile',
                            required = False,
                            help = 'path to the map file')
-remove_parser.add_argument('-t', '--target',
-                           required = True,
+remove_parser.add_argument('TARGET_PATH',
                            help = 'path to the target dotfile')
