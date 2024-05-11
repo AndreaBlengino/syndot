@@ -6,8 +6,7 @@ from syndot.commands.utils import skip_dotfiles
 
 
 def unlink(args: Namespace) -> None:
-    settings_dir, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile),
-                                               target = args.target)
+    settings_dir, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile), args = args)
 
     targets_to_be_unlinked = {}
     wrong_existing_links = {}

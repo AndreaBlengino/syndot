@@ -9,7 +9,7 @@ def remove(args: Namespace) -> None:
     config = utils.read_map_file(map_file_path = map_file_path)
     current_files = config['Targets']['files'].split()
     current_directories = config['Targets']['directories'].split()
-    target = args.target
+    target = args.TARGET_PATH
     if target.endswith(os.sep):
         target = target[:-1]
     if target in current_files:

@@ -1,3 +1,4 @@
+from argparse import Namespace
 from configparser import ConfigParser
 import os
 import shutil
@@ -19,19 +20,19 @@ def read_map_file(map_file_path: str | None) -> ConfigParser:
     return config
 
 
-def get_map_info(config: ConfigParser, target: str | None) -> tuple[str, list[str]]:
+def get_map_info(config: ConfigParser, args: Namespace) -> tuple[str, list[str]]:
     settings_dir = config['Path']['settings_dir']
     target_directories = config['Targets']['directories'].split()
     target_files = config['Targets']['files'].split()
-    if target is None:
+    if args.TARGET_PATH_START is None and args.all:
         targets = [*target_files, *target_directories]
     else:
         targets = []
         for file in target_files:
-            if file.startswith(target):
+            if file.startswith(args.TARGET_PATH_START):
                 targets.append(file)
         for directory in target_directories:
-            if directory.startswith(target):
+            if directory.startswith(args.TARGET_PATH_START):
                 targets.append(directory)
 
     return settings_dir, targets

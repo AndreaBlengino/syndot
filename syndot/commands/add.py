@@ -6,7 +6,7 @@ from syndot import utils
 def add(args: Namespace) -> None:
     map_file_path = utils.expand_home_path(args.mapfile if args.mapfile is not None else 'map.ini')
 
-    target = args.target
+    target = args.TARGET_PATH
     if not os.path.exists(target):
         raise OSError(f"Target {target} not found")
 
