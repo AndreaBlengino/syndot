@@ -113,28 +113,11 @@ def compose_target_paths(settings_dir: str, target: str) -> tuple[str, str]:
     return system_target_path, settings_target_path
 
 
-def compose_force_question(target_path: str, target_is_in_system: bool, command: str) -> str:
-    question = ''
-    target_type = 'System' if target_is_in_system else 'Settings'
-    if os.path.isfile(target_path):
-        question = f"{target_type} file {target_path} already exists. Force {command}"
-    elif os.path.isdir(target_path):
-        question = f"{target_type} directory {target_path} already exists. Force {command}"
-    return question
-
-
-def prompt_question(question: str, default: str | None = None) -> bool:
+def ask_to_proceed(question: str) -> bool:
     choice = ''
-    if default is not None:
-        if VALID_PROMPT_CHOICES[default]:
-            default_text = ' (Y/n)? '
-        else:
-            default_text = ' (y/N)? '
-    else:
-        default_text = ' (y/n)? '
     while choice not in VALID_PROMPT_CHOICES:
-        choice = input(question + default_text).lower()
-        if default is not None and choice == '':
-            choice = default
+        choice = input(question).lower()
+        if choice == '':
+            choice = 'n'
 
     return VALID_PROMPT_CHOICES[choice]
