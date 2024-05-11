@@ -10,6 +10,8 @@ def remove(args: Namespace) -> None:
     current_files = config['Targets']['files'].split()
     current_directories = config['Targets']['directories'].split()
     target = args.target
+    if target.endswith(os.sep):
+        target = target[:-1]
     if target in current_files:
         current_files.remove(target)
         config['Targets']['files'] = '\n' + '\n'.join(current_files)
