@@ -2,6 +2,7 @@ from argparse import Namespace
 from configparser import ConfigParser
 import os
 import shutil
+from syndot.colors import Color
 
 
 VALID_PROMPT_CHOICES = {'y': True, 'ye': True, 'yes': True, 'n': False, 'no': False}
@@ -128,3 +129,22 @@ def ask_to_proceed(question: str) -> bool:
             choice = 'n'
 
     return VALID_PROMPT_CHOICES[choice]
+
+
+def print_action(action_type: str, system_target_path: str, settings_target_path: str) -> None:
+    if action_type == 'link':
+        action = 'Linking'
+        preposition = 'to'
+        print(f"{action} {Color.link(system_target_path)} {preposition} {Color.settings(settings_target_path)}")
+    elif action_type == 'unlink':
+        action = 'Unlinking'
+        preposition = 'from'
+        print(f"{action} {Color.link(system_target_path)} {preposition} {Color.settings(settings_target_path)}")
+    elif action_type == 'diffuse':
+        action = 'Diffusing'
+        preposition = 'to'
+        print(f"{action} {Color.settings(settings_target_path)} {preposition} {Color.link(system_target_path)}")
+
+
+def print_relationship(system_target_path: str, settings_target_path: str, symbol: str) -> None:
+    print(f"{Color.link(system_target_path)} {Color.symbol(symbol)} {Color.settings(settings_target_path)}")

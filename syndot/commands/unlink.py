@@ -108,21 +108,29 @@ def unlink_dotfiles(targets_list: dict[str, str],
         if n_targets > 1:
             print(many_targets_sentence)
             for system_target_path, settings_target_path in targets_list.items():
-                print(f"{system_target_path} -x-> {settings_target_path}")
+                utils.print_relationship(system_target_path = system_target_path,
+                                         settings_target_path = settings_target_path,
+                                         symbol = '-x->')
             proceed = utils.ask_to_proceed(question = many_targets_question)
         else:
             if os.path.isfile(list(targets_list.keys())[0]):
                 print(single_file_sentence)
-                print(f"{list(targets_list.keys())[0]} -x-> {list(targets_list.values())[0]}")
+                utils.print_relationship(system_target_path = list(targets_list.keys())[0],
+                                         settings_target_path = list(targets_list.values())[0],
+                                         symbol = '-x->')
                 proceed = utils.ask_to_proceed(question = single_file_question)
             else:
                 print(single_directory_sentence)
-                print(f"{list(targets_list.keys())[0]} -x-> {list(targets_list.values())[0]}")
+                utils.print_relationship(system_target_path = list(targets_list.keys())[0],
+                                         settings_target_path = list(targets_list.values())[0],
+                                         symbol = '-x->')
                 proceed = utils.ask_to_proceed(question = single_directory_question)
 
         if proceed:
             for i, (system_target_path, settings_target_path) in enumerate(targets_list.items(), 1):
-                print(f"Unlinking {system_target_path} from {settings_target_path}")
+                utils.print_action(action_type = 'unlink',
+                                   system_target_path = system_target_path,
+                                   settings_target_path = settings_target_path)
                 print(f"Total ({i}/{n_targets})", end = '\r')
 
                 utils.remove(path = system_target_path)
