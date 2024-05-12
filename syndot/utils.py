@@ -121,10 +121,10 @@ def compose_target_paths(settings_dir: str, target: str) -> tuple[str, str]:
     return system_target_path, settings_target_path
 
 
-def ask_to_proceed(question: str) -> bool:
+def ask_to_proceed() -> bool:
     choice = ''
     while choice not in VALID_PROMPT_CHOICES:
-        choice = input(question).lower()
+        choice = input("Do you want to proceed (y/N)? ").lower()
         if choice == '':
             choice = 'n'
 
@@ -148,3 +148,7 @@ def print_action(action_type: str, system_target_path: str, settings_target_path
 
 def print_relationship(system_target_path: str, settings_target_path: str, symbol: str) -> None:
     print(f"{Color.link(system_target_path)} {Color.symbol(symbol)} {Color.settings(settings_target_path)}")
+
+
+def print_highlight(sentence: str) -> None:
+    print(f"{Color.highlight(sentence)}")

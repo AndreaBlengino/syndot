@@ -14,6 +14,8 @@ def diffuse(args: Namespace) -> None:
     missing_settings_targets = []
     settings_are_links = []
 
+    utils.print_highlight('Looking for files and directories to diffuse...')
+
     for target in targets:
         system_target_path, settings_target_path = utils.compose_target_paths(settings_dir = settings_dir,
                                                                               target = target)
@@ -36,40 +38,41 @@ def diffuse(args: Namespace) -> None:
 
     diffuse_dotfiles(targets_list = targets_to_be_diffused,
                      many_targets_sentence = f"Found {len(targets_to_be_diffused.keys())} files or directories to be "
-                                             f"diffused:",
-                     many_targets_question = "\nDo you want to proceed to diffuse the above listed files and "
-                                             "directories (y/N)? ",
-                     single_file_sentence = f"Found {len(targets_to_be_diffused.keys())} file to be diffused:",
-                     single_file_question = "\nDo you want to proceed to diffuse this file (y/N)? ",
+                                             f"diffused.\nSymbolic links to these settings files and directories will "
+                                             f"be created in the respective system directories.",
+                     single_file_sentence = f"Found {len(targets_to_be_diffused.keys())} file to be diffused.\nA "
+                                            f"symbolic link to this file will be created in the respective system "
+                                            f"directory.",
                      single_directory_sentence = f"Found {len(targets_to_be_diffused.keys())} directory to be "
-                                                 f"diffused:",
-                     single_directory_question = "\nDo you want to proceed to diffuse this directory (y/N)? ",
+                                                 f"diffused.\nA symbolic link to this directory will be created in the "
+                                                 f"respective system directory.",
                      remove_system = False)
 
     diffuse_dotfiles(targets_list = already_existing_system,
                      many_targets_sentence = f"Found {len(already_existing_system.keys())} already existing system "
-                                             f"files or directories:",
-                     many_targets_question = "\nDo you want to proceed to diffuse the above listed files and "
-                                             "directories (y/N)? ",
+                                             f"files or directories.\nThey will be removed and replaced by symbolic "
+                                             f"links to the respective files and directories in the settings "
+                                             f"directory.",
                      single_file_sentence = f"Found {len(already_existing_system.keys())} already existing system "
-                                            f"file:",
-                     single_file_question = "\nDo you want to proceed to diffuse this file (y/N)? ",
+                                            f"file.\nIt will be removed and replaced by a symbolic link to the "
+                                            f"respective file in the settings directory.",
                      single_directory_sentence = f"Found {len(already_existing_system.keys())} already existing system "
-                                                 f"directory:",
-                     single_directory_question = "\nDo you want to proceed to diffuse this directory (y/N)? ",
+                                                 f"directory.\nIt will be removed and replaced by a symbolic link to "
+                                                 f"the respective directory in the settings directory.",
                      remove_system = True)
 
     diffuse_dotfiles(targets_list = wrong_existing_links,
                      many_targets_sentence = f"Found {len(wrong_existing_links.keys())} files or directories that are "
-                                             f"links to wrong files or directories:",
-                     many_targets_question = "\nDo you want to proceed to diffuse the above listed files and "
-                                             "directories (y/N)? ",
+                                             f"links to wrong files or directories.\nThey will be removed and replaced "
+                                             f"by symbolic links to the respective files and directories in the "
+                                             f"settings directory.",
                      single_file_sentence = f"Found {len(wrong_existing_links.keys())} file that is a link to a wrong "
-                                            f"file:",
-                     single_file_question = "\nDo you want to proceed to diffuse this file (y/N)? ",
+                                            f"file.\nIt will be removed and replaced by a symbolic link to the "
+                                            f"respective file in the settings directory.",
                      single_directory_sentence = f"Found {len(wrong_existing_links.keys())} directory that is a link "
-                                                 f"to a wrong directory:",
-                     single_directory_question = "\nDo you want to proceed to diffuse this directory (y/N)? ",
+                                                 f"to a wrong directory.\nIt will be removed and replaced by a "
+                                                 f"symbolic link to the respective directory in the settings "
+                                                 f"directory.",
                      remove_system = True)
 
     skip_dotfiles(targets_list = already_diffused_targets,
@@ -94,34 +97,31 @@ def diffuse(args: Namespace) -> None:
 
 def diffuse_dotfiles(targets_list: dict[str, str],
                      many_targets_sentence: str,
-                     many_targets_question: str,
                      single_file_sentence: str,
-                     single_file_question: str,
                      single_directory_sentence: str,
-                     single_directory_question: str,
                      remove_system: bool) -> None:
     if targets_list:
         n_targets = len(targets_list.keys())
         if n_targets > 1:
-            print(many_targets_sentence)
             for system_target_path, settings_target_path in targets_list.items():
                 utils.print_relationship(system_target_path = system_target_path,
                                          settings_target_path = settings_target_path,
                                          symbol = '<--')
-            proceed = utils.ask_to_proceed(question = many_targets_question)
+            utils.print_highlight(many_targets_sentence)
+            proceed = utils.ask_to_proceed()
         else:
-            if os.path.isfile(list(targets_list.keys())[0]):
-                print(single_file_sentence)
+            if os.path.isfile(list(targets_list.values())[0]):
                 utils.print_relationship(system_target_path = list(targets_list.keys())[0],
                                          settings_target_path = list(targets_list.values())[0],
                                          symbol = '<--')
-                proceed = utils.ask_to_proceed(question = single_file_question)
+                utils.print_highlight(single_file_sentence)
+                proceed = utils.ask_to_proceed()
             else:
-                print(single_directory_sentence)
                 utils.print_relationship(system_target_path = list(targets_list.keys())[0],
                                          settings_target_path = list(targets_list.values())[0],
                                          symbol = '<--')
-                proceed = utils.ask_to_proceed(question = single_directory_question)
+                utils.print_highlight(single_directory_sentence)
+                proceed = utils.ask_to_proceed()
 
         if proceed:
             for i, (system_target_path, settings_target_path) in enumerate(targets_list.items(), 1):

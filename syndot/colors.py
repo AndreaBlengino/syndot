@@ -19,16 +19,22 @@ class Color:
     LINK_COLOR = get_ansi_color('link')
     SYMBOL_COLOR = get_ansi_color('symbol')
     SETTINGS_COLOR = get_ansi_color('settings')
-    END_SEQUENCE = "\x1b[0m"
+    BOLD_START_SEQUENCE = "\033[1m"
+    BOLD_END_SEQUENCE = "\033[0m"
+    COLOR_END_SEQUENCE = "\x1b[0m"
 
     @classmethod
     def link(cls, link: str) -> str:
-        return cls.LINK_COLOR + link + cls.END_SEQUENCE
+        return cls.LINK_COLOR + link + cls.COLOR_END_SEQUENCE
 
     @classmethod
     def symbol(cls, symbol: str) -> str:
-        return cls.SYMBOL_COLOR + symbol + cls.END_SEQUENCE
+        return cls.SYMBOL_COLOR + symbol + cls.COLOR_END_SEQUENCE
 
     @classmethod
     def settings(cls, settings: str) -> str:
-        return cls.SETTINGS_COLOR + settings + cls.END_SEQUENCE
+        return cls.SETTINGS_COLOR + settings + cls.COLOR_END_SEQUENCE
+
+    @classmethod
+    def highlight(cls, sentence: str) -> str:
+        return cls.BOLD_START_SEQUENCE + sentence + cls.BOLD_END_SEQUENCE

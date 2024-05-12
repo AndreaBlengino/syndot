@@ -14,6 +14,8 @@ def link(args: Namespace) -> None:
     corrupted_targets = []
     wrong_existing_links = []
 
+    utils.print_highlight('Looking for files and directories to link...')
+
     for target in targets:
         system_target_path, settings_target_path = utils.compose_target_paths(settings_dir = settings_dir,
                                                                               target = target)
@@ -38,93 +40,90 @@ def link(args: Namespace) -> None:
     link_dotfiles(targets_list = targets_to_be_linked,
                   settings_dir = settings_dir,
                   backup = args.backup,
-                  many_targets_sentence = f"Found {len(targets_to_be_linked.keys())} files or directories to be "
-                                          f"linked:",
-                  many_targets_question = "\nDo you want to proceed to link the above listed files and directories "
-                                          "(y/N)? ",
-                  single_file_sentence = f"Found {len(targets_to_be_linked.keys())} file to be linked:",
-                  single_file_question = "\nDo you want to proceed to link this file (y/N)? ",
-                  single_directory_sentence = f"Found {len(targets_to_be_linked.keys())} directory to be linked:",
-                  single_directory_question = "\nDo you want to proceed to link this directory (y/N)? ",
+                  many_targets_sentence = f"Found {len(targets_to_be_linked.keys())} files or directories to link.\n"
+                                          f"They will be moved to settings directory and will be replaced by "
+                                          f"symbolic links.",
+                  single_file_sentence = f"Found {len(targets_to_be_linked.keys())} file to link.\nIt will be moved to "
+                                         f"settings directory and will be replaced by a symbolic link.",
+                  single_directory_sentence = f"Found {len(targets_to_be_linked.keys())} directory to link.\nIt will "
+                                              f"be moved to settings directory and will be replaced by a symbolic "
+                                              f"link.",
                   remove_settings = False)
 
     link_dotfiles(targets_list = already_existing_settings,
                   settings_dir = settings_dir,
                   backup = args.backup,
                   many_targets_sentence = f"Found {len(already_existing_settings.keys())} already existing files or "
-                                          f"directories in settings directory:",
-                  many_targets_question = "\nDo you want to remove the files and directory from settings directory and "
-                                          "proceed to link the correspondent ones (y/N)? ",
+                                          f"directories in settings directory.\nThey will be removed, then the "
+                                          f"respective files and directories from the system will be moved to settings "
+                                          f"directory and will be replaced by symbolic links.",
                   single_file_sentence = f"Found {len(already_existing_settings.keys())} already existing file in "
-                                         f"settings directory:",
-                  single_file_question = "\nDo you want to remove this file from settings directory and proceed to "
-                                         "link the correspondent one (y/N)? ",
+                                         f"settings directory.\nIt will be removed, then the respective file from the "
+                                         f"system will be moved to settings directory and will be replaced by a "
+                                         f"symbolic link.",
                   single_directory_sentence = f"Found {len(already_existing_settings.keys())} already existing "
-                                              f"directory in settings directory:",
-                  single_directory_question = "\nDo you want to remove this directory from settings directory and "
-                                              "proceed to link the correspondent one (y/N)? ",
+                                              f"directory in settings directory.\nIt will be removed, then the "
+                                              f"respective directory from the system will be moved to settings "
+                                              f"directory and will be replaced by a symbolic link.",
                   remove_settings = True)
 
     skip_dotfiles(targets_list = missing_system_targets,
-                  many_targets_sentence = f"Skipping {len(missing_system_targets)} missing files or directories:",
-                  single_file_sentence = f"Skipping {len(missing_system_targets)} missing file:",
-                  single_directory_sentence = f"Skipping {len(missing_system_targets)} missing directory:")
+                  many_targets_sentence = f"Skipping {len(missing_system_targets)} missing files or directories.",
+                  single_file_sentence = f"Skipping {len(missing_system_targets)} missing file.",
+                  single_directory_sentence = f"Skipping {len(missing_system_targets)} missing directory.")
 
     skip_dotfiles(targets_list = already_linked_targets,
                   many_targets_sentence = f"Skipping {len(already_linked_targets)} already linked files or "
-                                          f"directories:",
-                  single_file_sentence = f"Skipping {len(already_linked_targets)} already linked file:",
-                  single_directory_sentence = f"Skipping {len(already_linked_targets)} already linked directory:")
+                                          f"directories.",
+                  single_file_sentence = f"Skipping {len(already_linked_targets)} already linked file.",
+                  single_directory_sentence = f"Skipping {len(already_linked_targets)} already linked directory.")
 
     skip_dotfiles(targets_list = corrupted_targets,
                   many_targets_sentence = f"Skipping {len(corrupted_targets)} files or directories because are links "
-                                          f"to non-existing files or directories:",
+                                          f"to non-existing files or directories.",
                   single_file_sentence = f"Skipping {len(corrupted_targets)} file because is a link to a non-existing "
-                                         f"file:",
+                                         f"file.",
                   single_directory_sentence = f"Skipping {len(corrupted_targets)} directory because is a link to a "
-                                              f"non-existing directory:")
+                                              f"non-existing directory.")
 
     skip_dotfiles(targets_list = wrong_existing_links,
                   many_targets_sentence = f"Skipping {len(wrong_existing_links)} files or directories because are "
-                                          f"links to wrong existing files or directories:",
+                                          f"links to wrong existing files or directories.",
                   single_file_sentence = f"Skipping {len(wrong_existing_links)} file because is a link to a wrong "
-                                         f"existing file:",
+                                         f"existing file.",
                   single_directory_sentence = f"Skipping {len(wrong_existing_links)} directory because is a link to a "
-                                              f"wrong existing directory:")
+                                              f"wrong existing directory.")
 
 
 def link_dotfiles(targets_list: dict[str, str],
                   settings_dir: str,
                   backup: bool,
                   many_targets_sentence: str,
-                  many_targets_question: str,
                   single_file_sentence: str,
-                  single_file_question: str,
                   single_directory_sentence: str,
-                  single_directory_question: str,
                   remove_settings: bool) -> None:
     if targets_list:
         n_targets = len(targets_list.keys())
         if n_targets > 1:
-            print(many_targets_sentence)
             for system_target_path, settings_target_path in targets_list.items():
                 utils.print_relationship(system_target_path = system_target_path,
                                          settings_target_path = settings_target_path,
                                          symbol = '-->')
-            proceed = utils.ask_to_proceed(question = many_targets_question)
+            utils.print_highlight(many_targets_sentence)
+            proceed = utils.ask_to_proceed()
         else:
             if os.path.isfile(list(targets_list.keys())[0]):
-                print(single_file_sentence)
                 utils.print_relationship(system_target_path = list(targets_list.keys())[0],
                                          settings_target_path = list(targets_list.values())[0],
                                          symbol = '-->')
-                proceed = utils.ask_to_proceed(question = single_file_question)
+                utils.print_highlight(single_file_sentence)
+                proceed = utils.ask_to_proceed()
             else:
-                print(single_directory_sentence)
                 utils.print_relationship(system_target_path = list(targets_list.keys())[0],
                                          settings_target_path = list(targets_list.values())[0],
                                          symbol = '-->')
-                proceed = utils.ask_to_proceed(question = single_directory_question)
+                utils.print_highlight(single_directory_sentence)
+                proceed = utils.ask_to_proceed()
 
         if proceed:
             for i, (system_target_path, settings_target_path) in enumerate(targets_list.items(), 1):
