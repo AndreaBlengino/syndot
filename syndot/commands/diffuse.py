@@ -36,6 +36,10 @@ def diffuse(args: Namespace) -> None:
         else:
             settings_are_links.append(settings_target_path)
 
+    if not any([targets_to_be_diffused, already_existing_system, already_diffused_targets, wrong_existing_links,
+                missing_settings_targets, settings_are_links]):
+        utils.print_highlight('No files or directories found to diffuse.')
+
     diffuse_dotfiles(targets_list = targets_to_be_diffused,
                      many_targets_sentence = f"Found {len(targets_to_be_diffused.keys())} files or directories to be "
                                              f"diffused.\nSymbolic links to these settings files and directories will "

@@ -41,6 +41,10 @@ def unlink(args: Namespace) -> None:
         else:
             settings_are_links.append(settings_target_path)
 
+    if not any([targets_to_be_unlinked, wrong_existing_links, already_existing_system, already_unlinked_targets,
+                missing_settings_targets, settings_are_links]):
+        utils.print_highlight('No files or directories found to unlink.')
+
     unlink_dotfiles(targets_list = targets_to_be_unlinked,
                     settings_dir = settings_dir,
                     many_targets_sentence = f"Found {len(targets_to_be_unlinked.keys())} files or directories to "

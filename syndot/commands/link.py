@@ -37,6 +37,10 @@ def link(args: Namespace) -> None:
             else:
                 wrong_existing_links.append(system_target_path)
 
+    if not any([targets_to_be_linked, already_existing_settings, missing_system_targets, already_linked_targets,
+                corrupted_targets, wrong_existing_links]):
+        utils.print_highlight('No files or directories found to link.')
+
     link_dotfiles(targets_list = targets_to_be_linked,
                   settings_dir = settings_dir,
                   backup = args.backup,
