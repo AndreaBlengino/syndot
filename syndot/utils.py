@@ -30,11 +30,19 @@ def get_map_info(config: ConfigParser, args: Namespace) -> tuple[str, list[str]]
     else:
         targets = []
         for file in target_files:
-            if file.startswith(args.TARGET_PATH_START):
-                targets.append(file)
+            if args.exact:
+                if file == args.TARGET_PATH_START:
+                    targets.append(file)
+            else:
+                if file.startswith(args.TARGET_PATH_START):
+                    targets.append(file)
         for directory in target_directories:
-            if directory.startswith(args.TARGET_PATH_START):
-                targets.append(directory)
+            if args.exact:
+                if directory == args.TARGET_PATH_START:
+                    targets.append(directory)
+            else:
+                if directory.startswith(args.TARGET_PATH_START):
+                    targets.append(directory)
 
     return settings_dir, targets
 

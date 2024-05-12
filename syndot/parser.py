@@ -21,7 +21,7 @@ init_parser.add_argument('-p', '--path',
 
 link_parser = command_parser.add_parser('link',
                                         prog = 'syndot link',
-                                        usage = '%(prog)s [-b | --backup] [-m | --mapfile] MAPFILE '
+                                        usage = '%(prog)s [-b | --backup] [-e | --exact] [-m | --mapfile] MAPFILE '
                                                 '[[-a | --all] | TARGET_PATH_START]',
                                         description = 'Move dotfiles to destination directory and create symlinks to '
                                                       'them')
@@ -30,6 +30,11 @@ link_parser.add_argument('-b', '--backup',
                          default = False,
                          required = False,
                          help = 'create a backup copy of the original dotfiles')
+link_parser.add_argument('-e', '--exact',
+                         action = 'store_true',
+                         default = False,
+                         required = False,
+                         help = 'search for an exact match for the target path')
 link_parser.add_argument('-m', '--mapfile',
                          required = False,
                          help = 'path to the map file')
@@ -46,9 +51,14 @@ link_targets.add_argument('-a', '--all',
 
 unlink_parser = command_parser.add_parser('unlink',
                                           prog = 'syndot unlink',
-                                          usage = '%(prog)s [-m | --mapfile] MAPFILE '
+                                          usage = '%(prog)s [-e | --exact] [-m | --mapfile] MAPFILE '
                                                   '[[-a | --all] | TARGET_PATH_START]',
                                           description = 'Remove dotfiles symlinks and move them to original directory')
+unlink_parser.add_argument('-e', '--exact',
+                           action = 'store_true',
+                           default = False,
+                           required = False,
+                           help = 'search for an exact match for the target path')
 unlink_parser.add_argument('-m', '--mapfile',
                            required = False,
                            help = 'path to the map file')
@@ -65,9 +75,14 @@ unlink_targets.add_argument('-a', '--all',
 
 diffuse_parser = command_parser.add_parser('diffuse',
                                            prog = 'syndot diffuse',
-                                           usage = '%(prog)s [-m | --mapfile] MAPFILE '
+                                           usage = '%(prog)s [-e | --exact] [-m | --mapfile] MAPFILE '
                                                    '[[-a | --all] | TARGET_PATH_START]',
                                            description = 'Create dotfiles symlinks')
+diffuse_parser.add_argument('-e', '--exact',
+                            action = 'store_true',
+                            default = False,
+                            required = False,
+                            help = 'search for an exact match for the target path')
 diffuse_parser.add_argument('-m', '--mapfile',
                             required = False,
                             help = 'path to the map file')
