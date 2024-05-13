@@ -158,5 +158,5 @@ def print_relationship(system_target_path: str, settings_target_path: str, symbo
     print(f"{Color.link(system_target_path)} {Color.symbol(symbol)} {Color.settings(settings_target_path)}")
 
 
-def print_highlight(sentence: str) -> None:
-    print(f"{Color.highlight(sentence)}")
+def print_highlight(sentence: str, end: str = '\n') -> None:
+    print(f"{Color.highlight(sentence)}", end = end)

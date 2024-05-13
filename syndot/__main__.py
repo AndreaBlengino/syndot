@@ -9,6 +9,7 @@ command_map = {'init': commands.init,
                'unlink': commands.unlink,
                'diffuse': commands.diffuse,
                'add': commands.add,
-               'remove': commands.remove}
+               'remove': commands.remove,
+               'list': commands.list_}
 
 command_map[args.command](args = args)

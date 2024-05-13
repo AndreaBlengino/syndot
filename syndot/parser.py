@@ -29,7 +29,7 @@ link_parser.add_argument('-b', '--backup',
                          action = 'store_true',
                          default = False,
                          required = False,
-                         help = 'create a backup copy of the original dotfiles')
+                         help = 'create a backup copy of the original dotfile')
 link_parser.add_argument('-e', '--exact',
                          action = 'store_true',
                          default = False,
@@ -117,3 +117,12 @@ remove_parser.add_argument('-m', '--mapfile',
                            help = 'path to the map file')
 remove_parser.add_argument('TARGET_PATH',
                            help = 'path to the target dotfile')
+
+
+list_parser = command_parser.add_parser('list',
+                                        prog = 'syndot list',
+                                        usage = '%(prog)s [-m | --mapfile] MAPFILE TARGET_PATH',
+                                        description = 'List dotfiles in the map file')
+list_parser.add_argument('-m', '--mapfile',
+                         required = False,
+                         help = 'path to the map file')
