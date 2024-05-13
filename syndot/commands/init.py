@@ -1,12 +1,15 @@
 from argparse import Namespace
 from configparser import ConfigParser
 import os
+from syndot.init_config import CONFIG_DIR_PATH
 from syndot.utils.path import expand_home_path
 from syndot.utils.map_file import read_map_file, write_map_file
 
 
 DEFAULT_SETTINGS_DIR = '~/Settings'
-MAP_TEMPLATE_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), '_templates', 'map.ini')
+MAP_TEMPLATE_PATH = os.path.join(CONFIG_DIR_PATH, 'templates', 'map.ini')
+if not os.path.exists(CONFIG_DIR_PATH) or not os.path.exists(MAP_TEMPLATE_PATH):
+    MAP_TEMPLATE_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), '_templates', 'map.ini')
 
 
 def init(args: Namespace) -> None:
