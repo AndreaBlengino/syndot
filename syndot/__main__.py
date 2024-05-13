@@ -1,7 +1,9 @@
 from syndot import commands
 from syndot.parser import parser
+from syndot import init_config
 
 
+init_config.init_config()
 args = parser.parse_args()
 
 command_map = {'init': commands.init,
