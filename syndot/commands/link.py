@@ -1,11 +1,15 @@
 from argparse import Namespace
 import os
-from syndot import utils
-from syndot.commands.utils import skip_dotfiles
+from syndot.utils.commands import skip_dotfiles
+from syndot.utils.file_actions import change_parent_owner, change_child_owner, copy, remove
+from syndot.utils.map_file import get_map_info, read_map_file
+from syndot.utils.path import compose_target_paths, generate_backup_path
+from syndot.utils.print_ import print_action, print_highlight, print_relationship
+from syndot.utils.prompt import ask_to_proceed
 
 
 def link(args: Namespace) -> None:
-    settings_dir, targets = utils.get_map_info(config = utils.read_map_file(map_file_path = args.mapfile), args = args)
+    settings_dir, targets = get_map_info(config = read_map_file(map_file_path = args.mapfile), args = args)
 
     targets_to_be_linked = {}
     already_existing_settings = {}
@@ -14,11 +18,10 @@ def link(args: Namespace) -> None:
     corrupted_targets = []
     wrong_existing_links = []
 
-    utils.print_highlight('Looking for files and directories to link...')
+    print_highlight('Looking for files and directories to link...')
 
     for target in targets:
-        system_target_path, settings_target_path = utils.compose_target_paths(settings_dir = settings_dir,
-                                                                              target = target)
+        system_target_path, settings_target_path = compose_target_paths(settings_dir = settings_dir, target = target)
 
         if not os.path.islink(system_target_path):
             if os.path.exists(system_target_path):
@@ -39,7 +42,7 @@ def link(args: Namespace) -> None:
 
     if not any([targets_to_be_linked, already_existing_settings, missing_system_targets, already_linked_targets,
                 corrupted_targets, wrong_existing_links]):
-        utils.print_highlight('No files or directories found to link.')
+        print_highlight('No files or directories found to link.')
 
     link_dotfiles(targets_list = targets_to_be_linked,
                   settings_dir = settings_dir,
@@ -110,43 +113,44 @@ def link_dotfiles(targets_list: dict[str, str],
         n_targets = len(targets_list.keys())
         if n_targets > 1:
             for system_target_path, settings_target_path in targets_list.items():
-                utils.print_relationship(system_target_path = system_target_path,
-                                         settings_target_path = settings_target_path,
-                                         symbol = '-->')
-            utils.print_highlight(many_targets_sentence)
-            proceed = utils.ask_to_proceed()
+                print_relationship(system_target_path = system_target_path,
+                                   settings_target_path = settings_target_path,
+                                   symbol = '-->')
+            print_highlight(many_targets_sentence)
+            proceed = ask_to_proceed()
         else:
             if os.path.isfile(list(targets_list.keys())[0]):
-                utils.print_relationship(system_target_path = list(targets_list.keys())[0],
-                                         settings_target_path = list(targets_list.values())[0],
-                                         symbol = '-->')
-                utils.print_highlight(single_file_sentence)
-                proceed = utils.ask_to_proceed()
+                print_relationship(system_target_path = list(targets_list.keys())[0],
+                                   settings_target_path = list(targets_list.values())[0],
+                                   symbol = '-->')
+                print_highlight(single_file_sentence)
+                proceed = ask_to_proceed()
             else:
-                utils.print_relationship(system_target_path = list(targets_list.keys())[0],
-                                         settings_target_path = list(targets_list.values())[0],
-                                         symbol = '-->')
-                utils.print_highlight(single_directory_sentence)
-                proceed = utils.ask_to_proceed()
+                print_relationship(system_target_path = list(targets_list.keys())[0],
+                                   settings_target_path = list(targets_list.values())[0],
+                                   symbol = '-->')
+                print_highlight(single_directory_sentence)
+                proceed = ask_to_proceed()
 
         if proceed:
             for i, (system_target_path, settings_target_path) in enumerate(targets_list.items(), 1):
-                utils.print_action(action_type = 'link',
-                                   system_target_path = system_target_path,
-                                   settings_target_path = settings_target_path)
+                print_action(action_type = 'link',
+                             system_target_path = system_target_path,
+                             settings_target_path = settings_target_path)
                 print(f"Total ({i}/{n_targets})", end = '\r')
 
                 if remove_settings:
-                    utils.remove(path = settings_target_path)
-                utils.copy(source = system_target_path, destination = settings_target_path)
-                utils.change_parent_owner(source = system_target_path, destination = settings_target_path,
-                                          settings_dir = settings_dir)
+                    remove(path = settings_target_path)
+                copy(source = system_target_path, destination = settings_target_path)
+                change_parent_owner(source = system_target_path,
+                                    destination = settings_target_path,
+                                    settings_dir = settings_dir)
                 if os.path.isdir(system_target_path):
-                    utils.change_child_owner(source = system_target_path, destination = settings_target_path)
+                    change_child_owner(source = system_target_path, destination = settings_target_path)
                 if backup:
-                    backup_path = utils.generate_backup_path(path = system_target_path)
+                    backup_path = generate_backup_path(path = system_target_path)
                     os.rename(system_target_path, backup_path)
                 else:
-                    utils.remove(system_target_path)
+                    remove(system_target_path)
                 os.symlink(settings_target_path, system_target_path)
         print()

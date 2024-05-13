@@ -1,5 +1,5 @@
 import os
-from syndot.utils import print_highlight
+from syndot.utils.print_ import print_highlight
 
 
 def skip_dotfiles(targets_list: list[str],
