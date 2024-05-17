@@ -22,3 +22,7 @@ def print_relationship(system_target_path: str, settings_target_path: str, symbo
 
 def print_highlight(sentence: str, end: str = '\n') -> None:
     print(f"{Color.highlight(sentence)}", end = end)
+
+
+def print_error(error: str, end: str = '\n') -> None:
+    print(f"{Color.error(error)}", end = end)

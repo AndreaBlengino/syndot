@@ -6,6 +6,7 @@ from syndot.utils.file_actions import copy
 SOURCE_PATH = os.path.dirname(__file__)
 HOME_PATH = expand_home_path('~')
 CONFIG_DIR_PATH = os.path.join(HOME_PATH, '.config', 'syndot')
+LOG_FILE_PATH = os.path.join(CONFIG_DIR_PATH, 'log_file.log')
 
 
 def copy_sources(source: str, destination: str) -> None:
@@ -19,3 +20,6 @@ def init_config() -> None:
 
         copy_sources(source = '_templates', destination = 'templates')
         copy_sources(source = '_colorschemes', destination = 'colorschemes')
+
+        with open(LOG_FILE_PATH, 'w') as log_file:
+            log_file.write('')

@@ -10,7 +10,8 @@ color_config = ConfigParser()
 color_config.read(COLORSCHEME_PATH)
 COLOR_MAP = {'link': 'Color6',
              'symbol': 'Color0',
-             'settings': 'Color1'}
+             'settings': 'Color1',
+             'error': 'Color4'}
 
 
 def get_ansi_color(color_type: str) -> str:
@@ -22,6 +23,7 @@ class Color:
     LINK_COLOR = get_ansi_color('link')
     SYMBOL_COLOR = get_ansi_color('symbol')
     SETTINGS_COLOR = get_ansi_color('settings')
+    ERROR_COLOR = get_ansi_color('error')
     BOLD_START_SEQUENCE = "\033[1m"
     BOLD_END_SEQUENCE = "\033[0m"
     COLOR_END_SEQUENCE = "\x1b[0m"
@@ -37,6 +39,10 @@ class Color:
     @classmethod
     def settings(cls, settings: str) -> str:
         return cls.SETTINGS_COLOR + settings + cls.COLOR_END_SEQUENCE
+
+    @classmethod
+    def error(cls, error: str) -> str:
+        return cls.ERROR_COLOR + error + cls.COLOR_END_SEQUENCE
 
     @classmethod
     def highlight(cls, sentence: str) -> str:

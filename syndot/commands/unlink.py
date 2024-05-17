@@ -1,11 +1,13 @@
 from argparse import Namespace
 import os
 import shutil
+from syndot.init_config import LOG_FILE_PATH
 from syndot.utils.commands import skip_dotfiles
 from syndot.utils.file_actions import remove
+from syndot.utils.logger import log_error
 from syndot.utils.map_file import get_map_info, read_map_file
 from syndot.utils.path import compose_target_paths, expand_home_path, generate_backup_path
-from syndot.utils.print_ import print_action, print_highlight, print_relationship
+from syndot.utils.print_ import print_action, print_error, print_highlight, print_relationship
 from syndot.utils.prompt import ask_to_proceed
 
 
@@ -139,24 +141,28 @@ def unlink_dotfiles(targets_list: dict[str, str],
 
         if proceed:
             for i, (system_target_path, settings_target_path) in enumerate(targets_list.items(), 1):
-                print_action(action_type = 'unlink',
-                             system_target_path = system_target_path,
-                             settings_target_path = settings_target_path)
-                print(f"Total ({i}/{n_targets})", end = '\r')
+                try:
+                    print_action(action_type = 'unlink',
+                                 system_target_path = system_target_path,
+                                 settings_target_path = settings_target_path)
+                    print(f"Total ({i}/{n_targets})", end = '\r')
 
-                remove(path = system_target_path)
-                shutil.move(settings_target_path, system_target_path)
-                backup_path = generate_backup_path(path = system_target_path)
-                remove(path = backup_path)
+                    remove(path = system_target_path)
+                    shutil.move(settings_target_path, system_target_path)
+                    backup_path = generate_backup_path(path = system_target_path)
+                    remove(path = backup_path)
 
-                parent_directory = os.path.dirname(settings_target_path)
-                protected_directories = (settings_dir, expand_home_path('~'), '/')
-                while parent_directory not in protected_directories:
-                    parent_directory_content = os.listdir(parent_directory)
-                    if not parent_directory_content or ((len(parent_directory_content) == 1) and
-                                                        parent_directory_content[0] == '.directory'):
-                        shutil.rmtree(parent_directory)
-                        parent_directory = os.path.dirname(parent_directory)
-                    else:
-                        break
-        print()
+                    parent_directory = os.path.dirname(settings_target_path)
+                    protected_directories = (settings_dir, expand_home_path('~'), '/')
+                    while parent_directory not in protected_directories:
+                        parent_directory_content = os.listdir(parent_directory)
+                        if not parent_directory_content or ((len(parent_directory_content) == 1) and
+                                                            parent_directory_content[0] == '.directory'):
+                            shutil.rmtree(parent_directory)
+                            parent_directory = os.path.dirname(parent_directory)
+                        else:
+                            break
+                except Exception as e:
+                    print_error(f"Error in unlinking {system_target_path}. Check {LOG_FILE_PATH} for more details.")
+                    log_error(f'{e}')
+        print('\n')

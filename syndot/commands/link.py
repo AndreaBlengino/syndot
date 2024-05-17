@@ -1,10 +1,12 @@
 from argparse import Namespace
 import os
+from syndot.init_config import LOG_FILE_PATH
 from syndot.utils.commands import skip_dotfiles
 from syndot.utils.file_actions import change_parent_owner, change_child_owner, copy, remove
+from syndot.utils.logger import log_error
 from syndot.utils.map_file import get_map_info, read_map_file
 from syndot.utils.path import compose_target_paths, generate_backup_path
-from syndot.utils.print_ import print_action, print_highlight, print_relationship
+from syndot.utils.print_ import print_action, print_error, print_highlight, print_relationship
 from syndot.utils.prompt import ask_to_proceed
 
 
@@ -134,23 +136,27 @@ def link_dotfiles(targets_list: dict[str, str],
 
         if proceed:
             for i, (system_target_path, settings_target_path) in enumerate(targets_list.items(), 1):
-                print_action(action_type = 'link',
-                             system_target_path = system_target_path,
-                             settings_target_path = settings_target_path)
-                print(f"Total ({i}/{n_targets})", end = '\r')
+                try:
+                    print_action(action_type = 'link',
+                                 system_target_path = system_target_path,
+                                 settings_target_path = settings_target_path)
+                    print(f"Total ({i}/{n_targets})", end = '\r')
 
-                if remove_settings:
-                    remove(path = settings_target_path)
-                copy(source = system_target_path, destination = settings_target_path)
-                change_parent_owner(source = system_target_path,
-                                    destination = settings_target_path,
-                                    settings_dir = settings_dir)
-                if os.path.isdir(system_target_path):
-                    change_child_owner(source = system_target_path, destination = settings_target_path)
-                if backup:
-                    backup_path = generate_backup_path(path = system_target_path)
-                    os.rename(system_target_path, backup_path)
-                else:
-                    remove(system_target_path)
-                os.symlink(settings_target_path, system_target_path)
-        print()
+                    if remove_settings:
+                        remove(path = settings_target_path)
+                    copy(source = system_target_path, destination = settings_target_path)
+                    change_parent_owner(source = system_target_path,
+                                        destination = settings_target_path,
+                                        settings_dir = settings_dir)
+                    if os.path.isdir(system_target_path):
+                        change_child_owner(source = system_target_path, destination = settings_target_path)
+                    if backup:
+                        backup_path = generate_backup_path(path = system_target_path)
+                        os.rename(system_target_path, backup_path)
+                    else:
+                        remove(system_target_path)
+                    os.symlink(settings_target_path, system_target_path)
+                except Exception as e:
+                    print_error(f"Error in linking {system_target_path}. Check {LOG_FILE_PATH} for more details.")
+                    log_error(f'{e}')
+        print('\n')
