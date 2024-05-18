@@ -6,7 +6,7 @@ import os
 from pytest import mark, raises
 import shutil
 from syndot.utils.map_file import read_map_file, get_map_info, write_map_file
-from tests.conftest import paths, MAP_FILE_PATH, TEST_DATA_PATH
+from tests.conftest import paths, targets, MAP_FILE_PATH, TEST_DATA_PATH
 
 
 @mark.utils
@@ -45,30 +45,37 @@ class TestReadMapFile:
 class TestGetMapInfo:
 
     @mark.genuine
-    @given(all_targets = booleans(), exact = booleans(), target_path_start = one_of(paths(absolute = True), none()))
+    @given(exact_match = booleans(), target_path = one_of(targets(), none()), truncate_path = booleans())
     @settings(max_examples = 100, deadline = None)
-    def test_function(self, all_targets, exact, target_path_start):
-        if target_path_start is None:
-            all_targets = True
+    def test_function(self, exact_match, target_path, truncate_path):
         args = Namespace()
-        args.all = all_targets
-        args.exact = exact
-        args.TARGET_PATH_START = target_path_start
+        args.all = target_path is None
+        args.exact = exact_match
+        truncated_target_path = os.path.split(target_path)[0] if truncate_path and target_path is not None else target_path
+        args.TARGET_PATH_START = truncated_target_path
         config = read_map_file(map_file_path = MAP_FILE_PATH)
 
-        settings_dir, targets = get_map_info(config = config, args = args)
+        settings_dir, targets_list = get_map_info(config = config, args = args)
 
         assert isinstance(settings_dir, str)
         assert settings_dir
 
-        assert isinstance(targets, list)
-
-        if not target_path_start and all_targets:
-            assert targets
+        assert isinstance(targets_list, list)
+        if target_path is None and args.all:
+            assert targets_list
+            assert len(targets_list) > 1
         else:
-            assert not targets
-
-        for target in targets:
+            if exact_match:
+                if truncate_path:
+                    assert not targets_list
+                else:
+                    assert targets_list
+                    assert truncated_target_path in targets_list
+                    assert len(targets_list) == 1
+            else:
+                assert targets_list
+                assert all([target.startswith(truncated_target_path) for target in targets_list])
+        for target in targets_list:
             assert isinstance(target, str)
             assert target
 

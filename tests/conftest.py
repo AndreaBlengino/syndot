@@ -1,10 +1,24 @@
-from hypothesis.strategies import composite, text, lists, characters
+from configparser import ConfigParser
+from hypothesis.strategies import composite, text, lists, characters, sampled_from
 import os
 
 
 TEST_DATA_PATH = 'test_data'
 SETTINGS_DIR = os.path.join(TEST_DATA_PATH, 'Settings')
 MAP_FILE_PATH = os.path.join(os.getcwd(), 'syndot', '_templates', 'map.ini')
+
+
+def get_valid_targets() -> list[str]:
+    config = ConfigParser()
+    config.read(MAP_FILE_PATH)
+    target_directories = config['Targets']['directories'].split()
+    target_files = config['Targets']['files'].split()
+    valid_targets = [*target_files, *target_directories]
+
+    return valid_targets
+
+
+valid_targets = get_valid_targets()
 
 
 @composite
@@ -25,3 +39,7 @@ def paths(draw, absolute = False):
 def usernames(draw):
     return draw(text(min_size = 5, max_size = 10, alphabet = characters(min_codepoint = 97, max_codepoint = 122)))
 
+
+@composite
+def targets(draw):
+    return draw(sampled_from(elements = valid_targets))
