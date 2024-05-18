@@ -12,7 +12,7 @@ class TestGenerateBackupPath:
 
     @mark.genuine
     @given(path = paths(), is_file = booleans())
-    @settings(max_examples = 10, deadline = None)
+    @settings(max_examples = 100, deadline = None)
     def test_function(self, path, is_file):
         create_file_or_directory(path = path, is_file = is_file)
 

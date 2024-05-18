@@ -23,11 +23,14 @@ valid_targets = get_valid_targets()
 
 def create_file_or_directory(path: str, is_file: bool) -> None:
     if is_file:
-        os.makedirs(os.path.dirname(path))
+        parent = os.path.dirname(path)
+        if not os.path.exists(parent):
+            os.makedirs(os.path.dirname(path))
         with open(path, 'w') as file:
             file.write('')
     else:
-        os.makedirs(path)
+        if not os.path.exists(path):
+            os.makedirs(path)
 
 
 @composite
