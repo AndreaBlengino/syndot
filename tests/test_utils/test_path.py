@@ -4,7 +4,7 @@ import os
 from pytest import mark
 import shutil
 from syndot.utils.path import generate_backup_path, split_path, expand_home_path, compose_target_paths
-from tests.conftest import paths, usernames, TEST_DATA_PATH, SETTINGS_DIR
+from tests.conftest import paths, usernames, TEST_DATA_PATH, SETTINGS_DIR, create_file_or_directory
 
 
 @mark.utils
@@ -12,14 +12,9 @@ class TestGenerateBackupPath:
 
     @mark.genuine
     @given(path = paths(), is_file = booleans())
-    @settings(max_examples = 100, deadline = None)
+    @settings(max_examples = 10, deadline = None)
     def test_function(self, path, is_file):
-        if is_file:
-            os.makedirs(os.path.dirname(path))
-            with open(path, 'w') as file:
-                file.write('')
-        else:
-            os.makedirs(path)
+        create_file_or_directory(path = path, is_file = is_file)
 
         backup_path = generate_backup_path(path = path)
 

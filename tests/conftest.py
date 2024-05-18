@@ -21,6 +21,15 @@ def get_valid_targets() -> list[str]:
 valid_targets = get_valid_targets()
 
 
+def create_file_or_directory(path: str, is_file: bool) -> None:
+    if is_file:
+        os.makedirs(os.path.dirname(path))
+        with open(path, 'w') as file:
+            file.write('')
+    else:
+        os.makedirs(path)
+
+
 @composite
 def paths(draw, absolute = False):
     folder_list = draw(lists(elements = text(min_size = 5, max_size = 10, alphabet = characters(min_codepoint = 97,
