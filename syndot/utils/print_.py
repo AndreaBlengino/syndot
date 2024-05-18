@@ -1,4 +1,4 @@
-from syndot.colors import Color
+from syndot.utils.colors import Color
 
 
 def print_action(action_type: str, system_target_path: str, settings_target_path: str) -> None:

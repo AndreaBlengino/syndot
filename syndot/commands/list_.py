@@ -2,7 +2,7 @@ from argparse import Namespace
 from syndot.utils.map_file import read_map_file
 from syndot.utils.path import expand_home_path
 from syndot.utils.print_ import print_highlight
-from syndot.colors import Color
+from syndot.utils.colors import Color
 
 
 def list_(args: Namespace) -> None:
