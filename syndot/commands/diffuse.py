@@ -46,15 +46,14 @@ def diffuse(args: Namespace) -> None:
         print_highlight('No files or directories found to diffuse.')
 
     diffuse_dotfiles(targets_list = targets_to_be_diffused,
-                     many_targets_sentence = f"Found {len(targets_to_be_diffused.keys())} files or directories to be "
-                                             f"diffused.\nSymbolic links to these settings files and directories will "
+                     many_targets_sentence = f"Found {len(targets_to_be_diffused.keys())} files or directories to "
+                                             f"diffuse.\nSymbolic links to these settings files and directories will "
                                              f"be created in the respective system directories.",
-                     single_file_sentence = f"Found {len(targets_to_be_diffused.keys())} file to be diffused.\nA "
-                                            f"symbolic link to this file will be created in the respective system "
-                                            f"directory.",
-                     single_directory_sentence = f"Found {len(targets_to_be_diffused.keys())} directory to be "
-                                                 f"diffused.\nA symbolic link to this directory will be created in the "
-                                                 f"respective system directory.",
+                     single_file_sentence = f"Found {len(targets_to_be_diffused.keys())} file to diffuse.\nA symbolic "
+                                            f"link to this file will be created in the respective system directory.",
+                     single_directory_sentence = f"Found {len(targets_to_be_diffused.keys())} directory to diffuse.\n"
+                                                 f"A symbolic link to this directory will be created in the respective "
+                                                 f"system directory.",
                      remove_system = False)
 
     diffuse_dotfiles(targets_list = already_existing_system,

@@ -58,7 +58,7 @@ def unlink(args: Namespace) -> None:
                     single_file_sentence = f"Found {len(targets_to_be_unlinked.keys())} file to unlink.\nIt will be "
                                            f"moved to the respective system directory.\nThe original symbolic link and"
                                            f"eventually the backup file will be removed.",
-                    single_directory_sentence = f"Found {len(targets_to_be_unlinked.keys())} directory to unlinked.\n"
+                    single_directory_sentence = f"Found {len(targets_to_be_unlinked.keys())} directory to unlink.\n"
                                                 f"It will be moved to the respective system directory.\nThe original "
                                                 f"symbolic link and eventually the backup directory will be removed.")
 
