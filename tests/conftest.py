@@ -53,5 +53,8 @@ def usernames(draw):
 
 
 @composite
-def targets(draw):
-    return draw(sampled_from(elements = valid_targets))
+def targets(draw, absolute = True):
+    if absolute:
+        return draw(sampled_from(elements = valid_targets))
+    else:
+        return draw(sampled_from(elements = [target.replace('~', os.path.join(os.getcwd(), TEST_DATA_PATH)) for target in valid_targets]))
