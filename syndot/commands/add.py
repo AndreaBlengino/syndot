@@ -8,6 +8,8 @@ def add(args: Namespace) -> None:
     map_file_path = expand_home_path(args.mapfile if args.mapfile is not None else 'map.ini')
 
     target = args.TARGET_PATH
+    if target.endswith(os.sep):
+        target = target[:-1]
     if not os.path.exists(target):
         raise OSError(f"Target {target} not found")
 
@@ -18,8 +20,6 @@ def add(args: Namespace) -> None:
     elif os.path.isdir(target):
         current_targets = config['Targets']['directories'].split()
 
-    if target.endswith(os.sep):
-        target = target[:-1]
     target_path = expand_home_path(target)
     if target_path in current_targets:
         print(f"Target {target} already in map file")
