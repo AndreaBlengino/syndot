@@ -38,10 +38,11 @@ def change_child_owner(source: str, destination: str):
 
 
 def remove(path: str) -> None:
-    if os.path.exists(path):
-        if os.path.islink(path):
-            os.unlink(path)
-        elif os.path.isfile(path):
-            os.remove(path)
-        elif os.path.isdir(path):
-            shutil.rmtree(path)
+    if os.path.islink(path):
+        os.unlink(path)
+    else:
+        if os.path.exists(path):
+            if os.path.isfile(path):
+                os.remove(path)
+            elif os.path.isdir(path):
+                shutil.rmtree(path)
