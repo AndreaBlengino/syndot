@@ -16,7 +16,7 @@ def init(args: Namespace) -> None:
     settings_dir = expand_home_path(args.path if args.path is not None else DEFAULT_SETTINGS_DIR)
     if os.path.exists(settings_dir):
         raise ValueError(f"Settings directory {settings_dir} already exists.")
-    os.mkdir(settings_dir)
+    os.makedirs(settings_dir)
 
     config = read_map_file(MAP_TEMPLATE_PATH)
     config['Path']['settings_dir'] = settings_dir
