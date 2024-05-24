@@ -1,8 +1,7 @@
 from hypothesis import given, settings, HealthCheck
-from hypothesis.strategies import sampled_from, text, characters
+from hypothesis.strategies import text, characters
 import os
 from pytest import mark
-import shutil
 from syndot.utils import logger
 from tests.conftest import TEST_DATA_PATH
 
