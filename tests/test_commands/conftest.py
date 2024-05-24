@@ -178,7 +178,7 @@ def generate_diffuse_testing_system_files(status: str) -> None:
                 os.symlink(other_target, settings_target_path)
 
 
-def generate_add_testing_system_files() -> None:
+def generate_add_and_remove_testing_system_files() -> None:
     config = ConfigParser()
     config.read(TEST_MAP_FILE_PATH)
     target_directories = config['Targets']['directories'].split()

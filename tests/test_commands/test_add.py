@@ -7,7 +7,8 @@ from pytest import mark, raises
 import shutil
 from syndot.commands import add
 from tests.conftest import targets, TEST_DATA_PATH
-from tests.test_commands.conftest import generate_add_testing_system_files, generate_testing_map_file, empty_testing_map_file, TEST_MAP_FILE_PATH
+from tests.test_commands.conftest import (generate_add_and_remove_testing_system_files, generate_testing_map_file,
+                                          empty_testing_map_file, TEST_MAP_FILE_PATH)
 
 
 @mark.commands
@@ -28,7 +29,7 @@ class TestAdd:
             args.TARGET_PATH = target_path
 
         generate_testing_map_file()
-        generate_add_testing_system_files()
+        generate_add_and_remove_testing_system_files()
 
         assert os.path.exists(target_path)
         assert not os.path.islink(target_path)
@@ -49,11 +50,10 @@ class TestAdd:
 
         add(args = args)
 
-        config = ConfigParser()
-        config.read(TEST_MAP_FILE_PATH)
-
         assert os.path.exists(target_path)
         assert not os.path.islink(target_path)
+        config = ConfigParser()
+        config.read(TEST_MAP_FILE_PATH)
         if os.path.isfile(target_path):
             assert target_path in config['Targets']['files'].split()
         if os.path.isdir(target_path):
@@ -87,5 +87,13 @@ class TestAdd:
 
         with raises(OSError):
             add(args = args)
+
+        assert not os.path.exists(target_path)
+        config = ConfigParser()
+        config.read(TEST_MAP_FILE_PATH)
+        if os.path.isfile(target_path):
+            assert target_path not in config['Targets']['files'].split()
+        if os.path.isdir(target_path):
+            assert target_path not in config['Targets']['directories'].split()
 
         shutil.rmtree(TEST_DATA_PATH)
