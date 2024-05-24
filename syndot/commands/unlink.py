@@ -56,7 +56,7 @@ def unlink(args: Namespace) -> None:
                                             f"unlink.\nThey will be moved to the respective system directories.\nThe "
                                             f"original symbolic links and eventually the backups will be removed.",
                     single_file_sentence = f"Found {len(targets_to_be_unlinked.keys())} file to unlink.\nIt will be "
-                                           f"moved to the respective system directory.\nThe original symbolic link and"
+                                           f"moved to the respective system directory.\nThe original symbolic link and "
                                            f"eventually the backup file will be removed.",
                     single_directory_sentence = f"Found {len(targets_to_be_unlinked.keys())} directory to unlink.\n"
                                                 f"It will be moved to the respective system directory.\nThe original "
@@ -65,9 +65,9 @@ def unlink(args: Namespace) -> None:
     unlink_dotfiles(targets_list = wrong_existing_links,
                     settings_dir = settings_dir,
                     many_targets_sentence = f"Found {len(wrong_existing_links.keys())} files or directories that are "
-                                            f"links to wrong files or directories.\nThese wrong links will be removed"
-                                            f"and eventually also the backups.\nThen the settings files and directories"
-                                            f"will be moved to the respective system directories.",
+                                            f"links to wrong files or directories.\nThese wrong links will be removed "
+                                            f"and eventually also the backups.\nThen the settings files and "
+                                            f"directories will be moved to the respective system directories.",
                     single_file_sentence = f"Found {len(wrong_existing_links.keys())} file that is a link to a wrong "
                                            f"file.\nThis wrong link will be removed and eventually also the backup "
                                            f"file.\nThen the settings file will be moved to the respective system "
