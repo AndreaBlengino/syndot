@@ -176,3 +176,22 @@ def generate_diffuse_testing_system_files(status: str) -> None:
                 other_target = settings_target_path + '.other'
                 create_file_or_directory(path = other_target, is_file = is_file)
                 os.symlink(other_target, settings_target_path)
+
+
+def generate_add_testing_system_files() -> None:
+    config = ConfigParser()
+    config.read(TEST_MAP_FILE_PATH)
+    target_directories = config['Targets']['directories'].split()
+    target_files = config['Targets']['files'].split()
+    for target_list, is_file in zip([target_files, target_directories], [True, False]):
+        for target in target_list:
+            create_file_or_directory(path = target, is_file = is_file)
+
+
+def empty_testing_map_file() -> None:
+    config = ConfigParser()
+    config.read(TEST_MAP_FILE_PATH)
+    config['Targets']['directories'] = ''
+    config['Targets']['files'] = ''
+    with open(TEST_MAP_FILE_PATH, 'w') as map_file:
+        config.write(map_file)
