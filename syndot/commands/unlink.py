@@ -148,6 +148,9 @@ def unlink_dotfiles(targets_list: dict[str, str],
                     print(f"Total ({i}/{n_targets})", end = '\r')
 
                     remove(path = system_target_path)
+                    system_target_parent = os.path.dirname(system_target_path)
+                    if not os.path.exists(system_target_parent):
+                        os.makedirs(system_target_parent)
                     shutil.move(settings_target_path, system_target_path)
                     backup_path = generate_backup_path(path = system_target_path)
                     remove(path = backup_path)
