@@ -1,5 +1,5 @@
 from syndot import commands
-from syndot.parser import parser
+from syndot.parser.parser import parser
 from syndot import init_config
 
 
