@@ -1,7 +1,8 @@
-from hypothesis import given, settings
-from hypothesis.strategies import one_of, none, booleans, text, characters
-from pytest import mark
-from syndot.parser import parser
+from hypothesis import given, settings, HealthCheck
+from hypothesis.strategies import one_of, none, booleans, text, characters, sampled_from
+from pytest import mark, raises
+import subprocess
+from syndot.parser.parser import parser
 from tests.conftest import paths
 
 
@@ -189,3 +190,68 @@ class TestParser:
             assert parsed_arguments.mapfile == map_file_path
         else:
             assert parsed_arguments.mapfile is None
+
+    @mark.genuine
+    @given(abbreviation = booleans())
+    @settings(max_examples = 100, deadline = None, suppress_health_check = [HealthCheck.function_scoped_fixture])
+    def test_version(self, abbreviation, capsys):
+        args = ['-v'] if abbreviation else ['--version']
+        with raises(SystemExit):
+            parser.parse_args(args = args)
+        printed_output = capsys.readouterr().out
+        version = subprocess.run(['git', 'describe', '--tags'], stdout = subprocess.PIPE).stdout.decode('utf-8').strip()
+
+        assert printed_output.startswith(f'syndot {version}')
+
+    @mark.genuine
+    @given(abbreviation = booleans())
+    @settings(max_examples = 100, deadline = None, suppress_health_check = [HealthCheck.function_scoped_fixture])
+    def test_help(self, abbreviation, capsys):
+        args = ['-h'] if abbreviation else ['--help']
+        with raises(SystemExit):
+            parser.parse_args(args = args)
+        printed_output = capsys.readouterr().out
+
+        assert printed_output.startswith('usage: syndot {OPTION | COMMAND}')
+        assert printed_output.endswith('Config file path: ~/.config/syndot\n')
+        assert 'OPTIONS' in printed_output
+        assert 'COMMANDS' in printed_output
+        assert '-h, --help' in printed_output
+        assert '-v, --version' in printed_output
+        assert 'add' in printed_output
+        assert 'diffuse' in printed_output
+        assert 'init' in printed_output
+        assert 'link' in printed_output
+        assert 'list' in printed_output
+        assert 'remove' in printed_output
+        assert 'unlink' in printed_output
+
+    @mark.genuine
+    @given(command = sampled_from(elements = ['add', 'diffuse', 'init', 'link', 'list', 'remove', 'unlink']),
+           abbreviation = booleans())
+    @settings(max_examples = 100, deadline = None, suppress_health_check = [HealthCheck.function_scoped_fixture])
+    def test_command_help(self, command, abbreviation, capsys):
+        args = [command]
+        if abbreviation:
+            args.append('-h')
+        else:
+            args.append('--help')
+        with raises(SystemExit):
+            parser.parse_args(args = args)
+        printed_output = capsys.readouterr().out
+
+        assert printed_output.startswith(f'usage: syndot {command}')
+        assert 'OPTIONS' in printed_output
+        if command in ['add', 'diffuse', 'link', 'remove', 'unlink']:
+            assert 'ARGUMENTS' in printed_output
+        assert '-h, --help' in printed_output
+        if command in ['add', 'diffuse', 'link', 'list', 'remove', 'unlink']:
+            assert '-m, --mapfile <MAP_FILE>' in printed_output
+        if command in ['diffuse', 'link', 'unlink']:
+            assert '-a, --all' in printed_output
+            assert '-e, --exact' in printed_output
+            assert '-e, --exact' in printed_output
+        if command == 'init':
+            assert '-p, --path PATH' in printed_output
+        if command == 'link':
+            assert '-b, --backup' in printed_output
