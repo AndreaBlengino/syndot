@@ -5,10 +5,10 @@ syndot
 .. toctree::
    :hidden:
 
-   init/index
    add/index
-   remove/index
-   list/index
-   link/index
-   unlink/index
    diffuse/index
+   init/index
+   link/index
+   list/index
+   remove/index
+   unlink/index

@@ -13,6 +13,7 @@ syndot documentation
    :caption: Library
 
    syndot
+   map.ini
 
 
 .. toctree::

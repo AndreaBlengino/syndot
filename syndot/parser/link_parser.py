@@ -16,13 +16,14 @@ link_targets = link_parser.add_mutually_exclusive_group(required = True)
 link_targets.add_argument('TARGET_PATH_START',
                           nargs = '?',
                           metavar = 'TARGET_PATH',
-                          help = 'Dotfile path, mandatory if [-a | -all] is not provided')
+                          help = 'Dotfile path, mandatory if [-a | -all] option is not provided')
 link_targets.add_argument('-a', '--all',
                           action = 'store_true',
                           default = False,
                           required = False,
                           dest = 'all',
-                          help = 'Select all dotfiles in the <MAP_FILE>, mandatory if <TARGET_PATH> is not provided')
+                          help = 'Select all dotfiles in the <MAP_FILE>, mandatory if <TARGET_PATH> argument is not '
+                                 'provided')
 link_parser.add_argument('-b', '--backup',
                          action = 'store_true',
                          default = False,
