@@ -1,7 +1,7 @@
 Dotfiles Management
 -------------------
 
-**syndot** is a python library for Linux dotfiles management.
+**syndot** is a python library for Linux and macOS dotfiles management.
 
 .. list-table::
    :stub-columns: 1
@@ -11,7 +11,7 @@ Dotfiles Management
    * - PyPI
      - |pypi_release| |supported_python_versions|
    * - Tests
-     - |linux_tests| |test_coverage|
+     - |linux_tests| |macos_tests| |test_coverage|
    * - Code Quality
      - |codefactor_grade| |codacy_grade| |issues|
    * - License
@@ -28,6 +28,10 @@ Dotfiles Management
 .. |linux_tests| image:: https://img.shields.io/github/actions/workflow/status/AndreaBlengino/syndot/linux_test.yml.svg?logo=linux&logoColor=white&label=Linux
    :target: https://github.com/AndreaBlengino/syndot/actions/workflows/linux_test.yml
    :alt: Linux Tests
+
+.. |macos_tests| image:: https://img.shields.io/github/actions/workflow/status/AndreaBlengino/syndot/macos_test.yml.svg?logo=apple&label=macOS
+   :target: https://github.com/AndreaBlengino/syndot/actions/workflows/macos_test.yml
+   :alt: macOS Tests
 
 .. |test_coverage| image:: https://img.shields.io/codecov/c/github/AndreaBlengino/syndot/master?logo=codecov
    :target: https://codecov.io/gh/AndreaBlengino/syndot
@@ -48,3 +52,27 @@ Dotfiles Management
 .. |license| image:: https://img.shields.io/badge/License-GPLv3-blue.svg
    :target: https://github.com/AndreaBlengino/syndot/blob/master/LICENSE
    :alt: License
+
+
+References
+----------
+
+- `PyPI <https://pypi.org/project/syndot/>`_
+- `Issue tracker <https://github.com/AndreaBlengino/syndot/issues>`_
+- `Source code <https://github.com/AndreaBlengino/syndot/tree/master/syndot>`_
+- `GNU General Public License v3.0 <https://github.com/AndreaBlengino/syndot/blob/master/LICENSE>`_
+
+
+Contributing
+------------
+
+The syndot project welcomes your expertise and enthusiasm!
+All contributions, bug reports, bug fixes, documentation improvements, enhancements and ideas are welcome.
+Writing code isn't the only way to contribute to syndot. You can also:
+
+- develop tutorials, presentations and other educational materials,
+- help with outreach and onboard new contributors.
+
+Have a look at the `contributing guide <https://github.com/AndreaBlengino/syndot/blob/master/.github/CONTRIBUTING.md>`_.
+If you are new to contributing to open source, `this guide <https://opensource.guide/how-to-contribute/>`_ helps explain
+why, what, and how to successfully get involved.
