@@ -27,4 +27,4 @@ syndot documentation
    license
 
 
-.. mdinclude:: ../../README.md
+.. include:: ../../README.rst

@@ -2,7 +2,7 @@ Get Started
 ===========
 
 
-.. mdinclude:: installation.md
+.. include:: installation.rst
 
 
 .. toctree::
