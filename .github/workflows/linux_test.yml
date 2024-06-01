@@ -1,0 +1,57 @@
+name: Linux Tests
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install building tools
+        run: |
+          pip install build twine
+
+      - name: Build package
+        run: |
+          python -m build --wheel
+
+      - name: Package differences computation
+        run: |
+          if [[ $(diff -r ./syndot ./build/lib/syndot | grep -v __pycache__ | wc -m) == 0 ]]; then 
+               echo "packages_are_equal=true" >> $GITHUB_ENV
+          else
+               echo "packages_are_equal=false" >> $GITHUB_ENV
+          fi
+
+      - name: Condition check
+        if: env.packages_are_equal == 'false'
+        uses: actions/github-script@v3
+        with:
+          script: |
+              core.setFailed('Compiled package different from source package.')
+
+      - name: Install build package
+        run: |
+          pip install .[test]
+
+      - name: Fetch
+        uses: actions/checkout@master
+
+      - name: Run tests
+        run: |
+          python -m pytest --verbose --disable-pytest-warnings --cov=syndot --cov-report=xml:linux_coverage.xml
+
+      - name: Upload
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          files: ./linux_coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
