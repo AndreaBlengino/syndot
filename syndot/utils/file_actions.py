@@ -20,7 +20,10 @@ def change_parent_owner(source: str, destination: str, settings_dir: str):
     protected_directories = (expand_home_path(settings_dir), expand_home_path('~'), '/')
     while destination not in protected_directories:
         st = os.stat(source)
-        os.chown(destination, st.st_uid, st.st_gid)
+        try:
+            os.chown(destination, st.st_uid, st.st_gid)
+        except PermissionError:
+            pass
         source = os.path.dirname(source)
         destination = os.path.dirname(destination)
 
