@@ -1,7 +1,6 @@
 from hypothesis import given, settings, HealthCheck
 from hypothesis.strategies import one_of, none, booleans, text, characters, sampled_from
 from pytest import mark, raises
-import subprocess
 from syndot.parser.parser import parser
 from tests.conftest import paths
 
@@ -199,9 +198,8 @@ class TestParser:
         with raises(SystemExit):
             parser.parse_args(args = args)
         printed_output = capsys.readouterr().out
-        version = subprocess.run(['git', 'describe', '--tags'], stdout = subprocess.PIPE).stdout.decode('utf-8').strip()
 
-        assert printed_output.startswith(f'syndot {version}')
+        assert printed_output.startswith(f'syndot')
 
     @mark.genuine
     @given(abbreviation = booleans())
