@@ -13,7 +13,7 @@ Dotfiles Management
    * - Tests
      - |linux_tests| |test_coverage|
    * - Code Quality
-     - |issues|
+     - |codefactor_grade| |codacy_grade| |issues|
    * - License
      - |license|
 
@@ -32,6 +32,14 @@ Dotfiles Management
 .. |test_coverage| image:: https://img.shields.io/codecov/c/github/AndreaBlengino/syndot/master?logo=codecov
    :target: https://codecov.io/gh/AndreaBlengino/syndot
    :alt: Test Coverage
+
+.. |codefactor_grade| image:: https://img.shields.io/codefactor/grade/github/AndreaBlengino/syndot?logo=codefactor&label=CodeFactor
+   :target: https://www.codefactor.io/repository/github/andreablengino/syndot
+   :alt: CodeFactor Grade
+
+.. |codacy_grade| image:: https://img.shields.io/codacy/grade/132c2f3d93344ae0934ea808bbf17f05?logo=codacy&label=Codacy
+   :target: https://app.codacy.com/gh/AndreaBlengino/syndot/dashboard
+   :alt: Codacy Grade
 
 .. |issues| image:: https://img.shields.io/github/issues/AndreaBlengino/syndot?logo=github
    :target: https://github.com/AndreaBlengino/syndot/issues
