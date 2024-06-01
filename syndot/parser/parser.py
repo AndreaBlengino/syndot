@@ -1,9 +1,6 @@
 from argparse import ArgumentParser, HelpFormatter, SUPPRESS, _SubParsersAction
 from operator import attrgetter
-import subprocess
-
-
-version = subprocess.run(['git', 'describe', '--tags'], stdout = subprocess.PIPE).stdout.decode('utf-8').strip()
+from syndot.version import __version__
 
 
 class GeneralFormatter(HelpFormatter):
@@ -64,7 +61,7 @@ parser.add_argument('-h', '--help',
                     help = 'Show this help message and exit')
 parser.add_argument('-v', '--version',
                     action = 'version',
-                    version = f'%(prog)s {version}',
+                    version = f'%(prog)s {__version__}',
                     help = 'Show program\'s version number and exit')
 command_parser = parser.add_subparsers(dest = 'command',
                                        title = 'COMMANDS')
