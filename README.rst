@@ -29,7 +29,7 @@ Dotfiles Management
    :target: https://pypi.org/project/syndot/
    :alt: PyPI - Supported Python Versions
 
-.. |semver| image:: https://img.shields.io/badge/semver-2.0.0-blue
+.. |semver| image:: https://img.shields.io/badge/semver-2.0.0-blue.svg
    :target: https://semver.org/
 
 .. |linux_tests| image:: https://img.shields.io/github/actions/workflow/status/AndreaBlengino/syndot/linux_test.yml.svg?logo=linux&logoColor=white&label=Linux
