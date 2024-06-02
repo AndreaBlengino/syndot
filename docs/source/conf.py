@@ -3,6 +3,7 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import subprocess
 
 
 # -- Project information -----------------------------------------------------
@@ -11,7 +12,11 @@
 project = 'syndot'
 copyright = '2024, Andrea Blengino'
 author = 'Andrea Blengino'
-release = 'v0.0.0'
+release = subprocess.run('git describe --tags'.split(), stdout = subprocess.PIPE).stdout.decode('utf-8')
+
+if release.count('-') >= 2:
+    release = '-'.join(release.split('-')[:2])
+
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

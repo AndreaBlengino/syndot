@@ -12,6 +12,8 @@ Dotfiles Management
      - |pypi_release| |supported_python_versions|
    * - Tests
      - |linux_tests| |macos_tests| |test_coverage|
+   * - Documentation
+     - |docs|
    * - Code Quality
      - |codefactor_grade| |codacy_grade| |issues|
    * - License
@@ -37,6 +39,10 @@ Dotfiles Management
    :target: https://codecov.io/gh/AndreaBlengino/syndot
    :alt: Test Coverage
 
+.. |docs| image:: https://img.shields.io/readthedocs/syndot/latest?logo=read%20the%20docs
+   :target: https://syndot.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Build Status
+
 .. |codefactor_grade| image:: https://img.shields.io/codefactor/grade/github/AndreaBlengino/syndot?logo=codefactor&label=CodeFactor
    :target: https://www.codefactor.io/repository/github/andreablengino/syndot
    :alt: CodeFactor Grade
@@ -57,7 +63,9 @@ Dotfiles Management
 References
 ----------
 
+- `Installation <https://syndot.readthedocs.io/en/latest/get_started.html>`_
 - `PyPI <https://pypi.org/project/syndot/>`_
+- `Documentation <https://syndot.readthedocs.io/en/latest/?badge=latest>`_
 - `Issue tracker <https://github.com/AndreaBlengino/syndot/issues>`_
 - `Source code <https://github.com/AndreaBlengino/syndot/tree/master/syndot>`_
 - `GNU General Public License v3.0 <https://github.com/AndreaBlengino/syndot/blob/master/LICENSE>`_
@@ -71,6 +79,7 @@ All contributions, bug reports, bug fixes, documentation improvements, enhanceme
 Writing code isn't the only way to contribute to syndot. You can also:
 
 - develop tutorials, presentations and other educational materials,
+- maintain and improve the `documentation <https://syndot.readthedocs.io/en/latest/?badge=latest>`_,
 - help with outreach and onboard new contributors.
 
 Have a look at the `contributing guide <https://github.com/AndreaBlengino/syndot/blob/master/.github/CONTRIBUTING.md>`_.
