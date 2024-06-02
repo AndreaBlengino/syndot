@@ -43,3 +43,9 @@ include = ["syndot", "syndot.*"]
 
 [tool.setuptools.package-data]
 "*" = ["*.ini", "*.colorscheme"]
+
+[project.urls]
+Homepage = "https://github.com/AndreaBlengino/syndot"
+Documentation = "https://syndot.readthedocs.io/en/latest/index.html"
+Issues = "https://github.com/AndreaBlengino/syndot/issues"
+Repository = "https://github.com/AndreaBlengino/syndot"
