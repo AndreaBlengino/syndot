@@ -8,8 +8,10 @@ Dotfiles Management
    :widths: auto
    :width: 100%
 
-   * - PyPI
-     - |pypi_release| |supported_python_versions|
+   * - Release
+     - |pypi_release|
+   * - Versioning
+     - |supported_python_versions| |semver|
    * - Tests
      - |linux_tests| |macos_tests| |test_coverage|
    * - Documentation
@@ -26,6 +28,9 @@ Dotfiles Management
 .. |supported_python_versions| image:: https://img.shields.io/pypi/pyversions/syndot?logo=python&logoColor=gold
    :target: https://pypi.org/project/syndot/
    :alt: PyPI - Supported Python Versions
+
+.. |semver| image:: https://img.shields.io/badge/semver-2.0.0-blue
+   :target: https://semver.org/
 
 .. |linux_tests| image:: https://img.shields.io/github/actions/workflow/status/AndreaBlengino/syndot/linux_test.yml.svg?logo=linux&logoColor=white&label=Linux
    :target: https://github.com/AndreaBlengino/syndot/actions/workflows/linux_test.yml
