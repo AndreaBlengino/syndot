@@ -13,10 +13,10 @@ maintainers = [
   {name = "Andrea Blengino", email = "ing.andrea.blengino@protonmail.com"},
 ]
 description = "Dotfiles link management tool"
-readme = "README.md"
+readme = "README.rst"
 license = { file = "LICENSE" }
 classifiers = [
-  "Development Status :: 4 - Beta",
+  "Development Status :: 5 - Production/Stable",
   "Environment :: Console",
   "Intended Audience :: End Users/Desktop",
   "Operating System :: POSIX :: Linux",
