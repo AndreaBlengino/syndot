@@ -9,7 +9,7 @@ Dotfiles Management
    :width: 100%
 
    * - Release
-     - |pypi_release|
+     - |pypi_release| |build|
    * - Versioning
      - |supported_python_versions| |semver|
    * - Tests
@@ -24,6 +24,10 @@ Dotfiles Management
 .. |pypi_release| image:: https://img.shields.io/pypi/v/syndot?label=release&color=blue
    :target: https://pypi.org/project/syndot/
    :alt: PyPI - Library Version
+
+.. |build| image:: https://img.shields.io/github/actions/workflow/status/AndreaBlengino/syndot/release.yml.svg?logo=github
+   :target: https://github.com/AndreaBlengino/syndot/actions/workflows/release.yml
+   :alt: Package Build
 
 .. |supported_python_versions| image:: https://img.shields.io/pypi/pyversions/syndot?logo=python&logoColor=gold
    :target: https://pypi.org/project/syndot/
