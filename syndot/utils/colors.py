@@ -15,7 +15,7 @@ COLOR_MAP = {'link': 'Color6',
 
 
 def get_ansi_color(color_type: str) -> str:
-    color = color_config.get(section = COLOR_MAP[color_type], option = 'Color').replace(',', ';')
+    color = color_config.get(section=COLOR_MAP[color_type], option='Color').replace(',', ';')
     return f"\x1b[38;2;{color}m"
 
 

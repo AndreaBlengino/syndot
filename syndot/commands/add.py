@@ -13,7 +13,7 @@ def add(args: Namespace) -> None:
     if not os.path.exists(target):
         raise OSError(f"Target {target} not found")
 
-    config = read_map_file(map_file_path = map_file_path)
+    config = read_map_file(map_file_path=map_file_path)
     current_targets = []
     if os.path.isfile(target):
         current_targets = config['Targets']['files'].split()
@@ -33,4 +33,4 @@ def add(args: Namespace) -> None:
     elif os.path.isdir(target):
         config['Targets']['directories'] = '\n' + '\n'.join(current_targets)
 
-    write_map_file(map_file_path = map_file_path, config = config)
+    write_map_file(map_file_path=map_file_path, config=config)

@@ -21,10 +21,10 @@ def init(args: Namespace) -> None:
     config = read_map_file(MAP_TEMPLATE_PATH)
     config['Path']['settings_dir'] = settings_dir
 
-    expand_default_target_path(config = config, target_category = 'files')
-    expand_default_target_path(config = config, target_category = 'directories')
+    expand_default_target_path(config=config, target_category='files')
+    expand_default_target_path(config=config, target_category='directories')
 
-    write_map_file(map_file_path = os.path.join(settings_dir, 'map.ini'), config = config)
+    write_map_file(map_file_path=os.path.join(settings_dir, 'map.ini'), config=config)
 
 
 def expand_default_target_path(config: ConfigParser, target_category: str):

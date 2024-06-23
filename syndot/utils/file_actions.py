@@ -11,7 +11,7 @@ def copy(source: str, destination: str) -> None:
     if os.path.isfile(source):
         shutil.copy2(source, destination)
     elif os.path.isdir(source):
-        shutil.copytree(source, destination, symlinks = True)
+        shutil.copytree(source, destination, symlinks=True)
         st = os.stat(source)
         os.chown(destination, st.st_uid, st.st_gid)
 
@@ -37,7 +37,7 @@ def change_child_owner(source: str, destination: str):
         st = os.stat(source_target_path)
         os.chown(destination_target_path, st.st_uid, st.st_gid)
         if os.path.isdir(destination_target_path):
-            change_child_owner(source = source_target_path, destination = destination_target_path)
+            change_child_owner(source=source_target_path, destination=destination_target_path)
 
 
 def remove(path: str) -> None:

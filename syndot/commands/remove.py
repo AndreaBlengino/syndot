@@ -7,7 +7,7 @@ from syndot.utils.path import expand_home_path
 def remove(args: Namespace) -> None:
     map_file_path = expand_home_path(args.mapfile if args.mapfile is not None else 'map.ini')
 
-    config = read_map_file(map_file_path = map_file_path)
+    config = read_map_file(map_file_path=map_file_path)
     current_files = config['Targets']['files'].split()
     current_directories = config['Targets']['directories'].split()
     target = args.TARGET_PATH
@@ -22,4 +22,4 @@ def remove(args: Namespace) -> None:
     else:
         raise NameError(f"Target {target} not found in map file")
 
-    write_map_file(map_file_path = map_file_path, config = config)
+    write_map_file(map_file_path=map_file_path, config=config)

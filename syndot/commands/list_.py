@@ -6,7 +6,7 @@ from syndot.utils.colors import Color
 
 
 def list_(args: Namespace) -> None:
-    config = read_map_file(map_file_path = args.mapfile)
+    config = read_map_file(map_file_path=args.mapfile)
 
     settings_dir = expand_home_path(config['Path']['settings_dir'])
     target_directories = config['Targets']['directories'].split()
@@ -16,5 +16,5 @@ def list_(args: Namespace) -> None:
 
     for target in targets:
         print(target)
-    print_highlight("Settings directory:", end = ' ')
+    print_highlight("Settings directory:", end=' ')
     print(Color.settings(settings_dir))

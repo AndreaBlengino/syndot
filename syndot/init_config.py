@@ -18,8 +18,8 @@ def copy_sources(source: str, destination: str) -> None:
 def init_config() -> None:
     if not os.path.exists(CONFIG_DIR_PATH):
 
-        copy_sources(source = '_templates', destination = 'templates')
-        copy_sources(source = '_colorschemes', destination = 'colorschemes')
+        copy_sources(source='_templates', destination='templates')
+        copy_sources(source='_colorschemes', destination='colorschemes')
 
         with open(LOG_FILE_PATH, 'w') as log_file:
             log_file.write('')

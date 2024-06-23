@@ -14,4 +14,4 @@ command_map = {'init': commands.init,
                'remove': commands.remove,
                'list': commands.list_}
 
-command_map[args.command](args = args)
+command_map[args.command](args=args)
