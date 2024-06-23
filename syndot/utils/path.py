@@ -30,5 +30,6 @@ def expand_home_path(path: str) -> str:
 def compose_target_paths(settings_dir: str, target: str) -> tuple[str, str]:
     system_target_path = expand_home_path(target)
     settings_dir = expand_home_path(settings_dir)
-    settings_target_path = os.path.join(settings_dir, *split_path(system_target_path))
+    settings_target_path = os.path.join(
+        settings_dir, *split_path(system_target_path))
     return system_target_path, settings_target_path

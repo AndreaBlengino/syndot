@@ -5,7 +5,8 @@ from syndot.utils.path import expand_home_path
 
 
 def add(args: Namespace) -> None:
-    map_file_path = expand_home_path(args.mapfile if args.mapfile is not None else 'map.ini')
+    map_file_path = expand_home_path(
+        args.mapfile if args.mapfile is not None else 'map.ini')
 
     target = args.TARGET_PATH
     if target.endswith(os.sep):

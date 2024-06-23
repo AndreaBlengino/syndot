@@ -3,9 +3,13 @@ import os
 from syndot.init_config import CONFIG_DIR_PATH
 
 
-COLORSCHEME_PATH = os.path.join(CONFIG_DIR_PATH, 'colorschemes', 'default.colorscheme')
+COLORSCHEME_PATH = os.path.join(
+    CONFIG_DIR_PATH, 'colorschemes', 'default.colorscheme')
 if not os.path.exists(CONFIG_DIR_PATH) or not os.path.exists(COLORSCHEME_PATH):
-    COLORSCHEME_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), '_colorschemes', 'default.colorscheme')
+    COLORSCHEME_PATH = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)),
+        '_colorschemes',
+        'default.colorscheme')
 color_config = ConfigParser()
 color_config.read(COLORSCHEME_PATH)
 COLOR_MAP = {'link': 'Color6',
@@ -15,7 +19,8 @@ COLOR_MAP = {'link': 'Color6',
 
 
 def get_ansi_color(color_type: str) -> str:
-    color = color_config.get(section=COLOR_MAP[color_type], option='Color').replace(',', ';')
+    color = color_config.get(section=COLOR_MAP[color_type],
+                             option='Color').replace(',', ';')
     return f"\x1b[38;2;{color}m"
 
 

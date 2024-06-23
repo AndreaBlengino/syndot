@@ -17,7 +17,9 @@ def copy(source: str, destination: str) -> None:
 
 
 def change_parent_owner(source: str, destination: str, settings_dir: str):
-    protected_directories = (expand_home_path(settings_dir), expand_home_path('~'), '/')
+    protected_directories = (expand_home_path(settings_dir),
+                             expand_home_path('~'),
+                             '/')
     while destination not in protected_directories:
         st = os.stat(source)
         try:
@@ -31,13 +33,15 @@ def change_parent_owner(source: str, destination: str, settings_dir: str):
 def change_child_owner(source: str, destination: str):
     source_content = os.listdir(source)
     destination_content = os.listdir(destination)
-    for source_target, destination_target in zip(source_content, destination_content):
+    for source_target, destination_target in \
+            zip(source_content, destination_content):
         source_target_path = os.path.join(source, source_target)
         destination_target_path = os.path.join(destination, destination_target)
         st = os.stat(source_target_path)
         os.chown(destination_target_path, st.st_uid, st.st_gid)
         if os.path.isdir(destination_target_path):
-            change_child_owner(source=source_target_path, destination=destination_target_path)
+            change_child_owner(source=source_target_path,
+                               destination=destination_target_path)
 
 
 def remove(path: str) -> None:
