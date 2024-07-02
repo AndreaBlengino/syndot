@@ -9,12 +9,43 @@ def list_(args: Namespace) -> None:
     config = read_map_file(map_file_path=args.mapfile)
 
     settings_dir = expand_home_path(config['Path']['settings_dir'])
-    target_directories = config['Targets']['directories'].split()
-    target_files = config['Targets']['files'].split()
-    targets = [*target_directories, *target_files]
-    targets.sort()
+    targets = dict(config['Targets'])
 
-    for target in targets:
-        print(target)
+    if args.label:
+        for label in targets.keys():
+            _list_labels(label=label)
+        if args.directory:
+            _print_settings_directory(settings_dir=settings_dir)
+        return
+
+    if args.path:
+        for paths in targets.values():
+            _list_paths(paths=paths, indent=False)
+        if args.directory:
+            _print_settings_directory(settings_dir=settings_dir)
+        return
+
+    for label, paths in targets.items():
+        _list_labels(label=label)
+        _list_paths(paths=paths, indent=True)
+        print()
+    if args.directory:
+        _print_settings_directory(settings_dir=settings_dir)
+
+
+def _list_labels(label: str) -> None:
+    print(label.split()[0])
+
+
+def _list_paths(paths: str, indent: bool) -> None:
+    paths = paths.split()
+    for path in paths:
+        if indent:
+            print(f'    {path}')
+        else:
+            print(path)
+
+
+def _print_settings_directory(settings_dir: str) -> None:
     print_highlight("Settings directory:", end=' ')
     print(Color.settings(settings_dir))

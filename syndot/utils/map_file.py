@@ -23,26 +23,50 @@ def read_map_file(map_file_path: str | None) -> ConfigParser:
 def get_map_info(
         config: ConfigParser, args: Namespace) -> tuple[str, list[str]]:
     settings_dir = config['Path']['settings_dir']
-    target_directories = config['Targets']['directories'].split()
-    target_files = config['Targets']['files'].split()
-    if args.TARGET_PATH_START is None and args.all:
-        targets = [*target_files, *target_directories]
-    else:
-        targets = []
-        for file in target_files:
-            if args.exact:
-                if file == args.TARGET_PATH_START:
-                    targets.append(file)
+
+    targets = []
+
+    available_labels = list(config['Targets'].keys())
+    unavailable_labels = []
+    if args.label is not None:
+        for label in args.label:
+            if label in available_labels:
+                targets.extend(config['Targets'][label].split())
             else:
-                if file.startswith(args.TARGET_PATH_START):
-                    targets.append(file)
-        for directory in target_directories:
-            if args.exact:
-                if directory == args.TARGET_PATH_START:
-                    targets.append(directory)
+                unavailable_labels.append(label)
+
+    available_paths = []
+    for path in config['Targets'].values():
+        available_paths.extend(path.split())
+    available_paths = [expand_home_path(path) for path in available_paths]
+    unavailable_paths = []
+    if args.path is not None:
+        for path in args.path:
+            if path.endswith(os.sep):
+                path = path[:-1]
+            path = expand_home_path(path=path)
+            if path in available_paths:
+                targets.append(path)
             else:
-                if directory.startswith(args.TARGET_PATH_START):
-                    targets.append(directory)
+                unavailable_paths.append(path)
+
+    error_message = ""
+    if unavailable_labels:
+        error_message += "\nThe following labels are not available in the map"\
+                         "file:\n"
+        for label in unavailable_labels:
+            error_message += f"    {label}\n"
+    if unavailable_paths:
+        error_message += "\nThe following paths are not available in the map"\
+                         "file:\n"
+        for path in unavailable_paths:
+            error_message += f"    {path}\n"
+    if error_message:
+        raise NameError(error_message)
+
+    if args.label is None and args.path is None:
+        for target in config['Targets'].values():
+            targets.extend(target.split())
 
     return settings_dir, targets
 
