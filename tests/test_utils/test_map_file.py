@@ -7,7 +7,7 @@ from pytest import mark, raises
 import shutil
 from syndot.utils.map_file import read_map_file, get_map_info, write_map_file
 from tests.conftest import (paths, labels, targets, MAP_FILE_PATH,
-                            TEST_DATA_PATH)
+                            TEST_DATA_PATH, valid_labels, valid_targets)
 
 
 @mark.utils
@@ -75,6 +75,22 @@ class TestGetMapInfo:
         for target in targets_list:
             assert isinstance(target, str)
             assert target
+
+    @mark.error
+    def test_raises_name_error(self):
+        args = Namespace()
+        args.label = valid_labels[0] + '_other'
+        args.path = None
+        config = read_map_file(map_file_path=MAP_FILE_PATH)
+        with raises(NameError):
+            get_map_info(config=config, args=args)
+
+        args = Namespace()
+        args.label = None
+        args.path = valid_targets[0] + '_other'
+        config = read_map_file(map_file_path=MAP_FILE_PATH)
+        with raises(NameError):
+            get_map_info(config=config, args=args)
 
 
 @mark.utils
