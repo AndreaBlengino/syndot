@@ -15,7 +15,8 @@ class TestInitConfig:
             return os.path.join(TEST_DATA_PATH, '.config', 'syndot')
 
         def mock_log_path():
-            return os.path.join(TEST_DATA_PATH, '.config', 'syndot', 'log_file.log')
+            return os.path.join(
+                TEST_DATA_PATH, '.config', 'syndot', 'log_file.log')
 
         config_path = mock_config_path()
         log_file_path = mock_log_path()
