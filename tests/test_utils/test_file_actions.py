@@ -2,11 +2,10 @@ from hypothesis import given, settings
 from hypothesis.strategies import booleans
 import os
 from pytest import mark
-import shutil
 from syndot.utils.file_actions import (copy, change_parent_owner,
                                        change_child_owner, remove)
-from tests.conftest import (paths, TEST_DATA_PATH, SETTINGS_DIR,
-                            create_file_or_directory)
+from tests.conftest import (paths, SETTINGS_DIR, create_file_or_directory,
+                            reset_environment)
 
 
 @mark.utils
@@ -16,6 +15,8 @@ class TestCopy:
     @given(source_path=paths(), destination_path=paths(), is_file=booleans())
     @settings(max_examples=100, deadline=None)
     def test_function(self, source_path, destination_path, is_file):
+        reset_environment()
+
         if source_path != destination_path:
             create_file_or_directory(path=source_path, is_file=is_file)
 
@@ -32,7 +33,7 @@ class TestCopy:
             assert source_stat.st_uid == destination_stat.st_uid
             assert source_stat.st_gid == destination_stat.st_gid
 
-            shutil.rmtree(TEST_DATA_PATH)
+        reset_environment()
 
 
 @mark.utils
@@ -42,6 +43,8 @@ class TestChangeParentOwner:
     @given(source_path=paths(absolute=True), is_file=booleans())
     @settings(max_examples=100, deadline=None)
     def test_function(self, source_path, is_file):
+        reset_environment()
+
         destination_path = os.path.join(
             os.getcwd(), SETTINGS_DIR, *source_path.split(os.path.sep)[1:])
         for path in [source_path, destination_path]:
@@ -67,7 +70,7 @@ class TestChangeParentOwner:
             source_parent_path = os.path.dirname(source_parent_path)
             destination_parent_path = os.path.dirname(destination_parent_path)
 
-        shutil.rmtree(TEST_DATA_PATH)
+        reset_environment()
 
 
 @mark.utils
@@ -77,6 +80,8 @@ class TestChangeChildOwner:
     @given(source_path=paths(absolute=True))
     @settings(max_examples=100, deadline=None)
     def test_function(self, source_path):
+        reset_environment()
+
         destination_path = os.path.join(
             os.getcwd(), SETTINGS_DIR, *source_path.split(os.path.sep)[1:])
         for path in [source_path, destination_path]:
@@ -108,7 +113,7 @@ class TestChangeChildOwner:
             assert source_target_stats.st_gid == \
                    destination_target_stats.st_gid
 
-        shutil.rmtree(TEST_DATA_PATH)
+        reset_environment()
 
 
 @mark.utils
@@ -118,6 +123,8 @@ class TestRemove:
     @given(path=paths(absolute=True), is_file=booleans())
     @settings(max_examples=100, deadline=None)
     def test_function(self, path, is_file):
+        reset_environment()
+
         create_file_or_directory(path=path, is_file=is_file)
         link_path = os.path.join(os.path.dirname(path), 'symlink_to_target')
         os.symlink(path, link_path)
@@ -137,4 +144,4 @@ class TestRemove:
         assert not os.path.islink(link_path)
         assert not os.path.exists(link_path)
 
-        shutil.rmtree(TEST_DATA_PATH)
+        reset_environment()

@@ -2,11 +2,10 @@ from hypothesis import given, settings
 from hypothesis.strategies import booleans, one_of, none
 import os
 from pytest import mark
-import shutil
 from syndot.utils.path import (generate_backup_path, split_path,
                                expand_home_path, compose_target_paths)
-from tests.conftest import (paths, usernames, TEST_DATA_PATH, SETTINGS_DIR,
-                            create_file_or_directory)
+from tests.conftest import (paths, usernames, SETTINGS_DIR,
+                            create_file_or_directory, reset_environment)
 
 
 @mark.utils
@@ -16,6 +15,8 @@ class TestGenerateBackupPath:
     @given(path=paths(), is_file=booleans())
     @settings(max_examples=100, deadline=None)
     def test_function(self, path, is_file):
+        reset_environment()
+
         create_file_or_directory(path=path, is_file=is_file)
 
         backup_path = generate_backup_path(path=path)
@@ -28,7 +29,7 @@ class TestGenerateBackupPath:
             assert backup_path.endswith('_bak')
         assert path == backup_path[:-4]
 
-        shutil.rmtree(TEST_DATA_PATH)
+        reset_environment()
 
 
 @mark.utils

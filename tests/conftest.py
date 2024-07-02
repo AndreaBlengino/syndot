@@ -2,6 +2,7 @@ from configparser import ConfigParser
 from hypothesis.strategies import (composite, text, lists, characters,
                                    sampled_from)
 import os
+import shutil
 
 
 TEST_DATA_PATH = 'test_data'
@@ -74,3 +75,8 @@ def targets(draw, absolute=True):
             elements=[target.replace(
                 '~', os.path.join(os.getcwd(), TEST_DATA_PATH))
                 for target in valid_targets]))
+
+
+def reset_environment():
+    if os.path.exists(TEST_DATA_PATH):
+        shutil.rmtree(TEST_DATA_PATH)

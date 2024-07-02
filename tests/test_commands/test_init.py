@@ -2,9 +2,8 @@ from argparse import Namespace
 from hypothesis import given, settings
 import os
 from pytest import mark, raises
-import shutil
 from syndot.commands import init
-from tests.conftest import paths, create_file_or_directory, TEST_DATA_PATH
+from tests.conftest import paths, create_file_or_directory, reset_environment
 
 
 @mark.commands
@@ -14,6 +13,7 @@ class TestInit:
     @given(path=paths())
     @settings(max_examples=100, deadline=None)
     def test_function(self, path):
+        reset_environment()
 
         args = Namespace()
         args.path = path
@@ -27,12 +27,13 @@ class TestInit:
         assert len(content) == 1
         assert 'map.ini' in content
 
-        shutil.rmtree(TEST_DATA_PATH)
+        reset_environment()
 
     @mark.error
     @given(path=paths())
     @settings(max_examples=100, deadline=None)
     def test_raises_value_error(self, path):
+        reset_environment()
 
         args = Namespace()
         args.path = path
@@ -48,4 +49,4 @@ class TestInit:
         assert os.path.isdir(path)
         assert not os.listdir(path)
 
-        shutil.rmtree(TEST_DATA_PATH)
+        reset_environment()

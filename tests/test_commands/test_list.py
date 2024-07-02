@@ -3,10 +3,10 @@ from configparser import ConfigParser
 from hypothesis import given, settings, HealthCheck
 from hypothesis.strategies import booleans
 from pytest import mark
-import shutil
 from syndot.commands import list_
-from tests.test_commands.conftest import (
-    generate_testing_map_file, TEST_MAP_FILE_PATH, TEST_DATA_PATH)
+from tests.conftest import reset_environment
+from tests.test_commands.conftest import (generate_testing_map_file,
+                                          TEST_MAP_FILE_PATH)
 
 
 @mark.commands
@@ -20,6 +20,7 @@ class TestList:
               deadline=None,
               suppress_health_check=[HealthCheck.function_scoped_fixture])
     def test_print_action(self, directory_arg, label_arg, path_arg, capsys):
+        reset_environment()
 
         args = Namespace()
         args.directory = directory_arg
@@ -73,4 +74,4 @@ class TestList:
             else:
                 assert path not in printed_output
 
-        shutil.rmtree(TEST_DATA_PATH)
+        reset_environment()

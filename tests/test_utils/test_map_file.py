@@ -7,7 +7,7 @@ from pytest import mark, raises
 import shutil
 from syndot.utils.map_file import read_map_file, get_map_info, write_map_file
 from tests.conftest import (paths, labels, targets, MAP_FILE_PATH,
-                            TEST_DATA_PATH, valid_labels, valid_targets)
+                            valid_labels, valid_targets, reset_environment)
 
 
 @mark.utils
@@ -100,6 +100,8 @@ class TestWriteMapFile:
     @given(path=paths())
     @settings(max_examples=100, deadline=None)
     def test_function(self, path):
+        reset_environment()
+
         config = read_map_file(map_file_path=MAP_FILE_PATH)
 
         map_file_path = os.path.join(path, 'map.ini')
@@ -109,4 +111,4 @@ class TestWriteMapFile:
         assert os.path.exists(map_file_path)
         assert os.path.isfile(map_file_path)
 
-        shutil.rmtree(TEST_DATA_PATH)
+        reset_environment()

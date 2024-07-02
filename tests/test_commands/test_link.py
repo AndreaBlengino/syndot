@@ -3,11 +3,11 @@ from hypothesis import given, settings
 from hypothesis.strategies import one_of, none, booleans, sampled_from
 import os
 from pytest import mark
-import shutil
 from syndot.commands import link
 from syndot.utils import prompt
 from syndot.utils.prompt import VALID_PROMPT_CHOICES
-from tests.conftest import labels, targets, valid_targets, TEST_DATA_PATH
+from tests.conftest import (labels, targets, valid_targets, TEST_DATA_PATH,
+                            reset_environment)
 from tests.test_commands.conftest import (
         generate_link_testing_system_files, generate_testing_map_file,
         TEST_MAP_FILE_PATH, get_settings_target_path)
@@ -28,6 +28,7 @@ class TestLink:
     @settings(max_examples=100, deadline=None)
     def test_function(
             self, target_label, target_path, backup, answer, target_status):
+        reset_environment()
 
         args = Namespace()
         args.backup = backup
@@ -153,7 +154,7 @@ class TestLink:
                 assert os.path.islink(target)
                 assert os.readlink(target) != settings_target_path
 
-        shutil.rmtree(TEST_DATA_PATH)
+        reset_environment()
 
     @staticmethod
     def teardown_method():

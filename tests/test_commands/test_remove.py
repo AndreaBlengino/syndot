@@ -4,9 +4,8 @@ from hypothesis import given, settings
 from hypothesis.strategies import booleans
 import os
 from pytest import mark, raises
-import shutil
 from syndot.commands import remove
-from tests.conftest import labels, targets, TEST_DATA_PATH
+from tests.conftest import labels, targets, reset_environment
 from tests.test_commands.conftest import (
     generate_add_and_remove_testing_system_files, generate_testing_map_file,
     TEST_MAP_FILE_PATH)
@@ -24,6 +23,7 @@ class TestRemove:
     def test_function(
             self, target_label, target_path, ending_separator,
             target_is_label):
+        reset_environment()
 
         args = Namespace()
         if target_is_label:
@@ -67,7 +67,7 @@ class TestRemove:
             assert target_label not in config['Targets'].keys()
         assert target_path not in path_list
 
-        shutil.rmtree(TEST_DATA_PATH)
+        reset_environment()
 
     @mark.error
     @given(target_label=labels(),
@@ -76,6 +76,7 @@ class TestRemove:
     @settings(max_examples=100, deadline=None)
     def test_raises_name_error(
             self, target_label, target_path, ending_separator):
+        reset_environment()
 
         args = Namespace()
         args.label = target_label
@@ -115,4 +116,4 @@ class TestRemove:
         assert target_label in config['Targets'].keys()
         assert target_path in path_list
 
-        shutil.rmtree(TEST_DATA_PATH)
+        reset_environment()
