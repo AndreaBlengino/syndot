@@ -8,10 +8,12 @@ from syndot.utils.colors import Color
 class TestColor:
 
     @mark.genuine
-    @given(link = text(min_size = 5, max_size = 10, alphabet = characters(min_codepoint = 97, max_codepoint = 122)))
-    @settings(max_examples = 100, deadline = None)
+    @given(link=text(min_size=5,
+                     max_size=10,
+                     alphabet=characters(min_codepoint=97, max_codepoint=122)))
+    @settings(max_examples=100, deadline=None)
     def test_link(self, link):
-        colored_link = Color.link(link = link)
+        colored_link = Color.link(link=link)
 
         assert isinstance(colored_link, str)
         assert colored_link
@@ -20,10 +22,13 @@ class TestColor:
         assert colored_link.endswith(Color.COLOR_END_SEQUENCE)
 
     @mark.genuine
-    @given(symbol = text(min_size = 1, max_size = 3, alphabet = characters(min_codepoint = 97, max_codepoint = 122)))
-    @settings(max_examples = 100, deadline = None)
+    @given(symbol=text(min_size=1,
+                       max_size=3,
+                       alphabet=characters(min_codepoint=97,
+                                           max_codepoint=122)))
+    @settings(max_examples=100, deadline=None)
     def test_symbol(self, symbol):
-        colored_symbol = Color.symbol(symbol = symbol)
+        colored_symbol = Color.symbol(symbol=symbol)
 
         assert isinstance(colored_symbol, str)
         assert colored_symbol
@@ -32,10 +37,13 @@ class TestColor:
         assert colored_symbol.endswith(Color.COLOR_END_SEQUENCE)
 
     @mark.genuine
-    @given(settings_ = text(min_size = 5, max_size = 10, alphabet = characters(min_codepoint = 97, max_codepoint = 122)))
-    @settings(max_examples = 100, deadline = None)
+    @given(settings_=text(min_size=5,
+                          max_size=10,
+                          alphabet=characters(min_codepoint=97,
+                                              max_codepoint=122)))
+    @settings(max_examples=100, deadline=None)
     def test_settings(self, settings_):
-        colored_settings = Color.settings(settings = settings_)
+        colored_settings = Color.settings(settings=settings_)
 
         assert isinstance(colored_settings, str)
         assert colored_settings
@@ -44,10 +52,13 @@ class TestColor:
         assert colored_settings.endswith(Color.COLOR_END_SEQUENCE)
 
     @mark.genuine
-    @given(error = text(min_size = 5, max_size = 10, alphabet = characters(min_codepoint = 97, max_codepoint = 122)))
-    @settings(max_examples = 100, deadline = None)
+    @given(error=text(min_size=5,
+                      max_size=10,
+                      alphabet=characters(min_codepoint=97,
+                                          max_codepoint=122)))
+    @settings(max_examples=100, deadline=None)
     def test_error(self, error):
-        colored_error = Color.error(error = error)
+        colored_error = Color.error(error=error)
 
         assert isinstance(colored_error, str)
         assert colored_error
@@ -56,10 +67,13 @@ class TestColor:
         assert colored_error.endswith(Color.COLOR_END_SEQUENCE)
 
     @mark.genuine
-    @given(highlight = text(min_size = 5, max_size = 10, alphabet = characters(min_codepoint = 97, max_codepoint = 122)))
-    @settings(max_examples = 100, deadline = None)
+    @given(highlight=text(min_size=5,
+                          max_size=10,
+                          alphabet=characters(min_codepoint=97,
+                                              max_codepoint=122)))
+    @settings(max_examples=100, deadline=None)
     def test_highlight(self, highlight):
-        colored_highlight = Color.highlight(sentence = highlight)
+        colored_highlight = Color.highlight(sentence=highlight)
 
         assert isinstance(colored_highlight, str)
         assert colored_highlight
