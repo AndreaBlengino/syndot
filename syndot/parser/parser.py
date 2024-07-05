@@ -50,22 +50,23 @@ class CommandFormatter(HelpFormatter):
 
 parser = ArgumentParser(
     prog='syndot',
-    usage='%(prog)s {OPTION | COMMAND}',
+    usage='%(prog)s <COMMAND> [<OPTIONS>...]',
     description='Manage symlinks to dotfiles',
     epilog='Config file path: ~/.config/syndot',
     add_help=False,
     formatter_class=GeneralFormatter)
-parser._positionals.title = 'ARGUMENTS'
-parser._optionals.title = 'OPTIONS'
+
 parser.add_argument(
     '-h', '--help',
     action='help',
     default=SUPPRESS,
     help='Show this help message and exit')
+
 parser.add_argument(
     '-v', '--version',
     action='version',
     version=f'%(prog)s {__version__}',
     help='Show program\'s version number and exit')
+
 command_parser = parser.add_subparsers(dest='command',
-                                       title='COMMANDS')
+                                       title='commands')
