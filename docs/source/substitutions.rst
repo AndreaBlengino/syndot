@@ -18,3 +18,9 @@
 .. |command syndot add| raw:: html
 
    <a class="reference external" href="../add/index.html"><code class="docutils literal notranslate">syndot add</code></a>
+
+.. |syndot rename| raw:: html
+
+   <a class="reference external" href="rename/index.html"><code class="docutils literal notranslate">syndot rename</code></a>
+
+

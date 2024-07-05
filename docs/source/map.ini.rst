@@ -30,3 +30,4 @@ Usage
 * |syndot add| to add dotfiles to the :ref:`map file <map.ini>`
 * |syndot remove| to remove dotfiles from the :ref:`map file <map.ini>`
 * |syndot list| to show :ref:`map file <map.ini>` content
+* |syndot rename| to rename a label in the :ref:`map file <map.ini>`
