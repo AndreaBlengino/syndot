@@ -23,7 +23,28 @@ def read_map_file(map_file_path: str | None) -> ConfigParser:
 def get_map_info(
         config: ConfigParser, args: Namespace) -> tuple[str, list[str]]:
     settings_dir = config['Path']['settings_dir']
+    targets, unavailable_labels, unavailable_paths = _get_available_targets(
+        config=config, args=args)
 
+    _compose_error_message(
+        unavailable_labels=unavailable_labels,
+        unavailable_paths=unavailable_paths)
+
+    if args.label is None and args.path is None:
+        for target in config['Targets'].values():
+            targets.extend(target.split())
+
+    return settings_dir, targets
+
+
+def write_map_file(map_file_path: str | None, config: ConfigParser) -> None:
+    with open(map_file_path, 'w') as map_file:
+        config.write(map_file)
+
+
+def _get_available_targets(
+        config: ConfigParser, args: Namespace) -> \
+        tuple[list[str], [list[str], list[str]]]:
     targets = []
 
     available_labels = list(config['Targets'].keys())
@@ -50,6 +71,11 @@ def get_map_info(
             else:
                 unavailable_paths.append(path)
 
+    return targets, unavailable_labels, unavailable_paths
+
+
+def _compose_error_message(
+        unavailable_labels: list[str], unavailable_paths: list[str]):
     error_message = ""
     if unavailable_labels:
         error_message += "\nThe following labels are not available in the map"\
@@ -63,14 +89,3 @@ def get_map_info(
             error_message += f"    {path}\n"
     if error_message:
         raise NameError(error_message)
-
-    if args.label is None and args.path is None:
-        for target in config['Targets'].values():
-            targets.extend(target.split())
-
-    return settings_dir, targets
-
-
-def write_map_file(map_file_path: str | None, config: ConfigParser) -> None:
-    with open(map_file_path, 'w') as map_file:
-        config.write(map_file)
