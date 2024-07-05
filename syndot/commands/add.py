@@ -21,8 +21,9 @@ def add(args: Namespace) -> None:
             raise OSError(f"Target {target_path} not found")
 
         target_path = expand_home_path(target_path)
-        if target_path in current_targets[args.label]:
-            print(f"Target {target_path} already in map file")
+        if args.label in current_targets.keys():
+            if target_path in current_targets[args.label]:
+                print(f"Target {target_path} already in map file")
             continue
         if args.label not in current_targets.keys():
             current_targets[args.label] = []
