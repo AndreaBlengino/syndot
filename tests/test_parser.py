@@ -280,6 +280,25 @@ class TestParser:
             assert not parsed_arguments.path
 
     @mark.genuine
+    @given(old_label=text(
+               min_size=5,
+               max_size=10,
+               alphabet=characters(min_codepoint=97, max_codepoint=122)),
+           new_label=text(
+               min_size=5,
+               max_size=10,
+               alphabet=characters(min_codepoint=97, max_codepoint=122)))
+    @settings(max_examples=100, deadline=None)
+    def test_rename(self, old_label, new_label):
+        input_arguments = f'rename -o {old_label} -n {new_label}'.split()
+
+        parsed_arguments = parser.parse_args(input_arguments)
+
+        assert parsed_arguments.command == 'rename'
+        assert parsed_arguments.old_label == old_label
+        assert parsed_arguments.new_label == new_label
+
+    @mark.genuine
     @given(abbreviation=booleans())
     @settings(max_examples=100,
               deadline=None,
@@ -316,6 +335,7 @@ class TestParser:
         assert 'link' in printed_output
         assert 'list' in printed_output
         assert 'remove' in printed_output
+        assert 'rename' in printed_output
         assert 'unlink' in printed_output
 
     @mark.genuine
