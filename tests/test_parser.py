@@ -303,10 +303,11 @@ class TestParser:
             parser.parse_args(args=args)
         printed_output = capsys.readouterr().out
 
-        assert printed_output.startswith('usage: syndot {OPTION | COMMAND}')
+        assert printed_output.startswith('usage: syndot <COMMAND> '
+                                         '[<OPTIONS>...]')
         assert printed_output.endswith('Config file path: ~/.config/syndot\n')
-        assert 'OPTIONS' in printed_output
-        assert 'COMMANDS' in printed_output
+        assert 'options:' in printed_output
+        assert 'commands:' in printed_output
         assert '-h, --help' in printed_output
         assert '-v, --version' in printed_output
         assert 'add' in printed_output
