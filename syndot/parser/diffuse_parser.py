@@ -6,7 +6,7 @@ diffuse_parser = command_parser.add_parser(
     'diffuse',
     prog='syndot diffuse',
     usage='%(prog)s ([[-l | --label] <LABEL>...] | [[-p | --path] <PATH>...]) '
-          '[[-m | --mapfile] <MAP_FILE>]',
+          '[[-m | --mapfile] <MAP_FILE>] [[-s | --start] <PATH_START>]',
     description='Create dotfiles symlinks',
     help='Create dotfiles symlinks',
     add_help=False,
@@ -43,3 +43,10 @@ diffuse_parser.add_argument(
     metavar='<PATH>',
     help='Dotfile path(s) to diffuse. At least a <LABEL> or a <PATH> must '
          'be provided')
+
+diffuse_parser.add_argument(
+    '-s', '--start',
+    required=False,
+    dest='start',
+    metavar='<PATH_START>',
+    help='Filter target based on path starting with <PATH_START>')

@@ -6,7 +6,8 @@ link_parser = command_parser.add_parser(
     'link',
     prog='syndot link',
     usage='%(prog)s [-b | --backup] ([[-l | --label] <LABEL>...] | '
-          '[[-p | --path] <PATH>...]) [[-m | --mapfile] <MAP_FILE>]',
+          '[[-p | --path] <PATH>...]) [[-m | --mapfile] <MAP_FILE>] '
+          '[[-s | --start] <PATH_START>]',
     description='Move dotfiles to settings directory '
                 'and create symlinks to them',
     help='Move dotfiles to settings directory and create symlinks to them',
@@ -52,3 +53,10 @@ link_parser.add_argument(
     metavar='<PATH>',
     help='Dotfile path(s) to link. At least a <LABEL> or a <PATH> must be '
          'provided')
+
+link_parser.add_argument(
+    '-s', '--start',
+    required=False,
+    dest='start',
+    metavar='<PATH_START>',
+    help='Filter target based on path starting with <PATH_START>')
