@@ -12,10 +12,10 @@ if not os.path.exists(CONFIG_DIR_PATH) or not os.path.exists(COLORSCHEME_PATH):
         'default.colorscheme')
 color_config = ConfigParser()
 color_config.read(COLORSCHEME_PATH)
-COLOR_MAP = {'link': 'Color6',
-             'symbol': 'Color0',
-             'settings': 'Color1',
-             'error': 'Color4'}
+COLOR_MAP = {'link': 'Color4',
+             'symbol': 'Color6',
+             'settings': 'Color3',
+             'error': 'Color1'}
 
 
 def get_ansi_color(color_type: str) -> str:
