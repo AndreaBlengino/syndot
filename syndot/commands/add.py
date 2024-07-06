@@ -24,7 +24,7 @@ def add(args: Namespace) -> None:
         if args.label in current_targets.keys():
             if target_path in current_targets[args.label]:
                 print(f"Target {target_path} already in map file")
-            continue
+                continue
         if args.label not in current_targets.keys():
             current_targets[args.label] = []
         current_targets[args.label].append(target_path)
