@@ -71,6 +71,10 @@ def _get_available_targets(
             else:
                 unavailable_paths.append(path)
 
+    if args.start:
+        targets = [target for target in targets
+                   if target.startswith(args.start)]
+
     return targets, unavailable_labels, unavailable_paths
 
 
