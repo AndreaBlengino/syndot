@@ -20,6 +20,7 @@ class TestLink:
     @given(backup=booleans(),
            target_label=one_of(labels(), none()),
            target_path=one_of(targets(absolute=False), none()),
+           start_path=booleans(),
            answer=sampled_from(elements=[*VALID_PROMPT_CHOICES.keys(), '']),
            target_status=sampled_from(
                elements=['targets_to_be_linked', 'already_existing_settings',
@@ -27,7 +28,8 @@ class TestLink:
                          'corrupted_targets', 'wrong_existing_links']))
     @settings(max_examples=100, deadline=None)
     def test_function(
-            self, target_label, target_path, backup, answer, target_status):
+            self, target_label, target_path, start_path, backup, answer,
+            target_status):
         reset_environment()
 
         args = Namespace()
@@ -41,6 +43,8 @@ class TestLink:
             args.path = [target_path]
         else:
             args.path = None
+        args.start = os.path.split(target_path)[0] \
+            if start_path and target_path else None
 
         generate_testing_map_file()
         generate_link_testing_system_files(status=target_status)

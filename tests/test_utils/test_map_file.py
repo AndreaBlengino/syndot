@@ -56,12 +56,14 @@ class TestGetMapInfo:
                min_size=1,
                max_size=5,
                elements=targets()),
-                       none()))
+                       none()),
+           start_path=booleans())
     @settings(max_examples=100, deadline=None)
-    def test_function(self, label, path):
+    def test_function(self, label, path, start_path):
         args = Namespace()
         args.label = label
         args.path = path
+        args.start = os.path.split(path[0])[0] if start_path and path else None
         config = read_map_file(map_file_path=MAP_FILE_PATH)
 
         settings_dir, targets_list = get_map_info(config=config, args=args)
@@ -70,17 +72,18 @@ class TestGetMapInfo:
         assert settings_dir
 
         assert isinstance(targets_list, list)
-        assert targets_list
 
-        for target in targets_list:
-            assert isinstance(target, str)
-            assert target
+        if targets_list:
+            for target in targets_list:
+                assert isinstance(target, str)
+                assert target
 
     @mark.error
     def test_raises_name_error(self):
         args = Namespace()
         args.label = valid_labels[0] + '_other'
         args.path = None
+        args.start = None
         config = read_map_file(map_file_path=MAP_FILE_PATH)
         with raises(NameError):
             get_map_info(config=config, args=args)
@@ -88,6 +91,7 @@ class TestGetMapInfo:
         args = Namespace()
         args.label = None
         args.path = valid_targets[0] + '_other'
+        args.start = None
         config = read_map_file(map_file_path=MAP_FILE_PATH)
         with raises(NameError):
             get_map_info(config=config, args=args)
