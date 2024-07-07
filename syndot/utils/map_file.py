@@ -34,6 +34,10 @@ def get_map_info(
         for target in config['Targets'].values():
             targets.extend(target.split())
 
+    if args.start:
+        targets = [target for target in targets
+                   if target.startswith(args.start)]
+
     return settings_dir, targets
 
 
@@ -70,10 +74,6 @@ def _get_available_targets(
                 targets.append(path)
             else:
                 unavailable_paths.append(path)
-
-    if args.start:
-        targets = [target for target in targets
-                   if target.startswith(args.start)]
 
     return targets, unavailable_labels, unavailable_paths
 
