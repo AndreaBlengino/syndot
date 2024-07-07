@@ -27,7 +27,7 @@ def unlink(args: Namespace) -> None:
     missing_settings_targets = []
     settings_are_links = []
 
-    print_highlight('Looking for files and directories to unlink...')
+    print_highlight("Looking for files and directories to unlink...")
 
     for target in targets:
         system_target_path, settings_target_path = compose_target_paths(
@@ -63,7 +63,7 @@ def unlink(args: Namespace) -> None:
                 already_unlinked_targets,
                 missing_settings_targets,
                 settings_are_links]):
-        print_highlight('No files or directories found to unlink.')
+        print_highlight("No files or directories found to unlink.")
 
     unlink_dotfiles(
         targets_list=targets_to_be_unlinked,
@@ -222,5 +222,5 @@ def unlink_dotfiles(targets_list: dict[str, str],
                 except Exception as e:
                     print_error(f"Error in unlinking {system_target_path}. "
                                 f"Check {LOG_FILE_PATH} for more details.")
-                    log_error(f'{e}')
+                    log_error(f"{e}")
         print('\n')

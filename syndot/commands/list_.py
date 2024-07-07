@@ -41,7 +41,7 @@ def _list_paths(paths: str, indent: bool) -> None:
     paths = paths.split()
     for path in paths:
         if indent:
-            print(f'    {path}')
+            print(f"    {path}")
         else:
             print(path)
 

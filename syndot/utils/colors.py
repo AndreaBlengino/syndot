@@ -29,9 +29,9 @@ class Color:
     SYMBOL_COLOR = get_ansi_color('symbol')
     SETTINGS_COLOR = get_ansi_color('settings')
     ERROR_COLOR = get_ansi_color('error')
-    BOLD_START_SEQUENCE = "\033[1m"
-    BOLD_END_SEQUENCE = "\033[0m"
-    COLOR_END_SEQUENCE = "\x1b[0m"
+    BOLD_START_SEQUENCE = '\033[1m'
+    BOLD_END_SEQUENCE = '\033[0m'
+    COLOR_END_SEQUENCE = '\x1b[0m'
 
     @classmethod
     def link(cls, link: str) -> str:

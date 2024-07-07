@@ -27,7 +27,7 @@ def link(args: Namespace) -> None:
     corrupted_targets = []
     wrong_existing_links = []
 
-    print_highlight('Looking for files and directories to link...')
+    print_highlight("Looking for files and directories to link...")
 
     for target in targets:
         system_target_path, settings_target_path = compose_target_paths(
@@ -58,7 +58,7 @@ def link(args: Namespace) -> None:
                 already_linked_targets,
                 corrupted_targets,
                 wrong_existing_links]):
-        print_highlight('No files or directories found to link.')
+        print_highlight("No files or directories found to link.")
 
     link_dotfiles(
         targets_list=targets_to_be_linked,
@@ -207,5 +207,5 @@ def link_dotfiles(targets_list: dict[str, str],
                 except Exception as e:
                     print_error(f"Error in linking {system_target_path}. "
                                 f"Check {LOG_FILE_PATH} for more details.")
-                    log_error(f'{e}')
+                    log_error(f"{e}")
         print('\n')
