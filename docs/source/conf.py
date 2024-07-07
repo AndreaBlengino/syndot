@@ -12,7 +12,9 @@ import subprocess
 project = 'syndot'
 copyright = '2024, Andrea Blengino'
 author = 'Andrea Blengino'
-release = subprocess.run('git describe --tags'.split(), stdout = subprocess.PIPE).stdout.decode('utf-8')
+release = subprocess.run(
+    'git describe --tags'.split(), stdout=subprocess.PIPE).stdout.decode(
+    'utf-8')
 
 if release.count('-') >= 2:
     release = '-'.join(release.split('-')[:2])
@@ -25,7 +27,6 @@ extensions = ['sphinx.ext.autodoc']
 
 templates_path = ['_templates']
 exclude_patterns = []
-
 
 
 # -- Options for HTML output -------------------------------------------------
