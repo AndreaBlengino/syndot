@@ -290,7 +290,7 @@ class TestParser:
                alphabet=characters(min_codepoint=97, max_codepoint=122)))
     @settings(max_examples=100, deadline=None)
     def test_rename(self, old_label, new_label):
-        input_arguments = f'rename -o {old_label} -n {new_label}'.split()
+        input_arguments = f"rename -o {old_label} -n {new_label}".split()
 
         parsed_arguments = parser.parse_args(input_arguments)
 
@@ -322,9 +322,9 @@ class TestParser:
             parser.parse_args(args=args)
         printed_output = capsys.readouterr().out
 
-        assert printed_output.startswith('usage: syndot <COMMAND> '
-                                         '[<OPTIONS>...]')
-        assert printed_output.endswith('Config file path: ~/.config/syndot\n')
+        assert printed_output.startswith("usage: syndot <COMMAND> "
+                                         "[<OPTIONS>...]")
+        assert printed_output.endswith("Config file path: ~/.config/syndot\n")
         assert 'options:' in printed_output
         assert 'commands:' in printed_output
         assert '-h, --help' in printed_output
@@ -360,7 +360,7 @@ class TestParser:
             parser.parse_args(args=args)
         printed_output = capsys.readouterr().out
 
-        assert printed_output.startswith(f'usage: syndot {command}')
+        assert printed_output.startswith(f"usage: syndot {command}")
         assert 'options' in printed_output
         assert '-h, --help' in printed_output
         if command in ['add', 'diffuse', 'link', 'list', 'remove', 'unlink']:
