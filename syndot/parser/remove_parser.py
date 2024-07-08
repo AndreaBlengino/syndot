@@ -1,4 +1,3 @@
-from argparse import SUPPRESS
 from syndot.parser.parser import command_parser, CommandFormatter
 
 
@@ -13,12 +12,6 @@ remove_parser = command_parser.add_parser(
     formatter_class=CommandFormatter)
 
 remove_parser.add_argument(
-    '-h', '--help',
-    action='help',
-    default=SUPPRESS,
-    help="Show this help message and exit")
-
-remove_parser.add_argument(
     '-l', '--label',
     required=False,
     nargs='+',
@@ -27,14 +20,6 @@ remove_parser.add_argument(
     help="Label(s) and relative path(s) to remove from the map file. One or "
          "more labels can be provided. At least a <LABEL> or a <PATH> must be "
          "provided")
-
-remove_parser.add_argument(
-    '-m', '--mapfile',
-    required=False,
-    metavar='<MAP_FILE>',
-    help="Path to the %(metavar)s. If not provided search for a 'map.ini' "
-         "file in the current directory, so not required if the current "
-         "directory is the settings directory")
 
 remove_parser.add_argument(
     '-p', '--path',

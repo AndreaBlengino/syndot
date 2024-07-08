@@ -1,4 +1,3 @@
-from argparse import SUPPRESS
 from syndot.parser.parser import command_parser, CommandFormatter
 
 
@@ -23,12 +22,6 @@ link_parser.add_argument(
     help="Create a backup copy of the original dotfile")
 
 link_parser.add_argument(
-    '-h', '--help',
-    action='help',
-    default=SUPPRESS,
-    help="Show this help message and exit")
-
-link_parser.add_argument(
     '-l', '--label',
     required=False,
     nargs='+',
@@ -38,14 +31,6 @@ link_parser.add_argument(
          "<PATH> must be provided")
 
 link_parser.add_argument(
-    '-m', '--mapfile',
-    required=False,
-    metavar='<MAP_FILE>',
-    help="Path to the %(metavar)s. If not provided search for a 'map.ini' "
-         "file in the current directory, so not required if the current "
-         "directory is the settings directory")
-
-link_parser.add_argument(
     '-p', '--path',
     required=False,
     nargs='+',
@@ -53,10 +38,3 @@ link_parser.add_argument(
     metavar='<PATH>',
     help="Dotfile path(s) to link. At least a <LABEL> or a <PATH> must be "
          "provided")
-
-link_parser.add_argument(
-    '-s', '--start',
-    required=False,
-    dest='start',
-    metavar='<PATH_START>',
-    help="Filter target based on path starting with <PATH_START>")
