@@ -1,6 +1,8 @@
 rename
 ======
 
+.. versionadded:: 2.0
+
 Rename label in the :ref:`map file <map.ini>`.
 
 
