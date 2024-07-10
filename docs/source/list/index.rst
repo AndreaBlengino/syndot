@@ -16,6 +16,8 @@ Options
 
 * ``-d``, ``--directory`` - Print the settings directory.
 
+  .. versionadded:: 2.0
+
 * ``-h``, ``--help`` - Show the help message and exit.
 
 * ``-l``, ``--label`` - List only target labels. Not allowed together with the 

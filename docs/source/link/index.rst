@@ -10,8 +10,8 @@ Usage
 -----
 
 ``syndot link [-b | --backup] ([[-l | --label] <LABEL>...] | 
-[[-p | --path] <PATH>...]) [[-m | --mapfile] <MAP_FILE>]``
-
+[[-p | --path] <PATH>...]) [[-m | --mapfile] <MAP_FILE>] 
+[[-s | --start] <PATH_START>]``
 
 Options
 -------
@@ -31,5 +31,10 @@ Options
 
 * ``-p``, ``--path`` ``<PATH> [<PATH>...]`` - Dotfile path(s) to link. At 
   least a ``<LABEL>`` or a ``<PATH>`` must be provided.
+
+  .. versionadded:: 2.0
+
+* ``-s``, ``--start`` ``<PATH_START>`` - Filter target based on path starting 
+  with <PATH_START>.
 
   .. versionadded:: 2.0
