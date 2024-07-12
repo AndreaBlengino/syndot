@@ -22,7 +22,7 @@ Arguments
 Options
 -------
 
-* ``-a``, ``--add`` - Select all dotfiles in the :ref:`map file <map.ini>`, mandatory if ``<TARGET_PATH>`` argument is
+* ``-a``, ``--all`` - Select all dotfiles in the :ref:`map file <map.ini>`, mandatory if ``<TARGET_PATH>`` argument is
   not provided.
 * ``-e``, ``--exact`` - Search for an exact match for the ``<TARGET_PATH>`` argument in the :ref:`map file <map.ini>`.
   If not provided, search for all targets which paths begin with ``<TARGET_PATH>`` argument in the
