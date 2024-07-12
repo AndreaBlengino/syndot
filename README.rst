@@ -78,6 +78,7 @@ References
 - `Issue tracker <https://github.com/AndreaBlengino/syndot/issues>`_
 - `Source code <https://github.com/AndreaBlengino/syndot/tree/master/syndot>`_
 - `GNU General Public License v3.0 <https://github.com/AndreaBlengino/syndot/blob/master/LICENSE>`_
+- `Release Notes <https://syndot.readthedocs.io/en/latest/release_notes.html>`_
 
 
 Contributing
