@@ -2,21 +2,24 @@ from hypothesis import given, settings
 from hypothesis.strategies import booleans, one_of, none
 import os
 from pytest import mark
-import shutil
-from syndot.utils.path import generate_backup_path, split_path, expand_home_path, compose_target_paths
-from tests.conftest import paths, usernames, TEST_DATA_PATH, SETTINGS_DIR, create_file_or_directory
+from syndot.utils.path import (generate_backup_path, split_path,
+                               expand_home_path, compose_target_paths)
+from tests.conftest import (paths, usernames, SETTINGS_DIR,
+                            create_file_or_directory, reset_environment)
 
 
 @mark.utils
 class TestGenerateBackupPath:
 
     @mark.genuine
-    @given(path = paths(), is_file = booleans())
-    @settings(max_examples = 100, deadline = None)
+    @given(path=paths(), is_file=booleans())
+    @settings(max_examples=100, deadline=None)
     def test_function(self, path, is_file):
-        create_file_or_directory(path = path, is_file = is_file)
+        reset_environment()
 
-        backup_path = generate_backup_path(path = path)
+        create_file_or_directory(path=path, is_file=is_file)
+
+        backup_path = generate_backup_path(path=path)
 
         assert isinstance(backup_path, str)
         assert backup_path
@@ -26,17 +29,17 @@ class TestGenerateBackupPath:
             assert backup_path.endswith('_bak')
         assert path == backup_path[:-4]
 
-        shutil.rmtree(TEST_DATA_PATH)
+        reset_environment()
 
 
 @mark.utils
 class TestSplitPath:
 
     @mark.genuine
-    @given(path = paths())
-    @settings(max_examples = 100, deadline = None)
+    @given(path=paths())
+    @settings(max_examples=100, deadline=None)
     def test_function(self, path):
-        splitted = split_path(path = path)
+        splitted = split_path(path=path)
 
         assert isinstance(splitted, list)
         assert splitted
@@ -48,21 +51,24 @@ class TestSplitPath:
 class TestExpandHomePath:
 
     @mark.genuine
-    @given(path = paths(), sudo_user = one_of(usernames(), none()), add_home = booleans())
-    @settings(max_examples = 100, deadline = None)
+    @given(path=paths(),
+           sudo_user=one_of(usernames(), none()),
+           add_home=booleans())
+    @settings(max_examples=100, deadline=None)
     def test_function(self, path, sudo_user, add_home):
         if sudo_user:
             os.environ['SUDO_USER'] = sudo_user
         if add_home:
             path = os.path.join('~', path)
 
-        expanded_path = expand_home_path(path = path)
+        expanded_path = expand_home_path(path=path)
 
         assert isinstance(expanded_path, str)
         assert expanded_path
         if add_home:
             if sudo_user:
-                assert expanded_path.startswith(os.path.join(os.sep, 'home', sudo_user))
+                assert expanded_path.startswith(
+                    os.path.join(os.sep, 'home', sudo_user))
             else:
                 assert expanded_path.startswith(os.path.join(os.sep, 'home'))
         else:
@@ -72,14 +78,15 @@ class TestExpandHomePath:
 class TestComposeTargetPaths:
 
     @mark.genuine
-    @given(target_path = paths(absolute = True), add_home = booleans())
-    @settings(max_examples = 100, deadline = None)
+    @given(target_path=paths(absolute=True), add_home=booleans())
+    @settings(max_examples=100, deadline=None)
     def test_function(self, target_path, add_home):
         if add_home:
             target_path = os.path.join('~', target_path)
 
-        system_target_path, settings_target_path = compose_target_paths(settings_dir = SETTINGS_DIR,
-                                                                        target = target_path)
+        system_target_path, settings_target_path = compose_target_paths(
+            settings_dir=SETTINGS_DIR,
+            target=target_path)
 
         for path in [system_target_path, settings_target_path]:
             assert isinstance(path, str)

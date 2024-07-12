@@ -5,40 +5,38 @@ from syndot.utils.path import expand_home_path
 
 
 def read_map_file(map_file_path: str | None) -> ConfigParser:
-    map_file_path = expand_home_path(map_file_path if map_file_path is not None else 'map.ini')
+    map_file_path = expand_home_path(
+        map_file_path if map_file_path is not None else 'map.ini')
     if not os.path.exists(map_file_path):
         if map_file_path == 'map.ini':
-            raise FileNotFoundError("Missing map.ini file in current directory.")
+            raise FileNotFoundError(
+                "Missing map.ini file in current directory.")
         else:
-            raise FileNotFoundError("Missing map.ini file at the specified path.")
+            raise FileNotFoundError(
+                "Missing map.ini file at the specified path.")
     config = ConfigParser()
     config.read(map_file_path)
 
     return config
 
 
-def get_map_info(config: ConfigParser, args: Namespace) -> tuple[str, list[str]]:
+def get_map_info(
+        config: ConfigParser, args: Namespace) -> tuple[str, list[str]]:
     settings_dir = config['Path']['settings_dir']
-    target_directories = config['Targets']['directories'].split()
-    target_files = config['Targets']['files'].split()
-    if args.TARGET_PATH_START is None and args.all:
-        targets = [*target_files, *target_directories]
-    else:
-        targets = []
-        for file in target_files:
-            if args.exact:
-                if file == args.TARGET_PATH_START:
-                    targets.append(file)
-            else:
-                if file.startswith(args.TARGET_PATH_START):
-                    targets.append(file)
-        for directory in target_directories:
-            if args.exact:
-                if directory == args.TARGET_PATH_START:
-                    targets.append(directory)
-            else:
-                if directory.startswith(args.TARGET_PATH_START):
-                    targets.append(directory)
+    targets, unavailable_labels, unavailable_paths = _get_available_targets(
+        config=config, args=args)
+
+    _compose_error_message(
+        unavailable_labels=unavailable_labels,
+        unavailable_paths=unavailable_paths)
+
+    if args.label is None and args.path is None:
+        for target in config['Targets'].values():
+            targets.extend(target.split())
+
+    if args.start:
+        targets = [target for target in targets
+                   if target.startswith(args.start)]
 
     return settings_dir, targets
 
@@ -46,3 +44,52 @@ def get_map_info(config: ConfigParser, args: Namespace) -> tuple[str, list[str]]
 def write_map_file(map_file_path: str | None, config: ConfigParser) -> None:
     with open(map_file_path, 'w') as map_file:
         config.write(map_file)
+
+
+def _get_available_targets(
+        config: ConfigParser, args: Namespace) -> \
+        tuple[list[str], [list[str], list[str]]]:
+    targets = []
+
+    available_labels = list(config['Targets'].keys())
+    unavailable_labels = []
+    if args.label is not None:
+        for label in args.label:
+            if label in available_labels:
+                targets.extend(config['Targets'][label].split())
+            else:
+                unavailable_labels.append(label)
+
+    available_paths = []
+    for path in config['Targets'].values():
+        available_paths.extend(path.split())
+    available_paths = [expand_home_path(path) for path in available_paths]
+    unavailable_paths = []
+    if args.path is not None:
+        for path in args.path:
+            if path.endswith(os.sep):
+                path = path[:-1]
+            path = expand_home_path(path=path)
+            if path in available_paths:
+                targets.append(path)
+            else:
+                unavailable_paths.append(path)
+
+    return targets, unavailable_labels, unavailable_paths
+
+
+def _compose_error_message(
+        unavailable_labels: list[str], unavailable_paths: list[str]):
+    error_message = ""
+    if unavailable_labels:
+        error_message += "\nThe following labels are not available in the map"\
+                         "file:\n"
+        for label in unavailable_labels:
+            error_message += f"    {label}\n"
+    if unavailable_paths:
+        error_message += "\nThe following paths are not available in the map"\
+                         "file:\n"
+        for path in unavailable_paths:
+            error_message += f"    {path}\n"
+    if error_message:
+        raise NameError(error_message)

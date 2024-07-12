@@ -1,8 +1,7 @@
 import os
 from pytest import mark
-import shutil
 from syndot import init_config
-from tests.conftest import TEST_DATA_PATH
+from tests.conftest import TEST_DATA_PATH, reset_environment
 
 
 @mark.config
@@ -10,12 +9,14 @@ class TestInitConfig:
 
     @mark.genuine
     def test_function(self, monkeypatch):
+        reset_environment()
 
         def mock_config_path():
             return os.path.join(TEST_DATA_PATH, '.config', 'syndot')
 
         def mock_log_path():
-            return os.path.join(TEST_DATA_PATH, '.config', 'syndot', 'log_file.log')
+            return os.path.join(
+                TEST_DATA_PATH, '.local', 'share', 'syndot', 'log_file.log')
 
         config_path = mock_config_path()
         log_file_path = mock_log_path()
@@ -37,4 +38,4 @@ class TestInitConfig:
         assert os.path.exists(log_file_path)
         assert os.path.isfile(log_file_path)
 
-        shutil.rmtree(config_path)
+        reset_environment()

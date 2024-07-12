@@ -11,4 +11,5 @@ syndot
    link/index
    list/index
    remove/index
+   rename/index
    unlink/index

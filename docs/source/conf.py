@@ -12,7 +12,9 @@ import subprocess
 project = 'syndot'
 copyright = '2024, Andrea Blengino'
 author = 'Andrea Blengino'
-release = subprocess.run('git describe --tags'.split(), stdout = subprocess.PIPE).stdout.decode('utf-8')
+release = subprocess.run(
+    'git describe --tags'.split(), stdout=subprocess.PIPE).stdout.decode(
+    'utf-8')
 
 if release.count('-') >= 2:
     release = '-'.join(release.split('-')[:2])
@@ -27,11 +29,11 @@ templates_path = ['_templates']
 exclude_patterns = []
 
 
-
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'furo'
 html_static_path = ['_static']
+html_css_files = ['custom.css']
 add_module_names = False
 html_title = 'syndot'

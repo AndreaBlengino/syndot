@@ -18,8 +18,8 @@ for input_answer, proceed in VALID_PROMPT_CHOICES.items():
 class TestAskToProceed:
 
     @mark.genuine
-    @given(answer = sampled_from(elements = [*VALID_PROMPT_CHOICES.keys(), '']))
-    @settings(max_examples = 100, deadline = None)
+    @given(answer=sampled_from(elements=[*VALID_PROMPT_CHOICES.keys(), '']))
+    @settings(max_examples=100, deadline=None)
     def test_function(self, answer):
         prompt.input = lambda x: answer
         proceed = prompt.ask_to_proceed()

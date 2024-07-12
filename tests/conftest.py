@@ -1,6 +1,8 @@
 from configparser import ConfigParser
-from hypothesis.strategies import composite, text, lists, characters, sampled_from
+from hypothesis.strategies import (composite, text, lists, characters,
+                                   sampled_from)
 import os
+import shutil
 
 
 TEST_DATA_PATH = 'test_data'
@@ -11,14 +13,15 @@ MAP_FILE_PATH = os.path.join(os.getcwd(), 'syndot', '_templates', 'map.ini')
 def get_valid_targets() -> list[str]:
     config = ConfigParser()
     config.read(MAP_FILE_PATH)
-    target_directories = config['Targets']['directories'].split()
-    target_files = config['Targets']['files'].split()
-    valid_targets = [*target_files, *target_directories]
+    valid_labels = list(config['Targets'].keys())
+    valid_targets = []
+    for target in config['Targets'].values():
+        valid_targets.extend(target.split())
 
-    return valid_targets
+    return valid_labels, valid_targets
 
 
-valid_targets = get_valid_targets()
+valid_labels, valid_targets = get_valid_targets()
 
 
 def create_file_or_directory(path: str, is_file: bool) -> None:
@@ -34,11 +37,14 @@ def create_file_or_directory(path: str, is_file: bool) -> None:
 
 
 @composite
-def paths(draw, absolute = False):
-    folder_list = draw(lists(elements = text(min_size = 5, max_size = 10, alphabet = characters(min_codepoint = 97,
-                                                                                                max_codepoint = 122)),
-                             min_size = 2,
-                             max_size = 5))
+def paths(draw, absolute=False):
+    folder_list = draw(lists(elements=text(min_size=5,
+                                           max_size=10,
+                                           alphabet=characters(
+                                               min_codepoint=97,
+                                               max_codepoint=122)),
+                             min_size=2,
+                             max_size=5))
     if absolute:
         folder_list.insert(0, os.path.join(os.getcwd(), TEST_DATA_PATH))
     else:
@@ -49,12 +55,28 @@ def paths(draw, absolute = False):
 
 @composite
 def usernames(draw):
-    return draw(text(min_size = 5, max_size = 10, alphabet = characters(min_codepoint = 97, max_codepoint = 122)))
+    return draw(text(min_size=5,
+                     max_size=10,
+                     alphabet=characters(min_codepoint=97,
+                                         max_codepoint=122)))
 
 
 @composite
-def targets(draw, absolute = True):
+def labels(draw):
+    return draw(sampled_from(elements=valid_labels))
+
+
+@composite
+def targets(draw, absolute=True):
     if absolute:
-        return draw(sampled_from(elements = valid_targets))
+        return draw(sampled_from(elements=valid_targets))
     else:
-        return draw(sampled_from(elements = [target.replace('~', os.path.join(os.getcwd(), TEST_DATA_PATH)) for target in valid_targets]))
+        return draw(sampled_from(
+            elements=[target.replace(
+                '~', os.path.join(os.getcwd(), TEST_DATA_PATH))
+                for target in valid_targets]))
+
+
+def reset_environment():
+    if os.path.exists(TEST_DATA_PATH):
+        shutil.rmtree(TEST_DATA_PATH)

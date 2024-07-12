@@ -3,19 +3,24 @@ import os
 from syndot.init_config import CONFIG_DIR_PATH
 
 
-COLORSCHEME_PATH = os.path.join(CONFIG_DIR_PATH, 'colorschemes', 'default.colorscheme')
+COLORSCHEME_PATH = os.path.join(
+    CONFIG_DIR_PATH, 'colorschemes', 'default.colorscheme')
 if not os.path.exists(CONFIG_DIR_PATH) or not os.path.exists(COLORSCHEME_PATH):
-    COLORSCHEME_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), '_colorschemes', 'default.colorscheme')
+    COLORSCHEME_PATH = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)),
+        '_colorschemes',
+        'default.colorscheme')
 color_config = ConfigParser()
 color_config.read(COLORSCHEME_PATH)
-COLOR_MAP = {'link': 'Color6',
-             'symbol': 'Color0',
-             'settings': 'Color1',
-             'error': 'Color4'}
+COLOR_MAP = {'link': 'Color4',
+             'symbol': 'Color6',
+             'settings': 'Color3',
+             'error': 'Color1'}
 
 
 def get_ansi_color(color_type: str) -> str:
-    color = color_config.get(section = COLOR_MAP[color_type], option = 'Color').replace(',', ';')
+    color = color_config.get(section=COLOR_MAP[color_type],
+                             option='Color').replace(',', ';')
     return f"\x1b[38;2;{color}m"
 
 
@@ -24,9 +29,9 @@ class Color:
     SYMBOL_COLOR = get_ansi_color('symbol')
     SETTINGS_COLOR = get_ansi_color('settings')
     ERROR_COLOR = get_ansi_color('error')
-    BOLD_START_SEQUENCE = "\033[1m"
-    BOLD_END_SEQUENCE = "\033[0m"
-    COLOR_END_SEQUENCE = "\x1b[0m"
+    BOLD_START_SEQUENCE = '\033[1m'
+    BOLD_END_SEQUENCE = '\033[0m'
+    COLOR_END_SEQUENCE = '\x1b[0m'
 
     @classmethod
     def link(cls, link: str) -> str:

@@ -5,32 +5,35 @@ from syndot.utils.path import expand_home_path
 
 
 def add(args: Namespace) -> None:
-    map_file_path = expand_home_path(args.mapfile if args.mapfile is not None else 'map.ini')
+    map_file_path = expand_home_path(
+        args.mapfile if args.mapfile is not None else 'map.ini')
 
-    target = args.TARGET_PATH
-    if target.endswith(os.sep):
-        target = target[:-1]
-    if not os.path.exists(target):
-        raise OSError(f"Target {target} not found")
+    config = read_map_file(map_file_path=map_file_path)
+    current_targets = dict(config['Targets'])
+    for label, paths in current_targets.items():
+        current_targets[label] = paths.split()
 
-    config = read_map_file(map_file_path = map_file_path)
-    current_targets = []
-    if os.path.isfile(target):
-        current_targets = config['Targets']['files'].split()
-    elif os.path.isdir(target):
-        current_targets = config['Targets']['directories'].split()
+    for target_path in args.path:
+        if target_path.endswith(os.sep):
+            target_path = target_path[:-1]
 
-    target_path = expand_home_path(target)
-    if target_path in current_targets:
-        print(f"Target {target} already in map file")
-        return
-    current_targets.append(target_path)
-    current_targets = list(set(current_targets))
-    current_targets.sort()
+        if not os.path.exists(target_path):
+            raise OSError(f"Target {target_path} not found")
 
-    if os.path.isfile(target):
-        config['Targets']['files'] = '\n' + '\n'.join(current_targets)
-    elif os.path.isdir(target):
-        config['Targets']['directories'] = '\n' + '\n'.join(current_targets)
+        target_path = expand_home_path(target_path)
+        if args.label in current_targets.keys():
+            if target_path in current_targets[args.label]:
+                print(f"Target {target_path} already in map file")
+                continue
+        if args.label not in current_targets.keys():
+            current_targets[args.label] = []
+        current_targets[args.label].append(target_path)
 
-    write_map_file(map_file_path = map_file_path, config = config)
+    current_targets[args.label] = list(set(current_targets[args.label]))
+    current_targets[args.label].sort()
+    current_targets = dict(sorted(current_targets.items()))
+    config['Targets'].clear()
+    for label, paths in current_targets.items():
+        config['Targets'][label] = '\n' + '\n'.join(paths)
+
+    write_map_file(map_file_path=map_file_path, config=config)

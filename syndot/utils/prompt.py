@@ -1,4 +1,8 @@
-VALID_PROMPT_CHOICES = {'y': True, 'ye': True, 'yes': True, 'n': False, 'no': False}
+VALID_PROMPT_CHOICES = {'y': True,
+                        'ye': True,
+                        'yes': True,
+                        'n': False,
+                        'no': False}
 
 
 def ask_to_proceed() -> bool:

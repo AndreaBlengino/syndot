@@ -4,88 +4,116 @@ from hypothesis import given, settings
 from hypothesis.strategies import booleans
 import os
 from pytest import mark, raises
-import shutil
 from syndot.commands import remove
-from tests.conftest import targets, TEST_DATA_PATH
-from tests.test_commands.conftest import (generate_add_and_remove_testing_system_files, generate_testing_map_file,
-                                          TEST_MAP_FILE_PATH)
+from tests.conftest import labels, targets, reset_environment
+from tests.test_commands.conftest import (
+    generate_add_and_remove_testing_system_files, generate_testing_map_file,
+    TEST_MAP_FILE_PATH)
 
 
 @mark.commands
 class TestRemove:
 
     @mark.genuine
-    @given(target_path = targets(absolute = False), ending_separator = booleans())
-    @settings(max_examples = 100, deadline = None)
-    def test_function(self, target_path, ending_separator):
+    @given(target_label=labels(),
+           target_path=targets(absolute=False),
+           ending_separator=booleans(),
+           target_is_label=booleans())
+    @settings(max_examples=100, deadline=None)
+    def test_function(
+            self, target_label, target_path, ending_separator,
+            target_is_label):
+        reset_environment()
 
         args = Namespace()
-        args.mapfile = TEST_MAP_FILE_PATH
-        if ending_separator:
-            args.TARGET_PATH = target_path + os.sep
+        if target_is_label:
+            args.label = [target_label]
+            args.path = None
         else:
-            args.TARGET_PATH = target_path
+            args.label = None
+            if ending_separator:
+                args.path = [target_path + os.sep]
+            else:
+                args.path = [target_path]
+        args.mapfile = TEST_MAP_FILE_PATH
 
         generate_testing_map_file()
         generate_add_and_remove_testing_system_files()
 
         assert os.path.exists(target_path)
         assert not os.path.islink(target_path)
+
         config = ConfigParser()
         config.read(TEST_MAP_FILE_PATH)
-        if os.path.isfile(target_path):
-            assert target_path in config['Targets']['files']
-        if os.path.isdir(target_path):
-            assert target_path in config['Targets']['directories']
+        path_list = []
+        for path in config['Targets'].values():
+            path_list.extend(path.split())
 
-        remove(args = args)
+        assert target_label in config['Targets'].keys()
+        assert target_path in path_list
+
+        remove(args=args)
 
         assert os.path.exists(target_path)
         assert not os.path.islink(target_path)
+
         config = ConfigParser()
         config.read(TEST_MAP_FILE_PATH)
-        if os.path.isfile(target_path):
-            assert target_path not in config['Targets']['files'].split()
-        if os.path.isdir(target_path):
-            assert target_path not in config['Targets']['directories'].split()
+        path_list = []
+        for path in config['Targets'].values():
+            path_list.extend(path.split())
 
-        shutil.rmtree(TEST_DATA_PATH)
+        if target_is_label:
+            assert target_label not in config['Targets'].keys()
+        assert target_path not in path_list
+
+        reset_environment()
 
     @mark.error
-    @given(target_path = targets(absolute = False),
-           ending_separator = booleans())
-    @settings(max_examples = 100, deadline = None)
-    def test_raises_name_error(self, target_path, ending_separator):
+    @given(target_label=labels(),
+           target_path=targets(absolute=False),
+           ending_separator=booleans())
+    @settings(max_examples=100, deadline=None)
+    def test_raises_name_error(
+            self, target_label, target_path, ending_separator):
+        reset_environment()
 
         args = Namespace()
-        args.mapfile = TEST_MAP_FILE_PATH
+        args.label = target_label
         if ending_separator:
-            args.TARGET_PATH = target_path + '_other' + os.sep
+            args.path = [target_path + '_other' + os.sep]
         else:
-            args.TARGET_PATH = target_path + '_other'
+            args.path = [target_path + '_other']
+        args.mapfile = TEST_MAP_FILE_PATH
 
         generate_testing_map_file()
         generate_add_and_remove_testing_system_files()
 
         assert os.path.exists(target_path)
         assert not os.path.islink(target_path)
+
         config = ConfigParser()
         config.read(TEST_MAP_FILE_PATH)
-        if os.path.isfile(target_path):
-            assert target_path in config['Targets']['files']
-        if os.path.isdir(target_path):
-            assert target_path in config['Targets']['directories']
+        path_list = []
+        for path in config['Targets'].values():
+            path_list.extend(path.split())
+
+        assert target_label in config['Targets'].keys()
+        assert target_path in path_list
 
         with raises(NameError):
-            remove(args = args)
+            remove(args=args)
 
         assert os.path.exists(target_path)
         assert not os.path.islink(target_path)
+
         config = ConfigParser()
         config.read(TEST_MAP_FILE_PATH)
-        if os.path.isfile(target_path):
-            assert target_path in config['Targets']['files'].split()
-        if os.path.isdir(target_path):
-            assert target_path in config['Targets']['directories'].split()
+        path_list = []
+        for path in config['Targets'].values():
+            path_list.extend(path.split())
 
-        shutil.rmtree(TEST_DATA_PATH)
+        assert target_label in config['Targets'].keys()
+        assert target_path in path_list
+
+        reset_environment()

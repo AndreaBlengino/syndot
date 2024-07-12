@@ -2,10 +2,11 @@ import os
 from syndot.utils.print_ import print_highlight
 
 
-def skip_dotfiles(targets_list: list[str],
-                  many_targets_sentence: str,
-                  single_file_sentence: str,
-                  single_directory_sentence: str) -> None:
+def skip_dotfiles(
+        targets_list: list[str],
+        many_targets_sentence: str,
+        single_file_sentence: str,
+        single_directory_sentence: str) -> None:
     if targets_list:
         for target in targets_list:
             print(f"Skip {target}")
