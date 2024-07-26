@@ -15,7 +15,10 @@ color_config.read(COLORSCHEME_PATH)
 COLOR_MAP = {'link': 'Color4',
              'symbol': 'Color6',
              'settings': 'Color3',
-             'error': 'Color1'}
+             'error': 'Color1',
+             'prompt_sentence': 'Color4',
+             'prompt_foreground': 'Color6',
+             'prompt_background': 'Background'}
 
 
 def get_ansi_color(color_type: str) -> str:
@@ -24,11 +27,20 @@ def get_ansi_color(color_type: str) -> str:
     return f"\x1b[38;2;{color}m"
 
 
+def get_hex_color(color_type: str) -> str:
+    r, g, b = color_config.get(section=COLOR_MAP[color_type],
+                               option='Color').split(',')
+    return f'#{int(r):02x}{int(g):02x}{int(b):02x}'
+
+
 class Color:
     LINK_COLOR = get_ansi_color('link')
     SYMBOL_COLOR = get_ansi_color('symbol')
     SETTINGS_COLOR = get_ansi_color('settings')
     ERROR_COLOR = get_ansi_color('error')
+    PROMPT_SENTENCE = get_hex_color('prompt_sentence')
+    PROMPT_FOREGROUND = get_hex_color('prompt_foreground')
+    PROMPT_BACKGROUND = get_hex_color('prompt_background')
     BOLD_START_SEQUENCE = '\033[1m'
     BOLD_END_SEQUENCE = '\033[0m'
     COLOR_END_SEQUENCE = '\x1b[0m'
