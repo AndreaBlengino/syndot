@@ -2,7 +2,7 @@ from argparse import Namespace
 import os
 import shutil
 from syndot.init_config import LOG_FILE_PATH
-from syndot.utils.commands import skip_dotfiles
+from syndot.utils.commands import skip_dotfiles, print_dotfiles_to_manage
 from syndot.utils.file_actions import remove
 from syndot.utils.logger import log_error
 from syndot.utils.map_file import get_map_info, read_map_file
@@ -11,8 +11,7 @@ from syndot.utils.path import (compose_target_paths,
                                generate_backup_path)
 from syndot.utils.print_ import (print_action,
                                  print_error,
-                                 print_highlight,
-                                 print_relationship)
+                                 print_highlight)
 from syndot.utils.prompt import ask_to_proceed
 
 
@@ -168,22 +167,14 @@ def unlink_dotfiles(targets_list: dict[str, str],
                     ask_for_confirmation: bool) -> None:
     if targets_list:
         n_targets = len(targets_list.keys())
-        if n_targets > 1:
-            for system_target_path, settings_target_path in \
-                    targets_list.items():
-                print_relationship(system_target_path=system_target_path,
-                                   settings_target_path=settings_target_path,
-                                   symbol='-x->')
-            print_highlight(many_targets_sentence)
-        else:
-            print_relationship(
-                system_target_path=list(targets_list.keys())[0],
-                settings_target_path=list(targets_list.values())[0],
-                symbol='-x->')
-            if os.path.isfile(list(targets_list.keys())[0]):
-                print_highlight(single_file_sentence)
-            else:
-                print_highlight(single_directory_sentence)
+
+        print_dotfiles_to_manage(
+            n_targets=n_targets,
+            targets_list=targets_list,
+            many_targets_sentence=many_targets_sentence,
+            single_file_sentence=single_directory_sentence,
+            single_directory_sentence=single_directory_sentence,
+            symbol='-x->')
 
         proceed = ask_to_proceed() if ask_for_confirmation else True
 
