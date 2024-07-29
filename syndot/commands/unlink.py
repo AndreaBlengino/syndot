@@ -82,7 +82,8 @@ def unlink(args: Namespace) -> None:
                                   f" directory to unlink.\nIt will be moved "
                                   f"to the respective system directory.\nThe "
                                   f"original symbolic link and eventually the "
-                                  f"backup directory will be removed.")
+                                  f"backup directory will be removed.",
+        ask_for_confirmation=not args.no_confirm),
 
     unlink_dotfiles(
         targets_list=wrong_existing_links,
@@ -105,7 +106,8 @@ def unlink(args: Namespace) -> None:
                                   f"removed and eventually also the backup "
                                   f"directory.\nThen the settings directory "
                                   f"will be moved to the respective system "
-                                  f"directory.")
+                                  f"directory.",
+        ask_for_confirmation=not args.no_confirm),
 
     unlink_dotfiles(
         targets_list=already_existing_system,
@@ -127,7 +129,8 @@ def unlink(args: Namespace) -> None:
                                   f"will be removed and eventually also the "
                                   f"backup directory.\nThen the settings "
                                   f"directory will be moved to the respective "
-                                  f"system directory.")
+                                  f"system directory.",
+        ask_for_confirmation=not args.no_confirm),
 
     skip_dotfiles(
         targets_list=already_unlinked_targets,
@@ -161,7 +164,8 @@ def unlink_dotfiles(targets_list: dict[str, str],
                     settings_dir: str,
                     many_targets_sentence: str,
                     single_file_sentence: str,
-                    single_directory_sentence: str) -> None:
+                    single_directory_sentence: str,
+                    ask_for_confirmation: bool) -> None:
     if targets_list:
         n_targets = len(targets_list.keys())
         if n_targets > 1:
@@ -171,22 +175,17 @@ def unlink_dotfiles(targets_list: dict[str, str],
                                    settings_target_path=settings_target_path,
                                    symbol='-x->')
             print_highlight(many_targets_sentence)
-            proceed = ask_to_proceed()
         else:
+            print_relationship(
+                system_target_path=list(targets_list.keys())[0],
+                settings_target_path=list(targets_list.values())[0],
+                symbol='-x->')
             if os.path.isfile(list(targets_list.keys())[0]):
-                print_relationship(
-                    system_target_path=list(targets_list.keys())[0],
-                    settings_target_path=list(targets_list.values())[0],
-                    symbol='-x->')
                 print_highlight(single_file_sentence)
-                proceed = ask_to_proceed()
             else:
-                print_relationship(
-                    system_target_path=list(targets_list.keys())[0],
-                    settings_target_path=list(targets_list.values())[0],
-                    symbol='-x->')
                 print_highlight(single_directory_sentence)
-                proceed = ask_to_proceed()
+
+        proceed = ask_to_proceed() if ask_for_confirmation else True
 
         if proceed:
             for i, (system_target_path, settings_target_path) in \

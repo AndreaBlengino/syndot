@@ -76,7 +76,8 @@ def link(args: Namespace) -> None:
                                   f"directory to link.\nIt will be moved to "
                                   f"settings directory and will be replaced "
                                   f"by a symbolic link.",
-        remove_settings=False)
+        remove_settings=False,
+        ask_for_confirmation=not args.no_confirm),
 
     link_dotfiles(
         targets_list=already_existing_settings,
@@ -102,7 +103,8 @@ def link(args: Namespace) -> None:
                                   f"respective directory from the system will "
                                   f"be moved to settings directory and will "
                                   f"be replaced by a symbolic link.",
-        remove_settings=True)
+        remove_settings=True,
+        ask_for_confirmation=not args.no_confirm),
 
     skip_dotfiles(
         targets_list=missing_system_targets,
@@ -151,7 +153,8 @@ def link_dotfiles(targets_list: dict[str, str],
                   many_targets_sentence: str,
                   single_file_sentence: str,
                   single_directory_sentence: str,
-                  remove_settings: bool) -> None:
+                  remove_settings: bool,
+                  ask_for_confirmation: bool) -> None:
     if targets_list:
         n_targets = len(targets_list.keys())
         if n_targets > 1:
@@ -161,22 +164,17 @@ def link_dotfiles(targets_list: dict[str, str],
                                    settings_target_path=settings_target_path,
                                    symbol='-->')
             print_highlight(many_targets_sentence)
-            proceed = ask_to_proceed()
         else:
+            print_relationship(
+                system_target_path=list(targets_list.keys())[0],
+                settings_target_path=list(targets_list.values())[0],
+                symbol='-->')
             if os.path.isfile(list(targets_list.keys())[0]):
-                print_relationship(
-                    system_target_path=list(targets_list.keys())[0],
-                    settings_target_path=list(targets_list.values())[0],
-                    symbol='-->')
                 print_highlight(single_file_sentence)
-                proceed = ask_to_proceed()
             else:
-                print_relationship(
-                    system_target_path=list(targets_list.keys())[0],
-                    settings_target_path=list(targets_list.values())[0],
-                    symbol='-->')
                 print_highlight(single_directory_sentence)
-                proceed = ask_to_proceed()
+
+        proceed = ask_to_proceed() if ask_for_confirmation else True
 
         if proceed:
             for i, (system_target_path, settings_target_path) in \

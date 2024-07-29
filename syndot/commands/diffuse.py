@@ -72,7 +72,8 @@ def diffuse(args: Namespace) -> None:
                                   f" directory to diffuse.\nA symbolic link "
                                   f"to this directory will be created in the "
                                   f"respective system directory.",
-        remove_system=False)
+        remove_system=False,
+        ask_for_confirmation=not args.no_confirm),
 
     diffuse_dotfiles(
         targets_list=already_existing_system,
@@ -92,7 +93,8 @@ def diffuse(args: Namespace) -> None:
                                   f"will be removed and replaced by a "
                                   f"symbolic link to the respective directory "
                                   f"in the settings directory.",
-        remove_system=True)
+        remove_system=True,
+        ask_for_confirmation=not args.no_confirm),
 
     diffuse_dotfiles(
         targets_list=wrong_existing_links,
@@ -112,7 +114,8 @@ def diffuse(args: Namespace) -> None:
                                   f"replaced by a symbolic link to the "
                                   f"respective directory in the settings "
                                   f"directory.",
-        remove_system=True)
+        remove_system=True,
+        ask_for_confirmation=not args.no_confirm),
 
     skip_dotfiles(
         targets_list=already_diffused_targets,
@@ -146,7 +149,8 @@ def diffuse_dotfiles(targets_list: dict[str, str],
                      many_targets_sentence: str,
                      single_file_sentence: str,
                      single_directory_sentence: str,
-                     remove_system: bool) -> None:
+                     remove_system: bool,
+                     ask_for_confirmation: bool) -> None:
     if targets_list:
         n_targets = len(targets_list.keys())
         if n_targets > 1:
@@ -156,22 +160,17 @@ def diffuse_dotfiles(targets_list: dict[str, str],
                                    settings_target_path=settings_target_path,
                                    symbol='<--')
             print_highlight(many_targets_sentence)
-            proceed = ask_to_proceed()
         else:
+            print_relationship(
+                system_target_path=list(targets_list.keys())[0],
+                settings_target_path=list(targets_list.values())[0],
+                symbol='<--')
             if os.path.isfile(list(targets_list.values())[0]):
-                print_relationship(
-                    system_target_path=list(targets_list.keys())[0],
-                    settings_target_path=list(targets_list.values())[0],
-                    symbol='<--')
                 print_highlight(single_file_sentence)
-                proceed = ask_to_proceed()
             else:
-                print_relationship(
-                    system_target_path=list(targets_list.keys())[0],
-                    settings_target_path=list(targets_list.values())[0],
-                    symbol='<--')
                 print_highlight(single_directory_sentence)
-                proceed = ask_to_proceed()
+
+        proceed = ask_to_proceed() if ask_for_confirmation else True
 
         if proceed:
             for i, (system_target_path, settings_target_path) in \

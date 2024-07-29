@@ -43,6 +43,11 @@ start_option_parsers = [
     link_parser,
     unlink_parser]
 
+confirmation_option_parsers = [
+    diffuse_parser,
+    link_parser,
+    unlink_parser]
+
 for parser in [add_parser, diffuse_parser, init_parser, link_parser,
                list_parser, remove_parser, rename_parser, unlink_parser]:
     if parser in help_option_parsers:
@@ -68,3 +73,12 @@ for parser in [add_parser, diffuse_parser, init_parser, link_parser,
             dest='start',
             metavar='<PATH_START>',
             help="Filter target based on path starting with <PATH_START>")
+
+    if parser in confirmation_option_parsers:
+        parser.add_argument(
+            '-n', '--no-confirm',
+            action='store_true',
+            default=False,
+            required=False,
+            dest='no_confirm',
+            help="Do not ask for confirmation")
