@@ -5,14 +5,14 @@ from syndot import init_config
 
 
 init_config.init_config()
-command_map = {'init': commands.init,
-               'link': commands.link,
-               'unlink': commands.unlink,
-               'diffuse': commands.diffuse,
-               'add': commands.add,
-               'remove': commands.remove,
-               'rename': commands.rename,
-               'list': commands.list_}
+command_map = {'init': commands.init.init,
+               'link': commands.link.link,
+               'unlink': commands.unlink.unlink,
+               'diffuse': commands.diffuse.diffuse,
+               'add': commands.add.add,
+               'remove': commands.remove.remove,
+               'rename': commands.rename.rename,
+               'list': commands.list_.list_}
 
 
 def main():
