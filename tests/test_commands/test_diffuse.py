@@ -20,6 +20,7 @@ class TestDiffuse:
     @given(target_label=one_of(labels(), none()),
            target_path=one_of(targets(absolute=False), none()),
            start_path=booleans(),
+           no_confirm=booleans(),
            answer=sampled_from(elements=[*VALID_PROMPT_CHOICES.keys(), '']),
            target_status=sampled_from(
                elements=['targets_to_be_diffused', 'already_existing_system',
@@ -43,6 +44,7 @@ class TestDiffuse:
             args.path = None
         args.start = os.path.split(target_path)[0] \
             if start_path and target_path else None
+        args.no_confirm = no_confirm
 
         generate_testing_map_file()
         generate_diffuse_testing_system_files(status=target_status)
@@ -94,7 +96,7 @@ class TestDiffuse:
                 settings_target_path = get_settings_target_path(target=target)
                 if answer == '':
                     answer = 'n'
-                if VALID_PROMPT_CHOICES[answer]:
+                if VALID_PROMPT_CHOICES[answer] or no_confirm:
                     assert os.path.islink(target)
                     assert os.readlink(target) == settings_target_path
                     assert os.path.exists(settings_target_path)
@@ -107,7 +109,7 @@ class TestDiffuse:
                 settings_target_path = get_settings_target_path(target=target)
                 if answer == '':
                     answer = 'n'
-                if VALID_PROMPT_CHOICES[answer]:
+                if VALID_PROMPT_CHOICES[answer] or no_confirm:
                     assert os.path.islink(target)
                     assert os.readlink(target) == settings_target_path
                     assert os.path.exists(settings_target_path)
@@ -126,7 +128,7 @@ class TestDiffuse:
                 settings_target_path = get_settings_target_path(target=target)
                 if answer == '':
                     answer = 'n'
-                if VALID_PROMPT_CHOICES[answer]:
+                if VALID_PROMPT_CHOICES[answer] or no_confirm:
                     assert os.path.islink(target)
                     assert os.readlink(target) == settings_target_path
                     assert os.path.exists(settings_target_path)
