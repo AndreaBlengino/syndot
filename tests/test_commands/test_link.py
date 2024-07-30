@@ -1,5 +1,5 @@
 from argparse import Namespace
-from hypothesis import given, settings
+from hypothesis import given, settings, HealthCheck
 from hypothesis.strategies import one_of, none, booleans, sampled_from
 import os
 from pytest import mark
@@ -27,10 +27,12 @@ class TestLink:
                elements=['targets_to_be_linked', 'already_existing_settings',
                          'missing_system_targets', 'already_linked_targets',
                          'corrupted_targets', 'wrong_existing_links']))
-    @settings(max_examples=100, deadline=None)
+    @settings(max_examples=100,
+              deadline=None,
+              suppress_health_check=[HealthCheck.function_scoped_fixture])
     def test_function(
-            self, target_label, target_path, start_path, backup, answer,
-            target_status):
+            self, target_label, target_path, start_path, no_confirm, backup,
+            answer, target_status, monkeypatch):
         reset_environment()
 
         args = Namespace()
@@ -91,6 +93,11 @@ class TestLink:
                 settings_target_path = get_settings_target_path(target=target)
                 assert os.path.islink(target)
                 assert os.readlink(target) != settings_target_path
+
+        monkeypatch.setattr(
+            link,
+            'ask_to_proceed',
+            lambda: VALID_PROMPT_CHOICES[answer] if answer else False)
 
         prompt.input = lambda x: answer
         link.link(args=args)

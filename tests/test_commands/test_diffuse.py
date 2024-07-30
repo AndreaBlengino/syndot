@@ -1,5 +1,5 @@
 from argparse import Namespace
-from hypothesis import given, settings
+from hypothesis import given, settings, HealthCheck
 from hypothesis.strategies import one_of, none, sampled_from, booleans
 import os
 from pytest import mark
@@ -26,10 +26,12 @@ class TestDiffuse:
                elements=['targets_to_be_diffused', 'already_existing_system',
                          'already_diffused_targets', 'wrong_existing_links',
                          'missing_settings_targets', 'settings_are_links']))
-    @settings(max_examples=100, deadline=None)
+    @settings(max_examples=100,
+              deadline=None,
+              suppress_health_check=[HealthCheck.function_scoped_fixture])
     def test_function(
-            self, target_label, target_path, start_path, answer,
-            target_status):
+            self, target_label, target_path, start_path, no_confirm, answer,
+            target_status, monkeypatch):
         reset_environment()
 
         args = Namespace()
@@ -87,6 +89,11 @@ class TestDiffuse:
             for target in target_list:
                 settings_target_path = get_settings_target_path(target=target)
                 assert os.path.islink(settings_target_path)
+
+        monkeypatch.setattr(
+            diffuse,
+            'ask_to_proceed',
+            lambda: VALID_PROMPT_CHOICES[answer] if answer else False)
 
         prompt.input = lambda x: answer
         diffuse.diffuse(args=args)
