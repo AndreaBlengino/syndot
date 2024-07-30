@@ -1,5 +1,6 @@
 import subprocess
 from syndot.utils.colors import Color
+from syndot.utils.system_info import gum_is_available
 
 
 MESSAGE = 'Do you want to proceed?'
@@ -11,15 +12,10 @@ VALID_PROMPT_CHOICES = {'y': True,
 
 
 def ask_to_proceed() -> bool:
-    gum_return_code = subprocess.run(
-        ['which', 'gum'],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL
-    ).returncode
-    if gum_return_code:
-        return __ask_to_proceed_prompt()
-    else:
+    if gum_is_available():
         return __ask_to_proceed_gum()
+    else:
+        return __ask_to_proceed_prompt()
 
 
 def __ask_to_proceed_prompt() -> bool:
