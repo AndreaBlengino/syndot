@@ -12,13 +12,17 @@ def rename(args: Namespace) -> None:
     targets = dict(config['Targets'])
 
     if args.old_label in targets.keys():
-        targets[args.new_label] = targets.pop(args.old_label)
+        if args.new_label in targets.keys():
+            paths = [*targets[args.old_label].split(),
+                     *targets[args.new_label].split()]
+            paths.sort()
+            targets[args.new_label] = '\n' + '\n'.join(paths)
+            targets.pop(args.old_label)
+        else:
+            targets[args.new_label] = targets.pop(args.old_label)
     else:
         raise KeyError(f"Label {args.old_label!r} not found in the map file")
 
-    targets = dict(sorted(targets.items()))
-    config['Targets'].clear()
-    for label, paths in targets.items():
-        config['Targets'][label] = paths
+    config['Targets'] = dict(sorted(targets.items()))
 
     write_map_file(map_file_path=map_file_path, config=config)
