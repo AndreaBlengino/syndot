@@ -3,7 +3,7 @@ from configparser import ConfigParser
 from hypothesis import given, settings
 from hypothesis.strategies import text, characters
 from pytest import mark, raises
-from syndot.commands import rename
+from syndot.commands.rename import rename
 from tests.conftest import labels, reset_environment
 from tests.test_commands.conftest import (generate_testing_map_file,
                                           TEST_MAP_FILE_PATH)

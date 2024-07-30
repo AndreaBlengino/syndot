@@ -91,7 +91,7 @@ class TestLink:
                 assert os.readlink(target) != settings_target_path
 
         prompt.input = lambda x: answer
-        link(args=args)
+        link.link(args=args)
 
         if target_status == 'targets_to_be_linked':
             for target in target_list:

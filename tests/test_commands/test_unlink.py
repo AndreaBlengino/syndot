@@ -93,7 +93,7 @@ class TestUnlink:
                 assert os.path.islink(settings_target_path)
 
         prompt.input = lambda x: answer
-        unlink(args=args)
+        unlink.unlink(args=args)
 
         if target_status == 'targets_to_be_unlinked':
             for target in target_list:

@@ -87,7 +87,7 @@ class TestDiffuse:
                 assert os.path.islink(settings_target_path)
 
         prompt.input = lambda x: answer
-        diffuse(args=args)
+        diffuse.diffuse(args=args)
 
         if target_status == 'targets_to_be_diffused':
             for target in target_list:

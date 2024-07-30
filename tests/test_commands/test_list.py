@@ -3,7 +3,7 @@ from configparser import ConfigParser
 from hypothesis import given, settings, HealthCheck
 from hypothesis.strategies import booleans
 from pytest import mark
-from syndot.commands import list_
+from syndot.commands.list_ import list_
 from tests.conftest import reset_environment
 from tests.test_commands.conftest import (generate_testing_map_file,
                                           TEST_MAP_FILE_PATH)

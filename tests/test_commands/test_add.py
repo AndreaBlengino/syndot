@@ -4,7 +4,7 @@ from hypothesis import given, settings
 from hypothesis.strategies import booleans, sampled_from
 import os
 from pytest import mark, raises
-from syndot.commands import add
+from syndot.commands.add import add
 from tests.conftest import labels, targets, reset_environment
 from tests.test_commands.conftest import (
     generate_add_and_remove_testing_system_files, generate_testing_map_file,
