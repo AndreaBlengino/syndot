@@ -3,8 +3,9 @@ import subprocess
 
 
 version = subprocess.run(
-    'git describe --tags'.split(), stdout=subprocess.PIPE).stdout.decode(
-    'utf-8').strip()
+    'git describe --tags'.split(),
+    stdout=subprocess.PIPE
+).stdout.decode('utf-8').strip()
 
 try:
     setup(version=version)
