@@ -11,6 +11,17 @@ VALID_PROMPT_CHOICES = {
     'n': False,
     'no': False
 }
+GUM_CONFIRM_COMMAND = [
+    'gum',
+    'confirm',
+    f"{MESSAGE}",
+    '--default=false',
+    f"--prompt.foreground={Color.PROMPT_SENTENCE}",
+    f"--selected.foreground={Color.PROMPT_BACKGROUND}",
+    f"--selected.background={Color.PROMPT_FOREGROUND}",
+    f"--unselected.foreground={Color.PROMPT_FOREGROUND}",
+    f"--unselected.background={Color.PROMPT_BACKGROUND}"
+]
 
 
 def ask_to_proceed() -> bool:
@@ -32,15 +43,7 @@ def __ask_to_proceed_prompt() -> bool:
 
 def __ask_to_proceed_gum() -> bool:
     choice = subprocess.run(
-        ['gum',
-         'confirm',
-         f"{MESSAGE}",
-         '--default=false',
-         f'--prompt.foreground={Color.PROMPT_SENTENCE}',
-         f'--selected.foreground={Color.PROMPT_BACKGROUND}',
-         f'--selected.background={Color.PROMPT_FOREGROUND}',
-         f'--unselected.foreground={Color.PROMPT_FOREGROUND}',
-         f'--unselected.background={Color.PROMPT_BACKGROUND}'],
+        '_'.join(GUM_CONFIRM_COMMAND).split('_'),
         stdout=subprocess.PIPE,
         text=True
     ).returncode
