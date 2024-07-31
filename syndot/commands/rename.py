@@ -4,6 +4,9 @@ from syndot.utils.path import expand_home_path
 
 
 def rename(args: Namespace) -> None:
+    if args.old_label == args.new_label:
+        raise NameError("The new label must be different from the old one")
+
     map_file_path = expand_home_path(
         args.mapfile if args.mapfile is not None else 'map.ini'
     )
