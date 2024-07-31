@@ -1,6 +1,13 @@
 from hypothesis import given, settings, HealthCheck
-from hypothesis.strategies import (one_of, none, booleans, text, characters,
-                                   sampled_from, lists)
+from hypothesis.strategies import (
+    one_of,
+    none,
+    booleans,
+    text,
+    characters,
+    sampled_from,
+    lists
+)
 from pytest import mark, raises
 from syndot.parser.parser import parser
 from tests.conftest import paths
@@ -26,26 +33,34 @@ class TestParser:
             assert parsed_arguments.path is None
 
     @mark.genuine
-    @given(backup=booleans(),
-           label_list=one_of(lists(
-               min_size=1,
-               max_size=5,
-               elements=text(
-                   min_size=5,
-                   max_size=10,
-                   alphabet=characters(min_codepoint=97,
-                                       max_codepoint=122))),
-                             none()),
-           map_file_path=one_of(paths(), none()),
-           path_list=one_of(lists(
-               min_size=1,
-               max_size=5,
-               elements=text(
-                   min_size=5,
-                   max_size=10,
-                   alphabet=characters(min_codepoint=97,
-                                       max_codepoint=122))),
-                            none()))
+    @given(
+        backup=booleans(),
+        label_list=one_of(
+            lists(
+                min_size=1,
+                max_size=5,
+                elements=text(
+                    min_size=5,
+                    max_size=10,
+                    alphabet=characters(min_codepoint=97, max_codepoint=122)
+                )
+            ),
+            none()
+        ),
+        map_file_path=one_of(paths(), none()),
+        path_list=one_of(
+            lists(
+                min_size=1,
+                max_size=5,
+                elements=text(
+                    min_size=5,
+                    max_size=10,
+                    alphabet=characters(min_codepoint=97, max_codepoint=122)
+                )
+            ),
+            none()
+        )
+    )
     @settings(max_examples=100, deadline=None)
     def test_link(self, backup, label_list, map_file_path, path_list):
         input_arguments = ['link']
@@ -79,25 +94,33 @@ class TestParser:
             assert parsed_arguments.path is None
 
     @mark.genuine
-    @given(label_list=one_of(lists(
+    @given(
+        label_list=one_of(
+            lists(
                min_size=1,
                max_size=5,
                elements=text(
                    min_size=5,
                    max_size=10,
-                   alphabet=characters(min_codepoint=97,
-                                       max_codepoint=122))),
-                             none()),
-           map_file_path=one_of(paths(), none()),
-           path_list=one_of(lists(
-               min_size=1,
-               max_size=5,
-               elements=text(
-                   min_size=5,
-                   max_size=10,
-                   alphabet=characters(min_codepoint=97,
-                                       max_codepoint=122))),
-                            none()))
+                   alphabet=characters(min_codepoint=97, max_codepoint=122)
+                )
+            ),
+            none()
+        ),
+        map_file_path=one_of(paths(), none()),
+        path_list=one_of(
+            lists(
+                min_size=1,
+                max_size=5,
+                elements=text(
+                    min_size=5,
+                    max_size=10,
+                    alphabet=characters(min_codepoint=97, max_codepoint=122)
+                )
+            ),
+            none()
+        )
+    )
     @settings(max_examples=100, deadline=None)
     def test_unlink(self, label_list, map_file_path, path_list):
         input_arguments = ['unlink']
@@ -125,25 +148,33 @@ class TestParser:
             assert parsed_arguments.path is None
 
     @mark.genuine
-    @given(label_list=one_of(lists(
+    @given(
+        label_list=one_of(
+            lists(
                min_size=1,
                max_size=5,
                elements=text(
                    min_size=5,
                    max_size=10,
-                   alphabet=characters(min_codepoint=97,
-                                       max_codepoint=122))),
-                             none()),
-           map_file_path=one_of(paths(), none()),
-           path_list=one_of(lists(
-               min_size=1,
-               max_size=5,
-               elements=text(
-                   min_size=5,
-                   max_size=10,
-                   alphabet=characters(min_codepoint=97,
-                                       max_codepoint=122))),
-                            none()))
+                   alphabet=characters(min_codepoint=97, max_codepoint=122)
+                )
+            ),
+            none()
+        ),
+        map_file_path=one_of(paths(), none()),
+        path_list=one_of(
+            lists(
+                min_size=1,
+                max_size=5,
+                elements=text(
+                    min_size=5,
+                    max_size=10,
+                    alphabet=characters(min_codepoint=97, max_codepoint=122)
+                )
+            ),
+            none()
+        )
+    )
     @settings(max_examples=100, deadline=None)
     def test_diffuse(self, label_list, map_file_path, path_list):
         input_arguments = ['diffuse']
@@ -170,18 +201,23 @@ class TestParser:
         else:
             assert parsed_arguments.path is None
 
-    @given(label=text(
-               min_size=5,
-               max_size=10,
-               alphabet=characters(min_codepoint=97, max_codepoint=122)),
-           map_file_path=one_of(paths(), none()),
-           path_list=lists(
-               min_size=5,
-               max_size=10,
-               elements=text(
-                   min_size=5,
-                   max_size=10,
-                   alphabet=characters(min_codepoint=97, max_codepoint=122))))
+    @given(
+        label=text(
+            min_size=5,
+            max_size=10,
+            alphabet=characters(min_codepoint=97, max_codepoint=122)
+        ),
+        map_file_path=one_of(paths(), none()),
+        path_list=lists(
+            min_size=5,
+            max_size=10,
+            elements=text(
+                min_size=5,
+                max_size=10,
+                alphabet=characters(min_codepoint=97, max_codepoint=122)
+            )
+        )
+    )
     @settings(max_examples=100, deadline=None)
     def test_add(self, label, map_file_path, path_list):
         input_arguments = ['add']
@@ -201,22 +237,28 @@ class TestParser:
         assert parsed_arguments.path == path_list
 
     @mark.genuine
-    @given(label_list=lists(
-               min_size=5,
-               max_size=10,
-               elements=text(
-                   min_size=5,
-                   max_size=10,
-                   alphabet=characters(min_codepoint=97, max_codepoint=122))),
-           map_file_path=one_of(paths(), none()),
-           path_list=lists(
-               min_size=5,
-               max_size=10,
-               elements=text(
-                   min_size=5,
-                   max_size=10,
-                   alphabet=characters(min_codepoint=97, max_codepoint=122))),
-           arg_is_label=booleans())
+    @given(
+        label_list=lists(
+            min_size=5,
+            max_size=10,
+            elements=text(
+                min_size=5,
+                max_size=10,
+                alphabet=characters(min_codepoint=97, max_codepoint=122)
+            )
+        ),
+        map_file_path=one_of(paths(), none()),
+        path_list=lists(
+            min_size=5,
+            max_size=10,
+            elements=text(
+                min_size=5,
+                max_size=10,
+                alphabet=characters(min_codepoint=97, max_codepoint=122)
+            )
+        ),
+        arg_is_label=booleans()
+    )
     @settings(max_examples=100, deadline=None)
     def test_remove(self, label_list, map_file_path, path_list, arg_is_label):
         input_arguments = ['remove']
@@ -242,10 +284,12 @@ class TestParser:
             assert parsed_arguments.mapfile is None
 
     @mark.genuine
-    @given(directory=booleans(),
-           label=booleans(),
-           map_file_path=one_of(paths(), none()),
-           path=booleans())
+    @given(
+        directory=booleans(),
+        label=booleans(),
+        map_file_path=one_of(paths(), none()),
+        path=booleans()
+    )
     @settings(max_examples=100, deadline=None)
     def test_list(self, directory, label, map_file_path, path):
         input_arguments = ['list']
@@ -280,14 +324,18 @@ class TestParser:
             assert not parsed_arguments.path
 
     @mark.genuine
-    @given(old_label=text(
-               min_size=5,
-               max_size=10,
-               alphabet=characters(min_codepoint=97, max_codepoint=122)),
-           new_label=text(
-               min_size=5,
-               max_size=10,
-               alphabet=characters(min_codepoint=97, max_codepoint=122)))
+    @given(
+        old_label=text(
+            min_size=5,
+            max_size=10,
+            alphabet=characters(min_codepoint=97, max_codepoint=122)
+        ),
+        new_label=text(
+            min_size=5,
+            max_size=10,
+            alphabet=characters(min_codepoint=97, max_codepoint=122)
+        )
+    )
     @settings(max_examples=100, deadline=None)
     def test_rename(self, old_label, new_label):
         input_arguments = f"rename -o {old_label} -n {new_label}".split()
@@ -300,9 +348,11 @@ class TestParser:
 
     @mark.genuine
     @given(abbreviation=booleans())
-    @settings(max_examples=100,
-              deadline=None,
-              suppress_health_check=[HealthCheck.function_scoped_fixture])
+    @settings(
+        max_examples=100,
+        deadline=None,
+        suppress_health_check=[HealthCheck.function_scoped_fixture]
+    )
     def test_version(self, abbreviation, capsys):
         args = ['-v'] if abbreviation else ['--version']
         with raises(SystemExit):
@@ -313,17 +363,20 @@ class TestParser:
 
     @mark.genuine
     @given(abbreviation=booleans())
-    @settings(max_examples=100,
-              deadline=None,
-              suppress_health_check=[HealthCheck.function_scoped_fixture])
+    @settings(
+        max_examples=100,
+        deadline=None,
+        suppress_health_check=[HealthCheck.function_scoped_fixture]
+    )
     def test_help(self, abbreviation, capsys):
         args = ['-h'] if abbreviation else ['--help']
         with raises(SystemExit):
             parser.parse_args(args=args)
         printed_output = capsys.readouterr().out
 
-        assert printed_output.startswith("usage: syndot <COMMAND> "
-                                         "[<OPTIONS>...]")
+        assert printed_output.startswith(
+            "usage: syndot <COMMAND> [<OPTIONS>...]"
+        )
         assert printed_output.endswith("Config file path: ~/.config/syndot\n")
         assert 'options:' in printed_output
         assert 'commands:' in printed_output
@@ -339,17 +392,25 @@ class TestParser:
         assert 'unlink' in printed_output
 
     @mark.genuine
-    @given(command=sampled_from(elements=['add',
-                                          'diffuse',
-                                          'init',
-                                          'link',
-                                          'list',
-                                          'remove',
-                                          'unlink']),
-           abbreviation=booleans())
-    @settings(max_examples=100,
-              deadline=None,
-              suppress_health_check=[HealthCheck.function_scoped_fixture])
+    @given(
+        command=sampled_from(
+            elements=[
+                'add',
+                'diffuse',
+                'init',
+                'link',
+                'list',
+                'remove',
+                'unlink'
+            ]
+        ),
+        abbreviation=booleans()
+    )
+    @settings(
+        max_examples=100,
+        deadline=None,
+        suppress_health_check=[HealthCheck.function_scoped_fixture]
+    )
     def test_command_help(self, command, abbreviation, capsys):
         args = [command]
         if abbreviation:

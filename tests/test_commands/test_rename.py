@@ -5,19 +5,23 @@ from hypothesis.strategies import text, characters
 from pytest import mark, raises
 from syndot.commands.rename import rename
 from tests.conftest import labels, reset_environment
-from tests.test_commands.conftest import (generate_testing_map_file,
-                                          TEST_MAP_FILE_PATH)
+from tests.test_commands.conftest import (
+    generate_testing_map_file,
+    TEST_MAP_FILE_PATH
+)
 
 
 @mark.commands
 class TestRename:
 
     @mark.genuine
-    @given(old_label=labels(),
-           new_label=text(
-               min_size=5,
-               max_size=10,
-               alphabet=characters(min_codepoint=97, max_codepoint=122)))
+    @given(
+        old_label=labels(),
+        new_label=text(
+            min_size=5,
+            max_size=10,
+            alphabet=characters(min_codepoint=97, max_codepoint=122))
+    )
     @settings(max_examples=100, deadline=None)
     def test_function(self, old_label, new_label):
         reset_environment()
@@ -60,11 +64,13 @@ class TestRename:
         reset_environment()
 
     @mark.error
-    @given(old_label=labels(),
-           new_label=text(
-               min_size=5,
-               max_size=10,
-               alphabet=characters(min_codepoint=97, max_codepoint=122)))
+    @given(
+        old_label=labels(),
+        new_label=text(
+            min_size=5,
+            max_size=10,
+            alphabet=characters(min_codepoint=97, max_codepoint=122))
+    )
     @settings(max_examples=100, deadline=None)
     def test_raises_name_error(self, old_label, new_label):
         reset_environment()

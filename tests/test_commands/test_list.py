@@ -5,21 +5,33 @@ from hypothesis.strategies import booleans
 from pytest import mark
 from syndot.commands.list_ import list_
 from tests.conftest import reset_environment
-from tests.test_commands.conftest import (generate_testing_map_file,
-                                          TEST_MAP_FILE_PATH)
+from tests.test_commands.conftest import (
+    generate_testing_map_file,
+    TEST_MAP_FILE_PATH
+)
 
 
 @mark.commands
 class TestList:
 
     @mark.genuine
-    @given(directory_arg=booleans(),
-           label_arg=booleans(),
-           path_arg=booleans())
-    @settings(max_examples=100,
-              deadline=None,
-              suppress_health_check=[HealthCheck.function_scoped_fixture])
-    def test_print_action(self, directory_arg, label_arg, path_arg, capsys):
+    @given(
+        directory_arg=booleans(),
+        label_arg=booleans(),
+        path_arg=booleans()
+    )
+    @settings(
+        max_examples=100,
+        deadline=None,
+        suppress_health_check=[HealthCheck.function_scoped_fixture]
+    )
+    def test_print_action(
+        self,
+        directory_arg,
+        label_arg,
+        path_arg,
+        capsys
+    ):
         reset_environment()
 
         args = Namespace()

@@ -1,6 +1,11 @@
 from configparser import ConfigParser
-from hypothesis.strategies import (composite, text, lists, characters,
-                                   sampled_from)
+from hypothesis.strategies import (
+    composite,
+    text,
+    lists,
+    characters,
+    sampled_from
+)
 import os
 import shutil
 
@@ -38,13 +43,17 @@ def create_file_or_directory(path: str, is_file: bool) -> None:
 
 @composite
 def paths(draw, absolute=False):
-    folder_list = draw(lists(elements=text(min_size=5,
-                                           max_size=10,
-                                           alphabet=characters(
-                                               min_codepoint=97,
-                                               max_codepoint=122)),
-                             min_size=2,
-                             max_size=5))
+    folder_list = draw(
+        lists(
+            elements=text(
+                min_size=5,
+                max_size=10,
+                alphabet=characters(min_codepoint=97, max_codepoint=122)
+            ),
+            min_size=2,
+            max_size=5
+        )
+    )
     if absolute:
         folder_list.insert(0, os.path.join(os.getcwd(), TEST_DATA_PATH))
     else:
@@ -55,10 +64,13 @@ def paths(draw, absolute=False):
 
 @composite
 def usernames(draw):
-    return draw(text(min_size=5,
-                     max_size=10,
-                     alphabet=characters(min_codepoint=97,
-                                         max_codepoint=122)))
+    return draw(
+        text(
+            min_size=5,
+            max_size=10,
+            alphabet=characters(min_codepoint=97, max_codepoint=122)
+        )
+    )
 
 
 @composite

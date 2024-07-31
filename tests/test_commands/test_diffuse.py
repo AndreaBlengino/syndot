@@ -6,32 +6,57 @@ from pytest import mark
 from syndot.commands import diffuse
 from syndot.utils import prompt
 from syndot.utils.prompt import VALID_PROMPT_CHOICES
-from tests.conftest import (labels, targets, valid_targets, TEST_DATA_PATH,
-                            reset_environment)
+from tests.conftest import (
+    labels,
+    targets,
+    valid_targets,
+    TEST_DATA_PATH,
+    reset_environment
+)
 from tests.test_commands.conftest import (
-    generate_diffuse_testing_system_files, generate_testing_map_file,
-    TEST_MAP_FILE_PATH, get_settings_target_path)
+    generate_diffuse_testing_system_files,
+    generate_testing_map_file,
+    TEST_MAP_FILE_PATH,
+    get_settings_target_path
+)
 
 
 @mark.commands
 class TestDiffuse:
 
     @mark.genuine
-    @given(target_label=one_of(labels(), none()),
-           target_path=one_of(targets(absolute=False), none()),
-           start_path=booleans(),
-           no_confirm=booleans(),
-           answer=sampled_from(elements=[*VALID_PROMPT_CHOICES.keys(), '']),
-           target_status=sampled_from(
-               elements=['targets_to_be_diffused', 'already_existing_system',
-                         'already_diffused_targets', 'wrong_existing_links',
-                         'missing_settings_targets', 'settings_are_links']))
-    @settings(max_examples=100,
-              deadline=None,
-              suppress_health_check=[HealthCheck.function_scoped_fixture])
+    @given(
+        target_label=one_of(labels(), none()),
+        target_path=one_of(targets(absolute=False), none()),
+        start_path=booleans(),
+        no_confirm=booleans(),
+        answer=sampled_from(elements=[*VALID_PROMPT_CHOICES.keys(), '']),
+        target_status=sampled_from(
+            elements=[
+                'targets_to_be_diffused',
+                'already_existing_system',
+                'already_diffused_targets',
+                'wrong_existing_links',
+                'missing_settings_targets',
+                'settings_are_links'
+            ]
+        )
+    )
+    @settings(
+        max_examples=100,
+        deadline=None,
+        suppress_health_check=[HealthCheck.function_scoped_fixture]
+    )
     def test_function(
-            self, target_label, target_path, start_path, no_confirm, answer,
-            target_status, monkeypatch):
+        self,
+        target_label,
+        target_path,
+        start_path,
+        no_confirm,
+        answer,
+        target_status,
+        monkeypatch
+    ):
         reset_environment()
 
         args = Namespace()
@@ -51,9 +76,12 @@ class TestDiffuse:
         generate_testing_map_file()
         generate_diffuse_testing_system_files(status=target_status)
 
-        target_list = [target.replace(
-                       '~', os.path.join(os.getcwd(), TEST_DATA_PATH))
-                       for target in valid_targets]
+        target_list = [
+            target.replace(
+                '~',
+                os.path.join(os.getcwd(), TEST_DATA_PATH)
+            ) for target in valid_targets
+        ]
         if target_path:
             target_list = [target for target in target_list
                            if target == target_path]
@@ -93,7 +121,8 @@ class TestDiffuse:
         monkeypatch.setattr(
             diffuse,
             'ask_to_proceed',
-            lambda: VALID_PROMPT_CHOICES[answer] if answer else False)
+            lambda: VALID_PROMPT_CHOICES[answer] if answer else False
+        )
 
         prompt.input = lambda x: answer
         diffuse.diffuse(args=args)

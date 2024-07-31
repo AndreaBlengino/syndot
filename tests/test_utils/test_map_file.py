@@ -6,8 +6,15 @@ import os
 from pytest import mark, raises
 import shutil
 from syndot.utils.map_file import read_map_file, get_map_info, write_map_file
-from tests.conftest import (paths, labels, targets, MAP_FILE_PATH,
-                            valid_labels, valid_targets, reset_environment)
+from tests.conftest import (
+    paths,
+    labels,
+    targets,
+    MAP_FILE_PATH,
+    valid_labels,
+    valid_targets,
+    reset_environment
+)
 
 
 @mark.utils
@@ -47,17 +54,17 @@ class TestReadMapFile:
 class TestGetMapInfo:
 
     @mark.genuine
-    @given(label=one_of(lists(
-               min_size=1,
-               max_size=3,
-               elements=labels()),
-                        none()),
-           path=one_of(lists(
-               min_size=1,
-               max_size=5,
-               elements=targets()),
-                       none()),
-           start_path=booleans())
+    @given(
+        label=one_of(
+            lists(min_size=1, max_size=3, elements=labels()),
+            none()
+        ),
+        path=one_of(
+            lists(min_size=1, max_size=5, elements=targets()),
+            none()
+        ),
+        start_path=booleans()
+    )
     @settings(max_examples=100, deadline=None)
     def test_function(self, label, path, start_path):
         args = Namespace()
