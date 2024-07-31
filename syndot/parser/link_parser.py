@@ -6,7 +6,7 @@ link_parser = command_parser.add_parser(
     prog="syndot link",
     usage="%(prog)s [-b | --backup] ([[-l | --label] <LABEL>...] | "
           "[[-p | --path] <PATH>...]) [[-m | --mapfile] <MAP_FILE>] "
-          "[[-s | --start] <PATH_START>]",
+          "[[-s | --start] <PATH_START>] [-n | --no-confirm]",
     description="Move dotfiles to settings directory "
                 "and create symlinks to them",
     help="Move dotfiles to settings directory and create symlinks to them",

@@ -5,7 +5,8 @@ unlink_parser = command_parser.add_parser(
     'unlink',
     prog="syndot unlink",
     usage="%(prog)s ([[-l | --label] <LABEL>...] | [[-p | --path] <PATH>...]) "
-          "[[-m | --mapfile] <MAP_FILE>] [[-s | --start] <PATH_START>]",
+          "[[-m | --mapfile] <MAP_FILE>] [[-s | --start] <PATH_START>] "
+          "[-n | --no-confirm]",
     description="Remove symlinks and move dotfiles from settings directory "
                 "to their original directories",
     help="Remove symlinks and move dotfiles from settings directory to "

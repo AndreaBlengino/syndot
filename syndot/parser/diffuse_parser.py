@@ -5,7 +5,8 @@ diffuse_parser = command_parser.add_parser(
     'diffuse',
     prog="syndot diffuse",
     usage="%(prog)s ([[-l | --label] <LABEL>...] | [[-p | --path] <PATH>...]) "
-          "[[-m | --mapfile] <MAP_FILE>] [[-s | --start] <PATH_START>]",
+          "[[-m | --mapfile] <MAP_FILE>] [[-s | --start] <PATH_START>] "
+          "[-n | --no-confirm]",
     description="Create dotfiles symlinks",
     help="Create dotfiles symlinks",
     add_help=False,
