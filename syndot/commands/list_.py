@@ -25,6 +25,16 @@ def list_(args: Namespace) -> None:
             _print_settings_directory(settings_dir=settings_dir)
         return
 
+    if args.search:
+        if args.search not in targets.keys():
+            raise NameError(f"Label {args.search} not found in map file")
+
+        _list_labels(label=args.search)
+        _list_paths(paths=targets[args.search], indent=True)
+        if args.directory:
+            _print_settings_directory(settings_dir=settings_dir)
+        return
+
     for label, paths in targets.items():
         _list_labels(label=label)
         _list_paths(paths=paths, indent=True)

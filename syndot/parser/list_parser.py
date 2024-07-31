@@ -4,8 +4,8 @@ from syndot.parser.parser import command_parser, CommandFormatter
 list_parser = command_parser.add_parser(
     'list',
     prog="syndot list",
-    usage="%(prog)s [-d | --directory] [[-l | --label] | [-p | --path]] "
-          "[[-m | --mapfile] <MAP_FILE>]",
+    usage="%(prog)s [-d | --directory] [[-l | --label] | [-p | --path]] | "
+          "[[-s | --search] <SEARCH>] [[-m | --mapfile] <MAP_FILE>]",
     description="List dotfiles in the map file",
     help="List dotfiles in the map file",
     add_help=False,
@@ -30,7 +30,7 @@ list_targets.add_argument(
     required=False,
     dest='label',
     help="List only target labels. Not allowed together with the "
-         "[-p | --path] option"
+         "[-p | --path] or [-s | --search] options"
 )
 
 list_targets.add_argument(
@@ -40,5 +40,14 @@ list_targets.add_argument(
     required=False,
     dest='path',
     help="List only target paths. Now allowed together with the "
-         "[-l | --label] option"
+         "[-l | --label] or [-s | --search] options"
+)
+
+list_targets.add_argument(
+    '-s', '--search',
+    required=False,
+    dest='search',
+    metavar='<SEARCH>',
+    help="List paths of the specified <SEARCH> label. Not allowed together "
+         "with the [-l | --label] or [-p | --path] options"
 )
