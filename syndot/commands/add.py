@@ -24,12 +24,24 @@ def add(args: Namespace) -> None:
         target_path = expand_home_path(target_path)
         if args.label in current_targets.keys():
             if target_path in current_targets[args.label]:
-                print(f"Target {target_path} already in map file")
+                print(f"Target {target_path} already in map file associated "
+                      f"to label {args.label!r}")
                 continue
+
+        if target_path in [path for target in current_targets.values()
+                           for path in target]:
+            for label, paths in current_targets.items():
+                if target_path in paths:
+                    print(f"Target {target_path} already in map file "
+                          f"associated to label {label!r}")
+            continue
+
         if args.label not in current_targets.keys():
             current_targets[args.label] = []
         current_targets[args.label].append(target_path)
 
+    if args.label not in current_targets.keys():
+        current_targets[args.label] = []
     current_targets[args.label] = list(set(current_targets[args.label]))
     current_targets[args.label].sort()
     current_targets = dict(sorted(current_targets.items()))
