@@ -2,22 +2,28 @@ from argparse import Namespace
 import os
 from syndot.init_config import LOG_FILE_PATH
 from syndot.utils.commands import skip_dotfiles, print_dotfiles_to_manage
-from syndot.utils.file_actions import (change_parent_owner,
-                                       change_child_owner,
-                                       copy,
-                                       remove)
+from syndot.utils.file_actions import (
+    change_parent_owner,
+    change_child_owner,
+    copy,
+    remove
+)
 from syndot.utils.logger import log_error
 from syndot.utils.map_file import get_map_info, read_map_file
 from syndot.utils.path import compose_target_paths, generate_backup_path
-from syndot.utils.print_ import (print_action,
-                                 print_error,
-                                 print_highlight)
+from syndot.utils.print_ import (
+    print_action,
+    print_error,
+    print_highlight
+)
 from syndot.utils.prompt import ask_to_proceed
 
 
 def link(args: Namespace) -> None:
     settings_dir, targets = get_map_info(
-        config=read_map_file(map_file_path=args.mapfile), args=args)
+        config=read_map_file(map_file_path=args.mapfile),
+        args=args
+    )
 
     targets_to_be_linked = {}
     already_existing_settings = {}
@@ -30,7 +36,9 @@ def link(args: Namespace) -> None:
 
     for target in targets:
         system_target_path, settings_target_path = compose_target_paths(
-            settings_dir=settings_dir, target=target)
+            settings_dir=settings_dir,
+            target=target
+        )
 
         if not os.path.islink(system_target_path):
             if os.path.exists(system_target_path):
@@ -51,12 +59,14 @@ def link(args: Namespace) -> None:
             else:
                 wrong_existing_links.append(system_target_path)
 
-    if not any([targets_to_be_linked,
-                already_existing_settings,
-                missing_system_targets,
-                already_linked_targets,
-                corrupted_targets,
-                wrong_existing_links]):
+    if not any([
+        targets_to_be_linked,
+        already_existing_settings,
+        missing_system_targets,
+        already_linked_targets,
+        corrupted_targets,
+        wrong_existing_links
+    ]):
         print_highlight("No files or directories found to link.")
 
     link_dotfiles(
@@ -76,7 +86,8 @@ def link(args: Namespace) -> None:
                                   f"settings directory and will be replaced "
                                   f"by a symbolic link.",
         remove_settings=False,
-        ask_for_confirmation=not args.no_confirm),
+        ask_for_confirmation=not args.no_confirm
+    ),
 
     link_dotfiles(
         targets_list=already_existing_settings,
@@ -103,7 +114,8 @@ def link(args: Namespace) -> None:
                                   f"be moved to settings directory and will "
                                   f"be replaced by a symbolic link.",
         remove_settings=True,
-        ask_for_confirmation=not args.no_confirm),
+        ask_for_confirmation=not args.no_confirm
+    ),
 
     skip_dotfiles(
         targets_list=missing_system_targets,
@@ -112,7 +124,8 @@ def link(args: Namespace) -> None:
         single_file_sentence=f"Skipping {len(missing_system_targets)} "
                              f"missing file.",
         single_directory_sentence=f"Skipping {len(missing_system_targets)} "
-                                  f"missing directory.")
+                                  f"missing directory."
+    )
 
     skip_dotfiles(
         targets_list=already_linked_targets,
@@ -121,7 +134,8 @@ def link(args: Namespace) -> None:
         single_file_sentence=f"Skipping {len(already_linked_targets)} "
                              f"already linked file.",
         single_directory_sentence=f"Skipping {len(already_linked_targets)} "
-                                  f"already linked directory.")
+                                  f"already linked directory."
+    )
 
     skip_dotfiles(
         targets_list=corrupted_targets,
@@ -132,7 +146,8 @@ def link(args: Namespace) -> None:
                              f"is a link to a non-existing file.",
         single_directory_sentence=f"Skipping {len(corrupted_targets)} "
                                   f"directory because is a link to a "
-                                  f"non-existing directory.")
+                                  f"non-existing directory."
+    )
 
     skip_dotfiles(
         targets_list=wrong_existing_links,
@@ -143,17 +158,20 @@ def link(args: Namespace) -> None:
                              f"because is a link to a wrong existing file.",
         single_directory_sentence=f"Skipping {len(wrong_existing_links)} "
                                   f"directory because is a link to a wrong "
-                                  f"existing directory.")
+                                  f"existing directory."
+    )
 
 
-def link_dotfiles(targets_list: dict[str, str],
-                  settings_dir: str,
-                  backup: bool,
-                  many_targets_sentence: str,
-                  single_file_sentence: str,
-                  single_directory_sentence: str,
-                  remove_settings: bool,
-                  ask_for_confirmation: bool) -> None:
+def link_dotfiles(
+    targets_list: dict[str, str],
+    settings_dir: str,
+    backup: bool,
+    many_targets_sentence: str,
+    single_file_sentence: str,
+    single_directory_sentence: str,
+    remove_settings: bool,
+    ask_for_confirmation: bool
+) -> None:
     if targets_list:
         n_targets = len(targets_list.keys())
 
@@ -163,7 +181,8 @@ def link_dotfiles(targets_list: dict[str, str],
             many_targets_sentence=many_targets_sentence,
             single_file_sentence=single_directory_sentence,
             single_directory_sentence=single_directory_sentence,
-            symbol='-->')
+            symbol='-->'
+        )
 
         proceed = ask_to_proceed() if ask_for_confirmation else True
 
@@ -171,30 +190,41 @@ def link_dotfiles(targets_list: dict[str, str],
             for i, (system_target_path, settings_target_path) in \
                     enumerate(targets_list.items(), 1):
                 try:
-                    print_action(action_type='link',
-                                 system_target_path=system_target_path,
-                                 settings_target_path=settings_target_path)
+                    print_action(
+                        action_type='link',
+                        system_target_path=system_target_path,
+                        settings_target_path=settings_target_path
+                    )
                     print(f"Total ({i}/{n_targets})", end='\r')
 
                     if remove_settings:
                         remove(path=settings_target_path)
-                    copy(source=system_target_path,
-                         destination=settings_target_path)
-                    change_parent_owner(source=system_target_path,
-                                        destination=settings_target_path,
-                                        settings_dir=settings_dir)
+                    copy(
+                        source=system_target_path,
+                        destination=settings_target_path
+                    )
+                    change_parent_owner(
+                        source=system_target_path,
+                        destination=settings_target_path,
+                        settings_dir=settings_dir
+                    )
                     if os.path.isdir(system_target_path):
-                        change_child_owner(source=system_target_path,
-                                           destination=settings_target_path)
+                        change_child_owner(
+                            source=system_target_path,
+                            destination=settings_target_path
+                        )
                     if backup:
                         backup_path = generate_backup_path(
-                                path=system_target_path)
+                                path=system_target_path
+                        )
                         os.rename(system_target_path, backup_path)
                     else:
                         remove(system_target_path)
                     os.symlink(settings_target_path, system_target_path)
                 except Exception as e:
-                    print_error(f"Error in linking {system_target_path}. "
-                                f"Check {LOG_FILE_PATH} for more details.")
+                    print_error(
+                        f"Error in linking {system_target_path}. "
+                        f"Check {LOG_FILE_PATH} for more details."
+                    )
                     log_error(f"{e}")
         print('\n')

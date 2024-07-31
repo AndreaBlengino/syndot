@@ -6,18 +6,24 @@ from syndot.utils.commands import skip_dotfiles, print_dotfiles_to_manage
 from syndot.utils.file_actions import remove
 from syndot.utils.logger import log_error
 from syndot.utils.map_file import get_map_info, read_map_file
-from syndot.utils.path import (compose_target_paths,
-                               expand_home_path,
-                               generate_backup_path)
-from syndot.utils.print_ import (print_action,
-                                 print_error,
-                                 print_highlight)
+from syndot.utils.path import (
+    compose_target_paths,
+    expand_home_path,
+    generate_backup_path
+)
+from syndot.utils.print_ import (
+    print_action,
+    print_error,
+    print_highlight
+)
 from syndot.utils.prompt import ask_to_proceed
 
 
 def unlink(args: Namespace) -> None:
     settings_dir, targets = get_map_info(
-        config=read_map_file(map_file_path=args.mapfile), args=args)
+        config=read_map_file(map_file_path=args.mapfile),
+        args=args
+    )
 
     targets_to_be_unlinked = {}
     wrong_existing_links = {}
@@ -30,7 +36,9 @@ def unlink(args: Namespace) -> None:
 
     for target in targets:
         system_target_path, settings_target_path = compose_target_paths(
-            settings_dir=settings_dir, target=target)
+            settings_dir=settings_dir,
+            target=target
+        )
 
         if not os.path.islink(settings_target_path):
             if os.path.exists(settings_target_path):
@@ -56,12 +64,14 @@ def unlink(args: Namespace) -> None:
         else:
             settings_are_links.append(settings_target_path)
 
-    if not any([targets_to_be_unlinked,
-                wrong_existing_links,
-                already_existing_system,
-                already_unlinked_targets,
-                missing_settings_targets,
-                settings_are_links]):
+    if not any([
+        targets_to_be_unlinked,
+        wrong_existing_links,
+        already_existing_system,
+        already_unlinked_targets,
+        missing_settings_targets,
+        settings_are_links
+    ]):
         print_highlight("No files or directories found to unlink.")
 
     unlink_dotfiles(
@@ -82,7 +92,8 @@ def unlink(args: Namespace) -> None:
                                   f"to the respective system directory.\nThe "
                                   f"original symbolic link and eventually the "
                                   f"backup directory will be removed.",
-        ask_for_confirmation=not args.no_confirm),
+        ask_for_confirmation=not args.no_confirm
+    ),
 
     unlink_dotfiles(
         targets_list=wrong_existing_links,
@@ -106,7 +117,8 @@ def unlink(args: Namespace) -> None:
                                   f"directory.\nThen the settings directory "
                                   f"will be moved to the respective system "
                                   f"directory.",
-        ask_for_confirmation=not args.no_confirm),
+        ask_for_confirmation=not args.no_confirm
+    ),
 
     unlink_dotfiles(
         targets_list=already_existing_system,
@@ -129,7 +141,8 @@ def unlink(args: Namespace) -> None:
                                   f"backup directory.\nThen the settings "
                                   f"directory will be moved to the respective "
                                   f"system directory.",
-        ask_for_confirmation=not args.no_confirm),
+        ask_for_confirmation=not args.no_confirm
+    ),
 
     skip_dotfiles(
         targets_list=already_unlinked_targets,
@@ -138,7 +151,8 @@ def unlink(args: Namespace) -> None:
         single_file_sentence=f"Skipping {len(already_unlinked_targets)} "
                              f"already unlinked file.",
         single_directory_sentence=f"Skipping {len(already_unlinked_targets)} "
-                                  f"already unlinked directory.")
+                                  f"already unlinked directory."
+    )
 
     skip_dotfiles(
         targets_list=missing_settings_targets,
@@ -147,7 +161,8 @@ def unlink(args: Namespace) -> None:
         single_file_sentence=f"Skipping {len(missing_settings_targets)} "
                              f"missing settings file.",
         single_directory_sentence=f"Skipping {len(missing_settings_targets)} "
-                                  f"missing settings directory.")
+                                  f"missing settings directory."
+    )
 
     skip_dotfiles(
         targets_list=settings_are_links,
@@ -156,15 +171,18 @@ def unlink(args: Namespace) -> None:
         single_file_sentence=f"Skipping {len(settings_are_links)} settings "
                              f"file because is a link.",
         single_directory_sentence=f"Skipping {len(settings_are_links)} "
-                                  f"settings directory because is a link.")
+                                  f"settings directory because is a link."
+    )
 
 
-def unlink_dotfiles(targets_list: dict[str, str],
-                    settings_dir: str,
-                    many_targets_sentence: str,
-                    single_file_sentence: str,
-                    single_directory_sentence: str,
-                    ask_for_confirmation: bool) -> None:
+def unlink_dotfiles(
+    targets_list: dict[str, str],
+    settings_dir: str,
+    many_targets_sentence: str,
+    single_file_sentence: str,
+    single_directory_sentence: str,
+    ask_for_confirmation: bool
+) -> None:
     if targets_list:
         n_targets = len(targets_list.keys())
 
@@ -174,7 +192,8 @@ def unlink_dotfiles(targets_list: dict[str, str],
             many_targets_sentence=many_targets_sentence,
             single_file_sentence=single_directory_sentence,
             single_directory_sentence=single_directory_sentence,
-            symbol='-x->')
+            symbol='-x->'
+        )
 
         proceed = ask_to_proceed() if ask_for_confirmation else True
 
@@ -182,9 +201,11 @@ def unlink_dotfiles(targets_list: dict[str, str],
             for i, (system_target_path, settings_target_path) in \
                     enumerate(targets_list.items(), 1):
                 try:
-                    print_action(action_type='unlink',
-                                 system_target_path=system_target_path,
-                                 settings_target_path=settings_target_path)
+                    print_action(
+                        action_type='unlink',
+                        system_target_path=system_target_path,
+                        settings_target_path=settings_target_path
+                    )
                     print(f"Total ({i}/{n_targets})", end='\r')
 
                     remove(path=system_target_path)
@@ -196,9 +217,11 @@ def unlink_dotfiles(targets_list: dict[str, str],
                     remove(path=backup_path)
 
                     parent_directory = os.path.dirname(settings_target_path)
-                    protected_directories = (settings_dir,
-                                             expand_home_path('~'),
-                                             '/')
+                    protected_directories = (
+                        settings_dir,
+                        expand_home_path('~'),
+                        '/'
+                    )
                     while parent_directory not in protected_directories:
                         parent_directory_content = os.listdir(parent_directory)
                         if (not parent_directory_content or
@@ -210,7 +233,9 @@ def unlink_dotfiles(targets_list: dict[str, str],
                         else:
                             break
                 except Exception as e:
-                    print_error(f"Error in unlinking {system_target_path}. "
-                                f"Check {LOG_FILE_PATH} for more details.")
+                    print_error(
+                        f"Error in unlinking {system_target_path}. "
+                        f"Check {LOG_FILE_PATH} for more details."
+                    )
                     log_error(f"{e}")
         print('\n')

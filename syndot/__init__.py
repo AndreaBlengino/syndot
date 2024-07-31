@@ -1,11 +1,13 @@
-__all__ = ["add",
-           "diffuse",
-           "init",
-           "link",
-           "list_",
-           "remove",
-           "rename",
-           "unlink"]
+__all__ = [
+    "add",
+    "diffuse",
+    "init",
+    "link",
+    "list_",
+    "remove",
+    "rename",
+    "unlink"
+]
 
 
 from .commands.add import add

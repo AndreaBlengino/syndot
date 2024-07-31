@@ -11,7 +11,8 @@ link_parser = command_parser.add_parser(
                 "and create symlinks to them",
     help="Move dotfiles to settings directory and create symlinks to them",
     add_help=False,
-    formatter_class=CommandFormatter)
+    formatter_class=CommandFormatter
+)
 
 link_parser.add_argument(
     '-b', '--backup',
@@ -19,7 +20,8 @@ link_parser.add_argument(
     default=False,
     required=False,
     dest='backup',
-    help="Create a backup copy of the original dotfile")
+    help="Create a backup copy of the original dotfile"
+)
 
 link_parser.add_argument(
     '-l', '--label',
@@ -28,7 +30,8 @@ link_parser.add_argument(
     dest='label',
     metavar="<LABEL>",
     help="Label(s) to link the associated path(s). At least a <LABEL> or a "
-         "<PATH> must be provided")
+         "<PATH> must be provided"
+)
 
 link_parser.add_argument(
     '-p', '--path',
@@ -37,4 +40,5 @@ link_parser.add_argument(
     dest='path',
     metavar='<PATH>',
     help="Dotfile path(s) to link. At least a <LABEL> or a <PATH> must be "
-         "provided")
+         "provided"
+)

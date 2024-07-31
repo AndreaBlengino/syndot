@@ -9,7 +9,8 @@ diffuse_parser = command_parser.add_parser(
     description="Create dotfiles symlinks",
     help="Create dotfiles symlinks",
     add_help=False,
-    formatter_class=CommandFormatter)
+    formatter_class=CommandFormatter
+)
 
 diffuse_parser.add_argument(
     '-l', '--label',
@@ -18,7 +19,8 @@ diffuse_parser.add_argument(
     dest='label',
     metavar='<LABEL>',
     help="Label(s) to diffuse the associated path(s). At least a <LABEL> or a "
-         "<PATH> must be provided")
+         "<PATH> must be provided"
+)
 
 diffuse_parser.add_argument(
     '-p', '--path',
@@ -27,4 +29,5 @@ diffuse_parser.add_argument(
     dest='path',
     metavar='<PATH>',
     help="Dotfile path(s) to diffuse. At least a <LABEL> or a <PATH> must "
-         "be provided")
+         "be provided"
+)

@@ -6,15 +6,19 @@ from syndot.utils.file_actions import remove
 from syndot.utils.logger import log_error
 from syndot.utils.map_file import get_map_info, read_map_file
 from syndot.utils.path import compose_target_paths
-from syndot.utils.print_ import (print_action,
-                                 print_error,
-                                 print_highlight)
+from syndot.utils.print_ import (
+    print_action,
+    print_error,
+    print_highlight
+)
 from syndot.utils.prompt import ask_to_proceed
 
 
 def diffuse(args: Namespace) -> None:
     settings_dir, targets = get_map_info(
-        config=read_map_file(map_file_path=args.mapfile), args=args)
+        config=read_map_file(map_file_path=args.mapfile),
+        args=args
+    )
 
     targets_to_be_diffused = {}
     already_existing_system = {}
@@ -27,7 +31,9 @@ def diffuse(args: Namespace) -> None:
 
     for target in targets:
         system_target_path, settings_target_path = compose_target_paths(
-            settings_dir=settings_dir, target=target)
+            settings_dir=settings_dir,
+            target=target
+        )
         if not os.path.islink(settings_target_path):
             if os.path.exists(settings_target_path):
                 if not os.path.islink(system_target_path):
@@ -48,12 +54,14 @@ def diffuse(args: Namespace) -> None:
         else:
             settings_are_links.append(settings_target_path)
 
-    if not any([targets_to_be_diffused,
-                already_existing_system,
-                already_diffused_targets,
-                wrong_existing_links,
-                missing_settings_targets,
-                settings_are_links]):
+    if not any([
+        targets_to_be_diffused,
+        already_existing_system,
+        already_diffused_targets,
+        wrong_existing_links,
+        missing_settings_targets,
+        settings_are_links
+    ]):
         print_highlight("No files or directories found to diffuse.")
 
     diffuse_dotfiles(
@@ -72,7 +80,8 @@ def diffuse(args: Namespace) -> None:
                                   f"to this directory will be created in the "
                                   f"respective system directory.",
         remove_system=False,
-        ask_for_confirmation=not args.no_confirm),
+        ask_for_confirmation=not args.no_confirm
+    ),
 
     diffuse_dotfiles(
         targets_list=already_existing_system,
@@ -93,7 +102,8 @@ def diffuse(args: Namespace) -> None:
                                   f"symbolic link to the respective directory "
                                   f"in the settings directory.",
         remove_system=True,
-        ask_for_confirmation=not args.no_confirm),
+        ask_for_confirmation=not args.no_confirm
+    ),
 
     diffuse_dotfiles(
         targets_list=wrong_existing_links,
@@ -114,7 +124,8 @@ def diffuse(args: Namespace) -> None:
                                   f"respective directory in the settings "
                                   f"directory.",
         remove_system=True,
-        ask_for_confirmation=not args.no_confirm),
+        ask_for_confirmation=not args.no_confirm
+    ),
 
     skip_dotfiles(
         targets_list=already_diffused_targets,
@@ -123,7 +134,8 @@ def diffuse(args: Namespace) -> None:
         single_file_sentence=f"Skipping {len(already_diffused_targets)} "
                              f"already diffused file:",
         single_directory_sentence=f"Skipping {len(already_diffused_targets)} "
-                                  f"already diffused directory:")
+                                  f"already diffused directory:"
+    )
 
     skip_dotfiles(
         targets_list=missing_settings_targets,
@@ -132,7 +144,8 @@ def diffuse(args: Namespace) -> None:
         single_file_sentence=f"Skipping {len(missing_settings_targets)} "
                              f"missing settings file:",
         single_directory_sentence=f"Skipping {len(missing_settings_targets)} "
-                                  f"missing settings directory:")
+                                  f"missing settings directory:"
+    )
 
     skip_dotfiles(
         targets_list=settings_are_links,
@@ -141,15 +154,18 @@ def diffuse(args: Namespace) -> None:
         single_file_sentence=f"Skipping {len(settings_are_links)} settings "
                              f"file because is a link:",
         single_directory_sentence=f"Skipping {len(settings_are_links)} "
-                                  f"settings directory because is a link:")
+                                  f"settings directory because is a link:"
+    )
 
 
-def diffuse_dotfiles(targets_list: dict[str, str],
-                     many_targets_sentence: str,
-                     single_file_sentence: str,
-                     single_directory_sentence: str,
-                     remove_system: bool,
-                     ask_for_confirmation: bool) -> None:
+def diffuse_dotfiles(
+    targets_list: dict[str, str],
+    many_targets_sentence: str,
+    single_file_sentence: str,
+    single_directory_sentence: str,
+    remove_system: bool,
+    ask_for_confirmation: bool
+) -> None:
     if targets_list:
         n_targets = len(targets_list.keys())
 
@@ -159,7 +175,8 @@ def diffuse_dotfiles(targets_list: dict[str, str],
             many_targets_sentence=many_targets_sentence,
             single_file_sentence=single_directory_sentence,
             single_directory_sentence=single_directory_sentence,
-            symbol='<--')
+            symbol='<--'
+        )
 
         proceed = ask_to_proceed() if ask_for_confirmation else True
 
@@ -167,9 +184,11 @@ def diffuse_dotfiles(targets_list: dict[str, str],
             for i, (system_target_path, settings_target_path) in \
                     enumerate(targets_list.items(), 1):
                 try:
-                    print_action(action_type='diffuse',
-                                 system_target_path=system_target_path,
-                                 settings_target_path=settings_target_path)
+                    print_action(
+                        action_type='diffuse',
+                        system_target_path=system_target_path,
+                        settings_target_path=settings_target_path
+                    )
                     print(f"Total ({i}/{n_targets})", end='\r')
 
                     if remove_system:
@@ -178,7 +197,9 @@ def diffuse_dotfiles(targets_list: dict[str, str],
                         os.makedirs(os.path.dirname(system_target_path))
                     os.symlink(settings_target_path, system_target_path)
                 except Exception as e:
-                    print_error(f"Error in diffusing {system_target_path}. "
-                                f"Check {LOG_FILE_PATH} for more details.")
+                    print_error(
+                        f"Error in diffusing {system_target_path}. "
+                        f"Check {LOG_FILE_PATH} for more details."
+                    )
                     log_error(f"{e}")
         print('\n')

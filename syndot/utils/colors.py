@@ -4,32 +4,42 @@ from syndot.init_config import CONFIG_DIR_PATH
 
 
 COLORSCHEME_PATH = os.path.join(
-    CONFIG_DIR_PATH, 'colorschemes', 'default.colorscheme')
+    CONFIG_DIR_PATH,
+    'colorschemes',
+    'default.colorscheme'
+)
 if not os.path.exists(CONFIG_DIR_PATH) or not os.path.exists(COLORSCHEME_PATH):
     COLORSCHEME_PATH = os.path.join(
         os.path.dirname(os.path.dirname(__file__)),
         '_colorschemes',
-        'default.colorscheme')
+        'default.colorscheme'
+    )
 color_config = ConfigParser()
 color_config.read(COLORSCHEME_PATH)
-COLOR_MAP = {'link': 'Color4',
-             'symbol': 'Color6',
-             'settings': 'Color3',
-             'error': 'Color1',
-             'prompt_sentence': 'Color4',
-             'prompt_foreground': 'Color6',
-             'prompt_background': 'Background'}
+COLOR_MAP = {
+    'link': 'Color4',
+    'symbol': 'Color6',
+    'settings': 'Color3',
+    'error': 'Color1',
+    'prompt_sentence': 'Color4',
+    'prompt_foreground': 'Color6',
+    'prompt_background': 'Background'
+}
 
 
 def get_ansi_color(color_type: str) -> str:
-    color = color_config.get(section=COLOR_MAP[color_type],
-                             option='Color').replace(',', ';')
+    color = color_config.get(
+        section=COLOR_MAP[color_type],
+        option='Color'
+    ).replace(',', ';')
     return f"\x1b[38;2;{color}m"
 
 
 def get_hex_color(color_type: str) -> str:
-    r, g, b = color_config.get(section=COLOR_MAP[color_type],
-                               option='Color').split(',')
+    r, g, b = color_config.get(
+        section=COLOR_MAP[color_type],
+        option='Color'
+    ).split(',')
     return f'#{int(r):02x}{int(g):02x}{int(b):02x}'
 
 

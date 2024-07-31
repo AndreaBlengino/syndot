@@ -9,7 +9,8 @@ list_parser = command_parser.add_parser(
     description="List dotfiles in the map file",
     help="List dotfiles in the map file",
     add_help=False,
-    formatter_class=CommandFormatter)
+    formatter_class=CommandFormatter
+)
 
 list_targets = list_parser.add_mutually_exclusive_group(required=False)
 
@@ -19,7 +20,8 @@ list_parser.add_argument(
     default=False,
     required=False,
     dest='directory',
-    help="Print the settings directory")
+    help="Print the settings directory"
+)
 
 list_targets.add_argument(
     '-l', '--label',
@@ -28,7 +30,8 @@ list_targets.add_argument(
     required=False,
     dest='label',
     help="List only target labels. Not allowed together with the "
-         "[-p | --path] option")
+         "[-p | --path] option"
+)
 
 list_targets.add_argument(
     '-p', '--path',
@@ -37,4 +40,5 @@ list_targets.add_argument(
     required=False,
     dest='path',
     help="List only target paths. Now allowed together with the "
-         "[-l | --label] option")
+         "[-l | --label] option"
+)

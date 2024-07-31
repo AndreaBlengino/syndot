@@ -4,11 +4,13 @@ from syndot.utils.system_info import gum_is_available
 
 
 MESSAGE = 'Do you want to proceed?'
-VALID_PROMPT_CHOICES = {'y': True,
-                        'ye': True,
-                        'yes': True,
-                        'n': False,
-                        'no': False}
+VALID_PROMPT_CHOICES = {
+    'y': True,
+    'ye': True,
+    'yes': True,
+    'n': False,
+    'no': False
+}
 
 
 def ask_to_proceed() -> bool:

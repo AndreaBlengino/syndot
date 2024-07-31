@@ -8,7 +8,8 @@ init_parser = command_parser.add_parser(
     description="Initialize settings directory where store dotfiles",
     help="Initialize settings directory where store dotfiles",
     add_help=False,
-    formatter_class=CommandFormatter)
+    formatter_class=CommandFormatter
+)
 
 init_parser.add_argument(
     '-p', '--path',
@@ -16,4 +17,5 @@ init_parser.add_argument(
     dest='path',
     metavar='<PATH>',
     help="Path to the settings directory. If not provided, it creates the "
-         "settings directory at the default path: ~/Settings")
+         "settings directory at the default path: ~/Settings"
+)

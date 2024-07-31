@@ -5,7 +5,8 @@ from syndot.utils.path import expand_home_path
 
 def rename(args: Namespace) -> None:
     map_file_path = expand_home_path(
-        args.mapfile if args.mapfile is not None else 'map.ini')
+        args.mapfile if args.mapfile is not None else 'map.ini'
+    )
 
     config = read_map_file(map_file_path=map_file_path)
 

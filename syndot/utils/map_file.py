@@ -6,14 +6,17 @@ from syndot.utils.path import expand_home_path
 
 def read_map_file(map_file_path: str | None) -> ConfigParser:
     map_file_path = expand_home_path(
-        map_file_path if map_file_path is not None else 'map.ini')
+        map_file_path if map_file_path is not None else 'map.ini'
+    )
     if not os.path.exists(map_file_path):
         if map_file_path == 'map.ini':
             raise FileNotFoundError(
-                "Missing map.ini file in current directory.")
+                "Missing map.ini file in current directory."
+            )
         else:
             raise FileNotFoundError(
-                "Missing map.ini file at the specified path.")
+                "Missing map.ini file at the specified path."
+            )
     config = ConfigParser()
     config.read(map_file_path)
 
@@ -21,14 +24,19 @@ def read_map_file(map_file_path: str | None) -> ConfigParser:
 
 
 def get_map_info(
-        config: ConfigParser, args: Namespace) -> tuple[str, list[str]]:
+    config: ConfigParser,
+    args: Namespace
+) -> tuple[str, list[str]]:
     settings_dir = config['Path']['settings_dir']
     targets, unavailable_labels, unavailable_paths = _get_available_targets(
-        config=config, args=args)
+        config=config,
+        args=args
+    )
 
     _compose_error_message(
         unavailable_labels=unavailable_labels,
-        unavailable_paths=unavailable_paths)
+        unavailable_paths=unavailable_paths
+    )
 
     if args.label is None and args.path is None:
         for target in config['Targets'].values():
@@ -47,8 +55,9 @@ def write_map_file(map_file_path: str | None, config: ConfigParser) -> None:
 
 
 def _get_available_targets(
-        config: ConfigParser, args: Namespace) -> \
-        tuple[list[str], [list[str], list[str]]]:
+    config: ConfigParser,
+    args: Namespace
+) -> tuple[list[str], [list[str], list[str]]]:
     targets = []
 
     available_labels = list(config['Targets'].keys())
@@ -79,7 +88,9 @@ def _get_available_targets(
 
 
 def _compose_error_message(
-        unavailable_labels: list[str], unavailable_paths: list[str]):
+    unavailable_labels: list[str],
+    unavailable_paths: list[str]
+) -> None:
     error_message = ""
     if unavailable_labels:
         error_message += "\nThe following labels are not available in the map"\
