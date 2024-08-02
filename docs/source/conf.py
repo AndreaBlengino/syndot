@@ -13,8 +13,9 @@ project = 'syndot'
 copyright = '2024, Andrea Blengino'
 author = 'Andrea Blengino'
 release = subprocess.run(
-    'git describe --tags'.split(), stdout=subprocess.PIPE).stdout.decode(
-    'utf-8')
+    'git describe --tags'.split(),
+    stdout=subprocess.PIPE
+).stdout.decode('utf-8')
 
 if release.count('-') >= 2:
     release = '-'.join(release.split('-')[:2])
