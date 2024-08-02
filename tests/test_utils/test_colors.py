@@ -1,7 +1,7 @@
 from hypothesis import given, settings
 from hypothesis.strategies import text, characters
-from pytest import mark
-from syndot.utils.colors import Color
+from pytest import mark, raises
+from syndot.utils.colors import Color, _get_color
 
 
 @mark.utils
@@ -96,3 +96,8 @@ class TestColor:
         assert highlight in colored_highlight
         assert colored_highlight.startswith(Color.BOLD_START_SEQUENCE)
         assert colored_highlight.endswith(Color.BOLD_END_SEQUENCE)
+
+    @mark.error
+    def test_raises_value_error(self):
+        with raises(ValueError):
+            _get_color('link', 'invalid_format')
