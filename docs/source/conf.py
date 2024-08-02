@@ -15,10 +15,7 @@ author = 'Andrea Blengino'
 release = subprocess.run(
     'git describe --tags'.split(),
     stdout=subprocess.PIPE
-).stdout.decode('utf-8')
-
-if release.count('-') >= 2:
-    release = '-'.join(release.split('-')[:2])
+).stdout.decode('utf-8').strip().split('-')[0]
 
 
 # -- General configuration ---------------------------------------------------
