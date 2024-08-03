@@ -19,7 +19,13 @@
 
    <a class="reference external" href="../remove/index.html"><code class="docutils literal notranslate">remove</code></a>
 
+.. |rename| raw:: html
+
+   <a class="reference external" href="../rename/index.html"><code class="docutils literal notranslate">rename</code></a>
+
 .. |unlink| raw:: html
 
    <a class="reference external" href="../unlink/index.html"><code class="docutils literal notranslate">unlink</code></a>
 
+
+.. _gum: https://github.com/charmbracelet/gum
