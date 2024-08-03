@@ -23,7 +23,10 @@ COLOR_MAP = {
     'error': 'color05',
     'prompt_sentence': 'color07',
     'prompt_foreground': 'color07',
-    'prompt_background': 'color24'
+    'prompt_background': 'color24',
+    'indicator_foreground': 'color12',
+    'match_foreground': 'color07',
+    'selected_indicator_foreground': 'color09'
 }
 
 
@@ -50,6 +53,15 @@ class Color:
     PROMPT_SENTENCE = _get_color(category='prompt_sentence', fmt='HEX')
     PROMPT_FOREGROUND = _get_color(category='prompt_foreground', fmt='HEX')
     PROMPT_BACKGROUND = _get_color(category='prompt_background', fmt='HEX')
+    INDICATOR_FOREGROUND = _get_color(
+        category='indicator_foreground',
+        fmt='HEX'
+    )
+    MATCH_FOREGROUND = _get_color(category='match_foreground', fmt='HEX')
+    SELECTED_INDICATOR_FOREGROUND = _get_color(
+        category='selected_indicator_foreground',
+        fmt='HEX'
+    )
     BOLD_START_SEQUENCE = '\033[1m'
     BOLD_END_SEQUENCE = '\033[0m'
     COLOR_END_SEQUENCE = '\x1b[0m'

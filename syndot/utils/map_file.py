@@ -1,7 +1,29 @@
 from argparse import Namespace
 from configparser import ConfigParser
 import os
+import subprocess
+from syndot.utils.colors import Color
 from syndot.utils.path import expand_home_path
+from syndot.utils.system_info import gum_is_available
+
+
+GUM_FILTER_COMMAND = [
+    'gum',
+    'filter'
+]
+GUM_OPTIONS = [
+    '--prompt= ',
+    '--placeholder=Filter labels',
+    '--width=100',
+    '--no-limit',
+    '--indicator=▶  ',
+    f"--indicator.foreground={Color.INDICATOR_FOREGROUND}",
+    '--selected-prefix= ',
+    f"--selected-indicator.foreground={Color.SELECTED_INDICATOR_FOREGROUND}",
+    '--unselected-prefix= ',
+    '--match.bold',
+    f"--match.foreground={Color.MATCH_FOREGROUND}"
+]
 
 
 def read_map_file(map_file_path: str | None) -> ConfigParser:
@@ -38,9 +60,23 @@ def get_map_info(
         unavailable_paths=unavailable_paths
     )
 
-    if args.label is None and args.path is None:
-        for target in config['Targets'].values():
-            targets.extend(target.split())
+    if args.interactive:
+        if gum_is_available():
+            GUM_FILTER_COMMAND.extend(config['Targets'].keys())
+            GUM_FILTER_COMMAND.extend(GUM_OPTIONS)
+            selected_labels = subprocess.run(
+                GUM_FILTER_COMMAND,
+                stdout=subprocess.PIPE
+            ).stdout.decode('utf-8').split()
+            targets = [path for selected_label in selected_labels
+                       for path in config['Targets'][selected_label].split()]
+        else:
+            raise OSError("Interactive option requires 'gum', which is not "
+                          "available in the system")
+    else:
+        if args.label is None and args.path is None:
+            for target in config['Targets'].values():
+                targets.extend(target.split())
 
     if args.start:
         targets = [target for target in targets
