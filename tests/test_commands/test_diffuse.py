@@ -61,17 +61,24 @@ class TestDiffuse:
 
         args = Namespace()
         if target_label:
-            args.label = [target_label]
+            if target_path:
+                args.label = None
+                args.path = None
+            else:
+                args.label = [target_label]
+                args.path = None
         else:
-            args.label = None
+            if target_path:
+                args.label = None
+                args.path = [target_path]
+            else:
+                args.label = None
+                args.path = None
         args.mapfile = TEST_MAP_FILE_PATH
-        if target_path:
-            args.path = [target_path]
-        else:
-            args.path = None
         args.start = os.path.split(target_path)[0] \
             if start_path and target_path else None
         args.no_confirm = no_confirm
+        args.interactive = False
 
         generate_testing_map_file()
         generate_diffuse_testing_system_files(status=target_status)

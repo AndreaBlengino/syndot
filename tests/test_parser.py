@@ -47,7 +47,6 @@ class TestParser:
             ),
             none()
         ),
-        map_file_path=one_of(paths(), none()),
         path_list=one_of(
             lists(
                 min_size=1,
@@ -59,39 +58,83 @@ class TestParser:
                 )
             ),
             none()
+        ),
+        map_file_path=one_of(paths(), none()),
+        no_confirm=booleans(),
+        interactive=booleans(),
+        start=one_of(
+            text(
+                min_size=5,
+                max_size=10,
+                alphabet=characters(min_codepoint=97, max_codepoint=122)
+            ),
+            none()
         )
     )
     @settings(max_examples=100, deadline=None)
-    def test_link(self, backup, label_list, map_file_path, path_list):
+    def test_link(
+        self,
+        backup,
+        label_list,
+        path_list,
+        map_file_path,
+        no_confirm,
+        interactive,
+        start
+    ):
         input_arguments = ['link']
         if backup:
             input_arguments.append('-b')
         if label_list:
-            input_arguments.extend(['-l', *label_list])
+            if path_list:
+                if interactive:
+                    input_arguments.extend(['-i'])
+            else:
+                input_arguments.extend(['-l', *label_list])
+        else:
+            if path_list:
+                input_arguments.extend(['-p', *path_list])
+            else:
+                if interactive:
+                    input_arguments.extend(['-i'])
         if map_file_path:
             input_arguments.extend(['-m', map_file_path])
-        if path_list:
-            input_arguments.extend(['-p', *path_list])
+        if no_confirm:
+            input_arguments.extend(['-n'])
+        if start:
+            input_arguments.extend(['-s', start])
 
         parsed_arguments = parser.parse_args(input_arguments)
 
         assert parsed_arguments.command == 'link'
-        if backup:
-            assert parsed_arguments.backup
-        else:
-            assert not parsed_arguments.backup
+        assert parsed_arguments.backup == backup
         if label_list:
-            assert parsed_arguments.label == label_list
+            if path_list:
+                assert parsed_arguments.label is None
+                assert parsed_arguments.path is None
+                assert parsed_arguments.interactive == interactive
+            else:
+                assert parsed_arguments.label == label_list
+                assert parsed_arguments.path is None
+                assert not parsed_arguments.interactive
         else:
-            assert parsed_arguments.label is None
+            if path_list:
+                assert parsed_arguments.label is None
+                assert parsed_arguments.path == path_list
+                assert not parsed_arguments.interactive
+            else:
+                assert parsed_arguments.label is None
+                assert parsed_arguments.path is None
+                assert parsed_arguments.interactive == interactive
         if map_file_path:
             assert parsed_arguments.mapfile == map_file_path
         else:
             assert parsed_arguments.mapfile is None
-        if path_list:
-            assert parsed_arguments.path == path_list
+        assert parsed_arguments.no_confirm == no_confirm
+        if start:
+            assert parsed_arguments.start == start
         else:
-            assert parsed_arguments.path is None
+            assert parsed_arguments.start is None
 
     @mark.genuine
     @given(
@@ -107,7 +150,6 @@ class TestParser:
             ),
             none()
         ),
-        map_file_path=one_of(paths(), none()),
         path_list=one_of(
             lists(
                 min_size=1,
@@ -119,33 +161,79 @@ class TestParser:
                 )
             ),
             none()
+        ),
+        map_file_path=one_of(paths(), none()),
+        no_confirm=booleans(),
+        interactive=booleans(),
+        start=one_of(
+            text(
+                min_size=5,
+                max_size=10,
+                alphabet=characters(min_codepoint=97, max_codepoint=122)
+            ),
+            none()
         )
     )
     @settings(max_examples=100, deadline=None)
-    def test_unlink(self, label_list, map_file_path, path_list):
+    def test_unlink(
+        self,
+        label_list,
+        path_list,
+        map_file_path,
+        no_confirm,
+        interactive,
+        start
+    ):
         input_arguments = ['unlink']
         if label_list:
-            input_arguments.extend(['-l', *label_list])
+            if path_list:
+                if interactive:
+                    input_arguments.extend(['-i'])
+            else:
+                input_arguments.extend(['-l', *label_list])
+        else:
+            if path_list:
+                input_arguments.extend(['-p', *path_list])
+            else:
+                if interactive:
+                    input_arguments.extend(['-i'])
         if map_file_path:
             input_arguments.extend(['-m', map_file_path])
-        if path_list:
-            input_arguments.extend(['-p', *path_list])
+        if no_confirm:
+            input_arguments.extend(['-n'])
+        if start:
+            input_arguments.extend(['-s', start])
 
         parsed_arguments = parser.parse_args(input_arguments)
 
         assert parsed_arguments.command == 'unlink'
         if label_list:
-            assert parsed_arguments.label == label_list
+            if path_list:
+                assert parsed_arguments.label is None
+                assert parsed_arguments.path is None
+                assert parsed_arguments.interactive == interactive
+            else:
+                assert parsed_arguments.label == label_list
+                assert parsed_arguments.path is None
+                assert not parsed_arguments.interactive
         else:
-            assert parsed_arguments.label is None
+            if path_list:
+                assert parsed_arguments.label is None
+                assert parsed_arguments.path == path_list
+                assert not parsed_arguments.interactive
+            else:
+                assert parsed_arguments.label is None
+                assert parsed_arguments.path is None
+                assert parsed_arguments.interactive == interactive
         if map_file_path:
             assert parsed_arguments.mapfile == map_file_path
         else:
             assert parsed_arguments.mapfile is None
-        if path_list:
-            assert parsed_arguments.path == path_list
+        assert parsed_arguments.no_confirm == no_confirm
+        if start:
+            assert parsed_arguments.start == start
         else:
-            assert parsed_arguments.path is None
+            assert parsed_arguments.start is None
 
     @mark.genuine
     @given(
@@ -161,7 +249,6 @@ class TestParser:
             ),
             none()
         ),
-        map_file_path=one_of(paths(), none()),
         path_list=one_of(
             lists(
                 min_size=1,
@@ -173,33 +260,79 @@ class TestParser:
                 )
             ),
             none()
+        ),
+        map_file_path=one_of(paths(), none()),
+        no_confirm=booleans(),
+        interactive=booleans(),
+        start=one_of(
+            text(
+                min_size=5,
+                max_size=10,
+                alphabet=characters(min_codepoint=97, max_codepoint=122)
+            ),
+            none()
         )
     )
     @settings(max_examples=100, deadline=None)
-    def test_diffuse(self, label_list, map_file_path, path_list):
+    def test_diffuse(
+        self,
+        label_list,
+        path_list,
+        map_file_path,
+        no_confirm,
+        interactive,
+        start
+    ):
         input_arguments = ['diffuse']
         if label_list:
-            input_arguments.extend(['-l', *label_list])
+            if path_list:
+                if interactive:
+                    input_arguments.extend(['-i'])
+            else:
+                input_arguments.extend(['-l', *label_list])
+        else:
+            if path_list:
+                input_arguments.extend(['-p', *path_list])
+            else:
+                if interactive:
+                    input_arguments.extend(['-i'])
         if map_file_path:
             input_arguments.extend(['-m', map_file_path])
-        if path_list:
-            input_arguments.extend(['-p', *path_list])
+        if no_confirm:
+            input_arguments.extend(['-n'])
+        if start:
+            input_arguments.extend(['-s', start])
 
         parsed_arguments = parser.parse_args(input_arguments)
 
         assert parsed_arguments.command == 'diffuse'
         if label_list:
-            assert parsed_arguments.label == label_list
+            if path_list:
+                assert parsed_arguments.label is None
+                assert parsed_arguments.path is None
+                assert parsed_arguments.interactive == interactive
+            else:
+                assert parsed_arguments.label == label_list
+                assert parsed_arguments.path is None
+                assert not parsed_arguments.interactive
         else:
-            assert parsed_arguments.label is None
+            if path_list:
+                assert parsed_arguments.label is None
+                assert parsed_arguments.path == path_list
+                assert not parsed_arguments.interactive
+            else:
+                assert parsed_arguments.label is None
+                assert parsed_arguments.path is None
+                assert parsed_arguments.interactive == interactive
         if map_file_path:
             assert parsed_arguments.mapfile == map_file_path
         else:
             assert parsed_arguments.mapfile is None
-        if path_list:
-            assert parsed_arguments.path == path_list
+        assert parsed_arguments.no_confirm == no_confirm
+        if start:
+            assert parsed_arguments.start == start
         else:
-            assert parsed_arguments.path is None
+            assert parsed_arguments.start is None
 
     @given(
         label=text(

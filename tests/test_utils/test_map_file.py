@@ -5,6 +5,7 @@ from hypothesis.strategies import booleans, one_of, none, lists
 import os
 from pytest import mark, raises
 import shutil
+from syndot.utils import map_file
 from syndot.utils.map_file import read_map_file, get_map_info, write_map_file
 from tests.conftest import (
     paths,
@@ -68,9 +69,22 @@ class TestGetMapInfo:
     @settings(max_examples=100, deadline=None)
     def test_function(self, label, path, start_path):
         args = Namespace()
-        args.label = label
-        args.path = path
+        if label:
+            if path:
+                args.label = None
+                args.path = None
+            else:
+                args.label = label
+                args.path = None
+        else:
+            if path:
+                args.label = None
+                args.path = path
+            else:
+                args.label = None
+                args.path = None
         args.start = os.path.split(path[0])[0] if start_path and path else None
+        args.interactive = False
         config = read_map_file(map_file_path=MAP_FILE_PATH)
 
         settings_dir, targets_list = get_map_info(config=config, args=args)
@@ -101,6 +115,18 @@ class TestGetMapInfo:
         args.start = None
         config = read_map_file(map_file_path=MAP_FILE_PATH)
         with raises(NameError):
+            get_map_info(config=config, args=args)
+
+    @mark.error
+    def test_raises_OS_error(self, monkeypatch):
+        args = Namespace()
+        args.label = None
+        args.path = None
+        args.interactive = True
+        args.start = None
+        config = read_map_file(map_file_path=MAP_FILE_PATH)
+        monkeypatch.setattr(map_file, 'gum_is_available', lambda: False)
+        with raises(OSError):
             get_map_info(config=config, args=args)
 
 
