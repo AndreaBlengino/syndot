@@ -16,6 +16,8 @@ GUM_CONFIRM_COMMAND = [
     'confirm',
     f"{MESSAGE}",
     '--default=false',
+    '--affirmative=YES',
+    '--negative=NO',
     f"--prompt.foreground={Color.PROMPT_SENTENCE}",
     f"--selected.foreground={Color.PROMPT_BACKGROUND}",
     f"--selected.background={Color.PROMPT_FOREGROUND}",
