@@ -23,4 +23,4 @@
 
    <a class="reference external" href="rename/index.html"><code class="docutils literal notranslate">syndot rename</code></a>
 
-
+.. _gum: https://github.com/charmbracelet/gum

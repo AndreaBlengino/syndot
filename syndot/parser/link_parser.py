@@ -32,7 +32,9 @@ targets_group.add_argument(
     default=False,
     required=False,
     dest='interactive',
-    help="Select label(s) to link in interactive mode using gum"
+    help="Select label(s) to link the associated path(s) in interactive mode "
+         "using gum. At least a label must be selected. Not allowed together "
+         "with [-l | --label] or [-p | --path] options"
 )
 
 targets_group.add_argument(
@@ -41,8 +43,9 @@ targets_group.add_argument(
     nargs='+',
     dest='label',
     metavar="<LABEL>",
-    help="Label(s) to link the associated path(s). At least a <LABEL> or a "
-         "<PATH> must be provided"
+    help="Label(s) to link the associated path(s). At least a <LABEL> must be "
+         "provided. Not allowed together with [-i | --interactive] or "
+         "[-p | --path] options"
 )
 
 targets_group.add_argument(
@@ -51,6 +54,6 @@ targets_group.add_argument(
     nargs='+',
     dest='path',
     metavar='<PATH>',
-    help="Dotfile path(s) to link. At least a <LABEL> or a <PATH> must be "
-         "provided"
+    help="Dotfile path(s) to link. At least a <PATH> must be provided. Not "
+         "allowed together with [-i | --interactive] or [-l | --label] options"
 )
