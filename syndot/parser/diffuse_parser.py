@@ -22,8 +22,9 @@ targets_group.add_argument(
     required=False,
     dest='interactive',
     help="Select label(s) to diffuse the associated path(s) in interactive "
-         "mode using gum. At least a label must be selected. Not allowed "
-         "together with [-l | --label] or [-p | --path] options"
+         "mode using gum, if it is installed in the system. At least a label "
+         "must be selected. Not allowed together with [-l | --label] or "
+         "[-p | --path] options"
 )
 
 targets_group.add_argument(

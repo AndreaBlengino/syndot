@@ -5,6 +5,8 @@ diffuse
 
 Create dotfiles symlinks.
 
+Interactive mode to select label(s) is available only if gum_ is installed in 
+the system.
 
 Usage
 -----
@@ -19,8 +21,9 @@ Options
 * ``-h``, ``--help`` - Show the help message and exit.
 
 * ``-i``, ``--interactive`` - Select label(s) to diffuse the associated path(s) 
-  in interactive mode using gum_. At least a label must be selected. Not 
-  allowed together with ``[-l | --label]`` or ``[-p | --path]`` options.
+  in interactive mode using gum_, if it is installed in the system. At least a 
+  label must be selected. Not allowed together with ``[-l | --label]`` or 
+  ``[-p | --path]`` options.
 
   .. versionadded :: 2.1
 
