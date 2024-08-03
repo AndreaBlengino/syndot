@@ -2,28 +2,9 @@ from argparse import Namespace
 from configparser import ConfigParser
 import os
 import subprocess
-from syndot.utils.colors import Color
 from syndot.utils.path import expand_home_path
 from syndot.utils.system_info import gum_is_available
-
-
-GUM_FILTER_COMMAND = [
-    'gum',
-    'filter'
-]
-GUM_OPTIONS = [
-    '--prompt= ',
-    '--placeholder=Filter labels',
-    '--width=100',
-    '--no-limit',
-    '--indicator=▶  ',
-    f"--indicator.foreground={Color.INDICATOR_FOREGROUND}",
-    '--selected-prefix= ',
-    f"--selected-indicator.foreground={Color.SELECTED_INDICATOR_FOREGROUND}",
-    '--unselected-prefix= ',
-    '--match.bold',
-    f"--match.foreground={Color.MATCH_FOREGROUND}"
-]
+from syndot.utils.gum_style import complete_gum_filter_command
 
 
 def read_map_file(map_file_path: str | None) -> ConfigParser:
@@ -62,10 +43,11 @@ def get_map_info(
 
     if args.interactive:
         if gum_is_available():
-            GUM_FILTER_COMMAND.extend(config['Targets'].keys())
-            GUM_FILTER_COMMAND.extend(GUM_OPTIONS)
+            gum_filter_command = complete_gum_filter_command(
+                labels=list(config['Targets'].keys())
+            )
             selected_labels = subprocess.run(
-                GUM_FILTER_COMMAND,
+                gum_filter_command,
                 stdout=subprocess.PIPE
             ).stdout.decode('utf-8').split()
             targets = [path for selected_label in selected_labels
