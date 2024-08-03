@@ -4,7 +4,9 @@ from hypothesis.strategies import (
     text,
     lists,
     characters,
-    sampled_from
+    sampled_from,
+    shared,
+    builds
 )
 import os
 import shutil
@@ -42,13 +44,25 @@ def create_file_or_directory(path: str, is_file: bool) -> None:
 
 
 @composite
+def names(draw, strategy):
+    seen = draw(shared(builds(set), key="key-for-unique-elems"))
+    return draw(
+        strategy.filter(
+            lambda x: x not in seen
+        ).map(lambda x: seen.add(x) or x)
+    )
+
+
+@composite
 def paths(draw, absolute=False):
     folder_list = draw(
         lists(
-            elements=text(
-                min_size=5,
-                max_size=10,
-                alphabet=characters(min_codepoint=97, max_codepoint=122)
+            elements=names(
+                text(
+                    min_size=1,
+                    max_size=5,
+                    alphabet=characters(categories=['L', 'N'])
+                )
             ),
             min_size=2,
             max_size=5
