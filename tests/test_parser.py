@@ -13,7 +13,7 @@ from syndot.parser.parser import parser
 from tests.conftest import paths
 
 
-@mark.utils
+@mark.parsers
 class TestParser:
 
     @mark.genuine
