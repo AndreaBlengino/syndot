@@ -22,13 +22,13 @@ def skip_dotfiles(
 
 
 def print_dotfiles_to_manage(
-    n_targets: int,
     targets_list: dict[str, str],
     many_targets_sentence: str,
     single_file_sentence: str,
     single_directory_sentence: str,
     symbol: str
 ) -> None:
+    n_targets = len(targets_list.keys())
     if n_targets > 1:
         for system_target_path, settings_target_path in targets_list.items():
             print_relationship(

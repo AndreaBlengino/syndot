@@ -187,7 +187,6 @@ def unlink_dotfiles(
         n_targets = len(targets_list.keys())
 
         print_dotfiles_to_manage(
-            n_targets=n_targets,
             targets_list=targets_list,
             many_targets_sentence=many_targets_sentence,
             single_file_sentence=single_directory_sentence,
