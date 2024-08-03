@@ -4,16 +4,27 @@ from syndot.parser.parser import command_parser, CommandFormatter
 diffuse_parser = command_parser.add_parser(
     'diffuse',
     prog="syndot diffuse",
-    usage="%(prog)s ([[-l | --label] <LABEL>...] | [[-p | --path] <PATH>...]) "
-          "[[-m | --mapfile] <MAP_FILE>] [[-s | --start] <PATH_START>] "
-          "[-n | --no-confirm]",
+    usage="%(prog)s ([-i | --interactive] | [[-l | --label] <LABEL>...] | "
+          "[[-p | --path] <PATH>...]) [[-m | --mapfile] <MAP_FILE>] "
+          "[-n | --no-confirm] [[-s | --start] <PATH_START>]",
     description="Create dotfiles symlinks",
     help="Create dotfiles symlinks",
     add_help=False,
     formatter_class=CommandFormatter
 )
 
-diffuse_parser.add_argument(
+targets_group = diffuse_parser.add_mutually_exclusive_group(required=False)
+
+targets_group.add_argument(
+    '-i', '--interactive',
+    action='store_true',
+    default=False,
+    required=False,
+    dest='interactive',
+    help="Select label(s) to diffuse in interactive mode using gum"
+)
+
+targets_group.add_argument(
     '-l', '--label',
     required=False,
     nargs='+',
@@ -23,7 +34,7 @@ diffuse_parser.add_argument(
          "<PATH> must be provided"
 )
 
-diffuse_parser.add_argument(
+targets_group.add_argument(
     '-p', '--path',
     required=False,
     nargs='+',
