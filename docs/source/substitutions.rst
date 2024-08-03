@@ -31,4 +31,18 @@
 
    <a class="reference external" href="unlink/index.html"><code class="docutils literal notranslate">syndot unlink</code></a>
 
+
+.. |diffuse| raw:: html
+
+   <a class="reference external" href="diffuse/index.html"><code class="docutils literal notranslate">diffuse</code></a>
+
+.. |link| raw:: html
+
+   <a class="reference external" href="link/index.html"><code class="docutils literal notranslate">link</code></a>
+
+.. |unlink| raw:: html
+
+   <a class="reference external" href="unlink/index.html"><code class="docutils literal notranslate">unlink</code></a>
+
+
 .. _gum: https://github.com/charmbracelet/gum
