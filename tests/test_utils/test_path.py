@@ -86,6 +86,7 @@ class TestExpandHomePath:
             assert expanded_path == path
 
 
+@mark.utils
 class TestComposeTargetPaths:
 
     @mark.genuine
