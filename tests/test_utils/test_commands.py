@@ -6,7 +6,6 @@ from tests.conftest import targets
 
 
 @mark.utils
-@mark.wip
 class TestSkipDotfiles:
 
     @mark.genuine
@@ -64,7 +63,6 @@ class TestSkipDotfiles:
 
 
 @mark.utils
-@mark.wip
 class TestPrintDotfilesToManage:
 
     @mark.genuine
