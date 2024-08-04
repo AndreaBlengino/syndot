@@ -17,7 +17,7 @@ SETTINGS_DIR = os.path.join(TEST_DATA_PATH, 'Settings')
 MAP_FILE_PATH = os.path.join(os.getcwd(), 'syndot', '_templates', 'map.ini')
 
 
-def get_valid_targets() -> list[str]:
+def get_valid_targets() -> tuple[str]:
     config = ConfigParser()
     config.read(MAP_FILE_PATH)
     valid_labels = list(config['Targets'].keys())
