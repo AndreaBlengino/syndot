@@ -40,24 +40,41 @@ def link(args: Namespace) -> None:
             target=target
         )
 
-        if not os.path.islink(system_target_path):
-            if os.path.exists(system_target_path):
-                if not os.path.exists(settings_target_path):
-                    targets_to_be_linked[system_target_path] = \
-                        settings_target_path
-                else:
-                    already_existing_settings[system_target_path] = \
-                        settings_target_path
-            else:
-                missing_system_targets.append(system_target_path)
-        else:
-            if os.readlink(system_target_path) == settings_target_path:
-                if os.path.exists(system_target_path):
-                    already_linked_targets.append(system_target_path)
-                else:
-                    corrupted_targets.append(system_target_path)
-            else:
-                wrong_existing_links.append(system_target_path)
+        if _check_tartgets_to_be_linked(
+            system_target_path=system_target_path,
+            settings_target_path=settings_target_path
+        ):
+            targets_to_be_linked[system_target_path] = settings_target_path
+
+        if _check_already_existing_settings(
+            system_target_path=system_target_path,
+            settings_target_path=settings_target_path
+        ):
+            already_existing_settings[system_target_path] = \
+                settings_target_path
+
+        if _check_missing_system_targets(
+            system_target_path=system_target_path
+        ):
+            missing_system_targets.append(system_target_path)
+
+        if _check_already_linked_targets(
+            system_target_path=system_target_path,
+            settings_target_path=settings_target_path
+        ):
+            already_linked_targets.append(system_target_path)
+
+        if _check_corrupted_targets(
+            system_target_path=system_target_path,
+            settings_target_path=settings_target_path
+        ):
+            corrupted_targets.append(system_target_path)
+
+        if _check_wrong_existing_links(
+            system_target_path=system_target_path,
+            settings_target_path=settings_target_path
+        ):
+            wrong_existing_links.append(system_target_path)
 
     if not any([
         targets_to_be_linked,
@@ -227,3 +244,52 @@ def link_dotfiles(
                     )
                     log_error(f"{e}")
         print('\n')
+
+
+def _check_tartgets_to_be_linked(
+    system_target_path: str,
+    settings_target_path: str
+) -> bool:
+    return not os.path.islink(system_target_path) and \
+           os.path.exists(system_target_path) and \
+           not os.path.exists(settings_target_path)
+
+
+def _check_already_existing_settings(
+    system_target_path: str,
+    settings_target_path: str
+) -> bool:
+    return not os.path.islink(system_target_path) and \
+           os.path.exists(system_target_path) and \
+           os.path.exists(settings_target_path)
+
+
+def _check_missing_system_targets(system_target_path: str) -> bool:
+    return not os.path.islink(system_target_path) and \
+           not os.path.exists(system_target_path)
+
+
+def _check_already_linked_targets(
+    system_target_path: str,
+    settings_target_path: str
+) -> bool:
+    return os.path.islink(system_target_path) and \
+           (os.readlink(system_target_path) == settings_target_path) and \
+           os.path.exists(system_target_path)
+
+
+def _check_corrupted_targets(
+    system_target_path: str,
+    settings_target_path: str
+) -> bool:
+    return os.path.islink(system_target_path) and \
+           (os.readlink(system_target_path) == settings_target_path) and \
+           not os.path.exists(system_target_path)
+
+
+def _check_wrong_existing_links(
+    system_target_path: str,
+    settings_target_path: str
+) -> bool:
+    return os.path.islink(system_target_path) and \
+           (os.readlink(system_target_path) != settings_target_path)
