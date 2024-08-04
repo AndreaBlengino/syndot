@@ -90,7 +90,6 @@ def generate_link_testing_system_files(status: str) -> None:
             os.symlink(settings_target_path, target)
     elif status == 'corrupted_targets':
         for target in target_list:
-            is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
                 os.getcwd(),
                 SETTINGS_DIR,
