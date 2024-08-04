@@ -31,11 +31,13 @@ COLOR_MAP = {
 
 
 def _get_color(category: str, fmt: str) -> str:
-    hex = color_config.get(section='Colors', option=COLOR_MAP[category])
+    hex_color = color_config.get(section='Colors', option=COLOR_MAP[category])
     if fmt == 'HEX':
-        return hex
+        return hex_color
     elif fmt == 'RGB':
-        r, g, b = tuple(int(hex.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
+        r, g, b = tuple(
+            int(hex_color.lstrip('#')[i:i+2], 16) for i in (0, 2, 4)
+        )
         return f"{r};{g};{b}"
     else:
         raise ValueError("Invalid color format: select 'HEX' or 'RGB'.")
