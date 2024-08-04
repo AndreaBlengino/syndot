@@ -93,7 +93,7 @@ def unlink(args: Namespace) -> None:
                                   f"original symbolic link and eventually the "
                                   f"backup directory will be removed.",
         ask_for_confirmation=not args.no_confirm
-    ),
+    )
 
     unlink_dotfiles(
         targets_list=wrong_existing_links,
@@ -118,7 +118,7 @@ def unlink(args: Namespace) -> None:
                                   f"will be moved to the respective system "
                                   f"directory.",
         ask_for_confirmation=not args.no_confirm
-    ),
+    )
 
     unlink_dotfiles(
         targets_list=already_existing_system,
@@ -142,7 +142,7 @@ def unlink(args: Namespace) -> None:
                                   f"directory will be moved to the respective "
                                   f"system directory.",
         ask_for_confirmation=not args.no_confirm
-    ),
+    )
 
     skip_dotfiles(
         targets_list=already_unlinked_targets,

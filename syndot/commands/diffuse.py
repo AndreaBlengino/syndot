@@ -81,7 +81,7 @@ def diffuse(args: Namespace) -> None:
                                   f"respective system directory.",
         remove_system=False,
         ask_for_confirmation=not args.no_confirm
-    ),
+    )
 
     diffuse_dotfiles(
         targets_list=already_existing_system,
@@ -103,7 +103,7 @@ def diffuse(args: Namespace) -> None:
                                   f"in the settings directory.",
         remove_system=True,
         ask_for_confirmation=not args.no_confirm
-    ),
+    )
 
     diffuse_dotfiles(
         targets_list=wrong_existing_links,
@@ -125,7 +125,7 @@ def diffuse(args: Namespace) -> None:
                                   f"directory.",
         remove_system=True,
         ask_for_confirmation=not args.no_confirm
-    ),
+    )
 
     skip_dotfiles(
         targets_list=already_diffused_targets,

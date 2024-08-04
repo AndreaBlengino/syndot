@@ -87,7 +87,7 @@ def link(args: Namespace) -> None:
                                   f"by a symbolic link.",
         remove_settings=False,
         ask_for_confirmation=not args.no_confirm
-    ),
+    )
 
     link_dotfiles(
         targets_list=already_existing_settings,
@@ -115,7 +115,7 @@ def link(args: Namespace) -> None:
                                   f"be replaced by a symbolic link.",
         remove_settings=True,
         ask_for_confirmation=not args.no_confirm
-    ),
+    )
 
     skip_dotfiles(
         targets_list=missing_system_targets,
