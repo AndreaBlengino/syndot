@@ -40,28 +40,39 @@ def unlink(args: Namespace) -> None:
             target=target
         )
 
-        if not os.path.islink(settings_target_path):
-            if os.path.exists(settings_target_path):
-                if os.path.islink(system_target_path):
-                    if os.readlink(system_target_path) == settings_target_path:
-                        targets_to_be_unlinked[system_target_path] = \
-                            settings_target_path
-                    else:
-                        wrong_existing_links[system_target_path] = \
-                            settings_target_path
-                else:
-                    if not os.path.exists(system_target_path):
-                        targets_to_be_unlinked[system_target_path] = \
-                            settings_target_path
-                    else:
-                        already_existing_system[system_target_path] = \
-                            settings_target_path
-            else:
-                if os.path.exists(system_target_path):
-                    already_unlinked_targets.append(settings_target_path)
-                else:
-                    missing_settings_targets.append(settings_target_path)
-        else:
+        if _check_targets_to_be_unlinked(
+            system_target_path=system_target_path,
+            settings_target_path=settings_target_path
+        ):
+            targets_to_be_unlinked[system_target_path] = settings_target_path
+
+        if _check_wrong_existing_links(
+            system_target_path=system_target_path,
+            settings_target_path=settings_target_path
+        ):
+            wrong_existing_links[system_target_path] = settings_target_path
+
+        if _check_already_existing_system(
+            system_target_path=system_target_path,
+            settings_target_path=settings_target_path
+        ):
+            already_existing_system[system_target_path] = settings_target_path
+
+        if _check_already_unlinked_targets(
+            system_target_path=system_target_path,
+            settings_target_path=settings_target_path
+        ):
+            already_unlinked_targets.append(settings_target_path)
+
+        if _check_missing_settings_targets(
+            system_target_path=system_target_path,
+            settings_target_path=settings_target_path
+        ):
+            missing_settings_targets.append(settings_target_path)
+
+        if _check_settings_are_links(
+            settings_target_path=settings_target_path
+        ):
             settings_are_links.append(settings_target_path)
 
     if not any([
@@ -238,3 +249,62 @@ def unlink_dotfiles(
                     )
                     log_error(f"{e}")
         print('\n')
+
+
+def _check_targets_to_be_unlinked(
+    system_target_path: str,
+    settings_target_path: str
+) -> bool:
+    return not os.path.islink(settings_target_path) and \
+        os.path.exists(settings_target_path) and (
+        (
+            os.path.islink(system_target_path) and
+            (os.readlink(system_target_path) == settings_target_path)
+        ) or
+        (
+            not os.path.islink(system_target_path) and
+            not os.path.exists(system_target_path)
+        )
+    )
+
+
+def _check_wrong_existing_links(
+    system_target_path: str,
+    settings_target_path: str
+) -> bool:
+    return not os.path.islink(settings_target_path) and \
+        os.path.exists(settings_target_path) and \
+        os.path.islink(system_target_path) and \
+        (os.readlink(system_target_path) != settings_target_path)
+
+
+def _check_already_existing_system(
+    system_target_path: str,
+    settings_target_path: str
+) -> bool:
+    return not os.path.islink(settings_target_path) and \
+        os.path.exists(settings_target_path) and \
+        not os.path.islink(system_target_path) and \
+        os.path.exists(system_target_path)
+
+
+def _check_already_unlinked_targets(
+    system_target_path: str,
+    settings_target_path: str
+) -> bool:
+    return not os.path.islink(settings_target_path) and \
+        not os.path.exists(settings_target_path) and \
+        os.path.exists(system_target_path)
+
+
+def _check_missing_settings_targets(
+    system_target_path: str,
+    settings_target_path: str
+) -> bool:
+    return not os.path.islink(settings_target_path) and \
+        not os.path.exists(settings_target_path) and \
+        not os.path.exists(system_target_path)
+
+
+def _check_settings_are_links(settings_target_path: str) -> bool:
+    return os.path.islink(settings_target_path)
