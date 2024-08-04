@@ -30,7 +30,7 @@ classifiers = [
 [project.optional-dependencies]
 doc = [
   "furo==2024.7.18",
-  "sphinx==8.0.2"
+  "sphinx==7.4.7"
 ]
 test = [
   "coverage==7.6.0",
