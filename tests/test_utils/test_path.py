@@ -2,10 +2,19 @@ from hypothesis import given, settings
 from hypothesis.strategies import booleans, one_of, none
 import os
 from pytest import mark
-from syndot.utils.path import (generate_backup_path, split_path,
-                               expand_home_path, compose_target_paths)
-from tests.conftest import (paths, usernames, SETTINGS_DIR,
-                            create_file_or_directory, reset_environment)
+from syndot.utils.path import (
+    generate_backup_path,
+    split_path,
+    expand_home_path,
+    compose_target_paths
+)
+from tests.conftest import (
+    paths,
+    usernames,
+    SETTINGS_DIR,
+    create_file_or_directory,
+    reset_environment
+)
 
 
 @mark.utils
@@ -51,9 +60,11 @@ class TestSplitPath:
 class TestExpandHomePath:
 
     @mark.genuine
-    @given(path=paths(),
-           sudo_user=one_of(usernames(), none()),
-           add_home=booleans())
+    @given(
+        path=paths(),
+        sudo_user=one_of(usernames(), none()),
+        add_home=booleans()
+    )
     @settings(max_examples=100, deadline=None)
     def test_function(self, path, sudo_user, add_home):
         if sudo_user:
@@ -75,6 +86,7 @@ class TestExpandHomePath:
             assert expanded_path == path
 
 
+@mark.utils
 class TestComposeTargetPaths:
 
     @mark.genuine
@@ -86,7 +98,8 @@ class TestComposeTargetPaths:
 
         system_target_path, settings_target_path = compose_target_paths(
             settings_dir=SETTINGS_DIR,
-            target=target_path)
+            target=target_path
+        )
 
         for path in [system_target_path, settings_target_path]:
             assert isinstance(path, str)

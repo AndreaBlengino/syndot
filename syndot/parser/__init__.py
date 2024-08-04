@@ -27,7 +27,8 @@ help_option_parsers = [
     list_parser,
     remove_parser,
     rename_parser,
-    unlink_parser]
+    unlink_parser
+]
 
 map_option_parsers = [
     add_parser,
@@ -36,21 +37,38 @@ map_option_parsers = [
     list_parser,
     remove_parser,
     rename_parser,
-    unlink_parser]
+    unlink_parser
+]
 
 start_option_parsers = [
     diffuse_parser,
     link_parser,
-    unlink_parser]
+    unlink_parser
+]
 
-for parser in [add_parser, diffuse_parser, init_parser, link_parser,
-               list_parser, remove_parser, rename_parser, unlink_parser]:
+confirmation_option_parsers = [
+    diffuse_parser,
+    link_parser,
+    unlink_parser
+]
+
+for parser in [
+    add_parser,
+    diffuse_parser,
+    init_parser,
+    link_parser,
+    list_parser,
+    remove_parser,
+    rename_parser,
+    unlink_parser
+]:
     if parser in help_option_parsers:
         parser.add_argument(
             '-h', '--help',
             action='help',
             default=SUPPRESS,
-            help="Show this help message and exit")
+            help="Show this help message and exit"
+        )
 
     if parser in map_option_parsers:
         parser.add_argument(
@@ -59,7 +77,8 @@ for parser in [add_parser, diffuse_parser, init_parser, link_parser,
             metavar='<MAP_FILE>',
             help="Path to the %(metavar)s. If not provided search for a "
                  "'map.ini' file in the current directory, so not required if "
-                 "the current directory is the settings directory")
+                 "the current directory is the settings directory"
+        )
 
     if parser in start_option_parsers:
         parser.add_argument(
@@ -67,4 +86,15 @@ for parser in [add_parser, diffuse_parser, init_parser, link_parser,
             required=False,
             dest='start',
             metavar='<PATH_START>',
-            help="Filter target based on path starting with <PATH_START>")
+            help="Filter target based on path starting with <PATH_START>"
+        )
+
+    if parser in confirmation_option_parsers:
+        parser.add_argument(
+            '-n', '--no-confirm',
+            action='store_true',
+            default=False,
+            required=False,
+            dest='no_confirm',
+            help="Do not ask for confirmation"
+        )

@@ -2,7 +2,7 @@ from argparse import Namespace
 from hypothesis import given, settings
 import os
 from pytest import mark, raises
-from syndot.commands import init
+from syndot.commands.init import init
 from tests.conftest import paths, create_file_or_directory, reset_environment
 
 

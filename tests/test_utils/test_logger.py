@@ -10,13 +10,18 @@ from tests.conftest import TEST_DATA_PATH
 class TestInitConfig:
 
     @mark.genuine
-    @given(message=text(
-        min_size=5,
-        max_size=10,
-        alphabet=characters(min_codepoint=97, max_codepoint=122)))
-    @settings(max_examples=100,
-              deadline=None,
-              suppress_health_check=[HealthCheck.function_scoped_fixture])
+    @given(
+        message=text(
+            min_size=5,
+            max_size=10,
+            alphabet=characters(min_codepoint=97, max_codepoint=122)
+        )
+    )
+    @settings(
+        max_examples=100,
+        deadline=None,
+        suppress_health_check=[HealthCheck.function_scoped_fixture]
+    )
     def test_function(self, message, monkeypatch, caplog):
 
         def mock_log_path():

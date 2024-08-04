@@ -10,14 +10,12 @@ import subprocess
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'syndot'
-copyright = '2024, Andrea Blengino'
+project_copyright = '2024, Andrea Blengino'
 author = 'Andrea Blengino'
 release = subprocess.run(
-    'git describe --tags'.split(), stdout=subprocess.PIPE).stdout.decode(
-    'utf-8')
-
-if release.count('-') >= 2:
-    release = '-'.join(release.split('-')[:2])
+    'git describe --tags'.split(),
+    stdout=subprocess.PIPE
+).stdout.decode('utf-8').strip().split('-')[0]
 
 
 # -- General configuration ---------------------------------------------------

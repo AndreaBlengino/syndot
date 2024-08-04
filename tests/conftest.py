@@ -1,6 +1,13 @@
 from configparser import ConfigParser
-from hypothesis.strategies import (composite, text, lists, characters,
-                                   sampled_from)
+from hypothesis.strategies import (
+    composite,
+    text,
+    lists,
+    characters,
+    sampled_from,
+    shared,
+    builds
+)
 import os
 import shutil
 
@@ -10,7 +17,7 @@ SETTINGS_DIR = os.path.join(TEST_DATA_PATH, 'Settings')
 MAP_FILE_PATH = os.path.join(os.getcwd(), 'syndot', '_templates', 'map.ini')
 
 
-def get_valid_targets() -> list[str]:
+def get_valid_targets() -> tuple[str]:
     config = ConfigParser()
     config.read(MAP_FILE_PATH)
     valid_labels = list(config['Targets'].keys())
@@ -37,14 +44,30 @@ def create_file_or_directory(path: str, is_file: bool) -> None:
 
 
 @composite
+def names(draw, strategy):
+    seen = draw(shared(builds(set), key="key-for-unique-elems"))
+    return draw(
+        strategy.filter(
+            lambda x: x not in seen
+        ).map(lambda x: seen.add(x) or x)
+    )
+
+
+@composite
 def paths(draw, absolute=False):
-    folder_list = draw(lists(elements=text(min_size=5,
-                                           max_size=10,
-                                           alphabet=characters(
-                                               min_codepoint=97,
-                                               max_codepoint=122)),
-                             min_size=2,
-                             max_size=5))
+    folder_list = draw(
+        lists(
+            elements=names(
+                text(
+                    min_size=1,
+                    max_size=5,
+                    alphabet=characters(categories=['L', 'N'])
+                )
+            ),
+            min_size=2,
+            max_size=5
+        )
+    )
     if absolute:
         folder_list.insert(0, os.path.join(os.getcwd(), TEST_DATA_PATH))
     else:
@@ -55,10 +78,13 @@ def paths(draw, absolute=False):
 
 @composite
 def usernames(draw):
-    return draw(text(min_size=5,
-                     max_size=10,
-                     alphabet=characters(min_codepoint=97,
-                                         max_codepoint=122)))
+    return draw(
+        text(
+            min_size=5,
+            max_size=10,
+            alphabet=characters(min_codepoint=97, max_codepoint=122)
+        )
+    )
 
 
 @composite

@@ -4,29 +4,48 @@ from hypothesis import given, settings
 from hypothesis.strategies import booleans, sampled_from
 import os
 from pytest import mark, raises
-from syndot.commands import add
+from syndot.commands.add import add
 from tests.conftest import labels, targets, reset_environment
 from tests.test_commands.conftest import (
-    generate_add_and_remove_testing_system_files, generate_testing_map_file,
-    empty_testing_map_file, TEST_MAP_FILE_PATH)
+    generate_add_and_remove_testing_system_files,
+    generate_testing_map_file,
+    empty_testing_map_file,
+    TEST_MAP_FILE_PATH
+)
 
 
 @mark.commands
 class TestAdd:
 
     @mark.genuine
-    @given(target_label=labels(),
-           target_path=targets(absolute=False),
-           target_status=sampled_from(elements=['targets_to_be_added',
-                                                'already_added_target']),
-           ending_separator=booleans())
+    @given(
+        target_label=labels(),
+        target_path=targets(absolute=False),
+        target_status=sampled_from(
+            elements=[
+                'targets_to_be_added',
+                'already_added_target',
+            ]
+        ),
+        ending_separator=booleans(),
+        path_added_to_other_label=booleans()
+    )
     @settings(max_examples=100, deadline=None)
     def test_function(
-            self, target_label, target_path, target_status, ending_separator):
+        self,
+        target_label,
+        target_path,
+        target_status,
+        ending_separator,
+        path_added_to_other_label
+    ):
         reset_environment()
 
         args = Namespace()
-        args.label = target_label
+        if path_added_to_other_label:
+            args.label = target_label + '_other'
+        else:
+            args.label = target_label
         if ending_separator:
             args.path = [target_path + os.sep]
         else:
@@ -62,18 +81,25 @@ class TestAdd:
         config = ConfigParser()
         config.read(TEST_MAP_FILE_PATH)
 
-        assert target_label in config['Targets'].keys()
-        assert target_path in config['Targets'][target_label].split()
+        if not path_added_to_other_label:
+            assert target_label in config['Targets'].keys()
+            assert target_path in config['Targets'][target_label].split()
 
         reset_environment()
 
     @mark.error
-    @given(target_label=labels(),
-           target_path=targets(absolute=False),
-           ending_separator=booleans())
+    @given(
+        target_label=labels(),
+        target_path=targets(absolute=False),
+        ending_separator=booleans()
+    )
     @settings(max_examples=100, deadline=None)
-    def test_raises_OS_error(
-            self, target_label, target_path, ending_separator):
+    def test_raises_os_error(
+        self,
+        target_label,
+        target_path,
+        ending_separator
+    ):
         reset_environment()
 
         args = Namespace()

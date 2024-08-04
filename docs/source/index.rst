@@ -14,6 +14,7 @@ syndot documentation
 
    syndot
    map.ini
+   gum
 
 
 .. toctree::

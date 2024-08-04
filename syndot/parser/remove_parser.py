@@ -9,7 +9,8 @@ remove_parser = command_parser.add_parser(
     description="Remove dotfiles from the map file",
     help="Remove dotfiles from the map file",
     add_help=False,
-    formatter_class=CommandFormatter)
+    formatter_class=CommandFormatter
+)
 
 remove_parser.add_argument(
     '-l', '--label',
@@ -19,7 +20,8 @@ remove_parser.add_argument(
     metavar='<LABEL>',
     help="Label(s) and relative path(s) to remove from the map file. One or "
          "more labels can be provided. At least a <LABEL> or a <PATH> must be "
-         "provided")
+         "provided"
+)
 
 remove_parser.add_argument(
     '-p', '--path',
@@ -28,4 +30,5 @@ remove_parser.add_argument(
     dest='path',
     metavar='<PATH>',
     help="Dotfile path(s) to remove from the map file. One of more paths can "
-         "be provided. At least a <LABEL> or a <PATH> must be provided")
+         "be provided. At least a <LABEL> or a <PATH> must be provided"
+)

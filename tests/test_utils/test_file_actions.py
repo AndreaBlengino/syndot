@@ -2,10 +2,18 @@ from hypothesis import given, settings
 from hypothesis.strategies import booleans
 import os
 from pytest import mark
-from syndot.utils.file_actions import (copy, change_parent_owner,
-                                       change_child_owner, remove)
-from tests.conftest import (paths, SETTINGS_DIR, create_file_or_directory,
-                            reset_environment)
+from syndot.utils.file_actions import (
+    copy,
+    change_parent_owner,
+    change_child_owner,
+    remove
+)
+from tests.conftest import (
+    paths,
+    SETTINGS_DIR,
+    create_file_or_directory,
+    reset_environment
+)
 
 
 @mark.utils
@@ -50,9 +58,11 @@ class TestChangeParentOwner:
         for path in [source_path, destination_path]:
             create_file_or_directory(path=path, is_file=is_file)
 
-        change_parent_owner(source=source_path,
-                            destination=destination_path,
-                            settings_dir=SETTINGS_DIR)
+        change_parent_owner(
+            source=source_path,
+            destination=destination_path,
+            settings_dir=SETTINGS_DIR
+        )
 
         for path in [source_path, destination_path]:
             assert os.path.exists(path)
@@ -87,13 +97,16 @@ class TestChangeChildOwner:
         for path in [source_path, destination_path]:
             create_file_or_directory(path=path, is_file=False)
             create_file_or_directory(
-                path=os.path.join(path, 'child_directory'), is_file=False)
+                path=os.path.join(path, 'child_directory'), is_file=False
+            )
             create_file_or_directory(
                 path=os.path.join(path, 'child_directory', 'sub_child_file'),
-                is_file=True)
+                is_file=True
+            )
             create_file_or_directory(
                 path=os.path.join(path, 'child_file'),
-                is_file=True)
+                is_file=True
+            )
 
         change_child_owner(source=source_path, destination=destination_path)
 

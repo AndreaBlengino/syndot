@@ -4,25 +4,33 @@ from hypothesis import given, settings
 from hypothesis.strategies import booleans
 import os
 from pytest import mark, raises
-from syndot.commands import remove
+from syndot.commands.remove import remove
 from tests.conftest import labels, targets, reset_environment
 from tests.test_commands.conftest import (
-    generate_add_and_remove_testing_system_files, generate_testing_map_file,
-    TEST_MAP_FILE_PATH)
+    generate_add_and_remove_testing_system_files,
+    generate_testing_map_file,
+    TEST_MAP_FILE_PATH
+)
 
 
 @mark.commands
 class TestRemove:
 
     @mark.genuine
-    @given(target_label=labels(),
-           target_path=targets(absolute=False),
-           ending_separator=booleans(),
-           target_is_label=booleans())
+    @given(
+        target_label=labels(),
+        target_path=targets(absolute=False),
+        ending_separator=booleans(),
+        target_is_label=booleans()
+    )
     @settings(max_examples=100, deadline=None)
     def test_function(
-            self, target_label, target_path, ending_separator,
-            target_is_label):
+        self,
+        target_label,
+        target_path,
+        ending_separator,
+        target_is_label
+    ):
         reset_environment()
 
         args = Namespace()
@@ -70,12 +78,18 @@ class TestRemove:
         reset_environment()
 
     @mark.error
-    @given(target_label=labels(),
-           target_path=targets(absolute=False),
-           ending_separator=booleans())
+    @given(
+        target_label=labels(),
+        target_path=targets(absolute=False),
+        ending_separator=booleans()
+    )
     @settings(max_examples=100, deadline=None)
     def test_raises_name_error(
-            self, target_label, target_path, ending_separator):
+        self,
+        target_label,
+        target_path,
+        ending_separator
+    ):
         reset_environment()
 
         args = Namespace()

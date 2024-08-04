@@ -1,4 +1,4 @@
-from hypothesis import given, settings
+from hypothesis import given, settings, HealthCheck
 from hypothesis.strategies import sampled_from
 from pytest import mark
 from syndot.utils.prompt import VALID_PROMPT_CHOICES
@@ -19,8 +19,15 @@ class TestAskToProceed:
 
     @mark.genuine
     @given(answer=sampled_from(elements=[*VALID_PROMPT_CHOICES.keys(), '']))
-    @settings(max_examples=100, deadline=None)
-    def test_function(self, answer):
+    @settings(
+        max_examples=100,
+        deadline=None,
+        suppress_health_check=[HealthCheck.function_scoped_fixture]
+    )
+    def test_function(self, answer, monkeypatch):
+
+        monkeypatch.setattr(prompt, 'gum_is_available', lambda: False)
+
         prompt.input = lambda x: answer
         proceed = prompt.ask_to_proceed()
 

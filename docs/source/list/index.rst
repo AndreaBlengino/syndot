@@ -7,8 +7,8 @@ List dotfiles in the :ref:`map file <map.ini>`.
 Usage
 -----
 
-``syndot list [-d | --directory] [[-l | --label] | [-p | --path]] 
-[[-m | --mapfile] <MAP_FILE>]``
+``syndot list [-d | --directory] [[-l | --label] | [-p | --path] | 
+[[-s | --search] <SEARCH>]] [[-m | --mapfile] <MAP_FILE>]``
 
 
 Options
@@ -21,7 +21,7 @@ Options
 * ``-h``, ``--help`` - Show the help message and exit.
 
 * ``-l``, ``--label`` - List only target labels. Not allowed together with the 
-  ``[-p | --path]`` option.
+  ``[-p | --path]`` or ``[-s | --search]`` options.
 
   .. versionadded:: 2.0
 
@@ -30,6 +30,12 @@ Options
   not required if current directory is the settings directory.
 
 * ``-p``, ``--path`` - List only target paths. Now allowed together with the 
-  ``[-l | --label]`` option.
+  ``[-l | --label]`` or ``[-s | --search]`` options.
 
   .. versionadded:: 2.0
+
+* ``-s``, ``--search`` ``<SEARCH>`` - List paths of the specified ``<SEARCH>``
+  label. Not allowed together with the ``[-l | --label]`` or ``[-p | --path]`` 
+  options
+
+  .. versionadded :: 2.1

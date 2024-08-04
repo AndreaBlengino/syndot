@@ -64,38 +64,56 @@ def generate_link_testing_system_files(status: str) -> None:
         for target in target_list:
             is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
-                SETTINGS_DIR, *target.split(os.path.sep)[1:])
+                SETTINGS_DIR,
+                *target.split(os.path.sep)[1:]
+            )
             create_file_or_directory(path=target, is_file=is_file)
-            create_file_or_directory(path=settings_target_path,
-                                     is_file=is_file)
+            create_file_or_directory(
+                path=settings_target_path,
+                is_file=is_file
+            )
     elif status == 'missing_system_targets':
         return
     elif status == 'already_linked_targets':
         for target in target_list:
             is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
-                os.getcwd(), SETTINGS_DIR, *target.split(os.path.sep)[1:])
-            create_file_or_directory(path=settings_target_path,
-                                     is_file=is_file)
+                os.getcwd(),
+                SETTINGS_DIR,
+                *target.split(os.path.sep)[1:]
+            )
+            create_file_or_directory(
+                path=settings_target_path,
+                is_file=is_file
+            )
             create_parent_directory(path=target)
             os.symlink(settings_target_path, target)
     elif status == 'corrupted_targets':
         for target in target_list:
-            is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
-                os.getcwd(), SETTINGS_DIR, *target.split(os.path.sep)[1:])
+                os.getcwd(),
+                SETTINGS_DIR,
+                *target.split(os.path.sep)[1:]
+            )
             create_parent_directory(path=target)
             os.symlink(settings_target_path, target)
     elif status == 'wrong_existing_links':
         for target in target_list:
             is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
-                os.getcwd(), SETTINGS_DIR, *target.split(os.path.sep)[1:])
-            create_file_or_directory(path=settings_target_path,
-                                     is_file=is_file)
+                os.getcwd(),
+                SETTINGS_DIR,
+                *target.split(os.path.sep)[1:]
+            )
+            create_file_or_directory(
+                path=settings_target_path,
+                is_file=is_file
+            )
             create_parent_directory(path=target)
             os.symlink(
-                os.path.join(settings_target_path + '.other'), target)
+                os.path.join(settings_target_path + '.other'),
+                target
+            )
 
 
 def generate_unlink_testing_system_files(status: str) -> None:
@@ -110,36 +128,57 @@ def generate_unlink_testing_system_files(status: str) -> None:
         for target in target_list:
             is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
-                os.getcwd(), SETTINGS_DIR, *target.split(os.path.sep)[1:])
-            create_file_or_directory(path=settings_target_path,
-                                     is_file=is_file)
+                os.getcwd(),
+                SETTINGS_DIR,
+                *target.split(os.path.sep)[1:]
+            )
+            create_file_or_directory(
+                path=settings_target_path,
+                is_file=is_file
+            )
             create_parent_directory(path=target)
             os.symlink(settings_target_path, target)
     elif status == 'wrong_existing_links':
         for target in target_list:
             is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
-                os.getcwd(), SETTINGS_DIR, *target.split(os.path.sep)[1:])
-            create_file_or_directory(path=settings_target_path,
-                                     is_file=is_file)
+                os.getcwd(),
+                SETTINGS_DIR,
+                *target.split(os.path.sep)[1:]
+            )
+            create_file_or_directory(
+                path=settings_target_path,
+                is_file=is_file
+            )
             create_parent_directory(path=target)
             os.symlink(
-                os.path.join(settings_target_path + '.other'), target)
+                os.path.join(settings_target_path + '.other'),
+                target
+            )
     elif status == 'missing_system_targets':
         for target in target_list:
             is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
-                os.getcwd(), SETTINGS_DIR, *target.split(os.path.sep)[1:])
-            create_file_or_directory(path=settings_target_path,
-                                     is_file=is_file)
+                os.getcwd(),
+                SETTINGS_DIR,
+                *target.split(os.path.sep)[1:]
+            )
+            create_file_or_directory(
+                path=settings_target_path,
+                is_file=is_file
+            )
     elif status == 'already_existing_system':
         for target in target_list:
             is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
-                SETTINGS_DIR, *target.split(os.path.sep)[1:])
+                SETTINGS_DIR,
+                *target.split(os.path.sep)[1:]
+            )
             create_file_or_directory(path=target, is_file=is_file)
-            create_file_or_directory(path=settings_target_path,
-                                     is_file=is_file)
+            create_file_or_directory(
+                path=settings_target_path,
+                is_file=is_file
+            )
     elif status == 'already_unlinked_targets':
         for target in target_list:
             is_file = True if '.' in target.split('/')[-1] else False
@@ -150,7 +189,10 @@ def generate_unlink_testing_system_files(status: str) -> None:
         for target in target_list:
             is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
-                os.getcwd(), SETTINGS_DIR, *target.split(os.path.sep)[1:])
+                os.getcwd(),
+                SETTINGS_DIR,
+                *target.split(os.path.sep)[1:]
+            )
             other_target = settings_target_path + '.other'
             create_file_or_directory(path=other_target, is_file=is_file)
             os.symlink(other_target, settings_target_path)
@@ -168,43 +210,67 @@ def generate_diffuse_testing_system_files(status: str) -> None:
         for target in target_list:
             is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
-                os.getcwd(), SETTINGS_DIR, *target.split(os.path.sep)[1:])
-            create_file_or_directory(path=settings_target_path,
-                                     is_file=is_file)
+                os.getcwd(),
+                SETTINGS_DIR,
+                *target.split(os.path.sep)[1:]
+            )
+            create_file_or_directory(
+                path=settings_target_path,
+                is_file=is_file
+            )
     elif status == 'already_existing_system':
         for target in target_list:
             is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
-                SETTINGS_DIR, *target.split(os.path.sep)[1:])
+                SETTINGS_DIR,
+                *target.split(os.path.sep)[1:]
+            )
             create_file_or_directory(path=target, is_file=is_file)
-            create_file_or_directory(path=settings_target_path,
-                                     is_file=is_file)
+            create_file_or_directory(
+                path=settings_target_path,
+                is_file=is_file
+            )
     elif status == 'already_diffused_targets':
         for target in target_list:
             is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
-                os.getcwd(), SETTINGS_DIR, *target.split(os.path.sep)[1:])
-            create_file_or_directory(path=settings_target_path,
-                                     is_file=is_file)
+                os.getcwd(),
+                SETTINGS_DIR,
+                *target.split(os.path.sep)[1:]
+            )
+            create_file_or_directory(
+                path=settings_target_path,
+                is_file=is_file
+            )
             create_parent_directory(path=target)
             os.symlink(settings_target_path, target)
     elif status == 'wrong_existing_links':
         for target in target_list:
             is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
-                os.getcwd(), SETTINGS_DIR, *target.split(os.path.sep)[1:])
-            create_file_or_directory(path=settings_target_path,
-                                     is_file=is_file)
+                os.getcwd(),
+                SETTINGS_DIR,
+                *target.split(os.path.sep)[1:]
+            )
+            create_file_or_directory(
+                path=settings_target_path,
+                is_file=is_file
+            )
             create_parent_directory(path=target)
             os.symlink(
-                os.path.join(settings_target_path + '.other'), target)
+                os.path.join(settings_target_path + '.other'),
+                target
+            )
     elif status == 'missing_settings_targets':
         return
     elif status == 'settings_are_links':
         for target in target_list:
             is_file = True if '.' in target.split('/')[-1] else False
             settings_target_path = os.path.join(
-                os.getcwd(), SETTINGS_DIR, *target.split(os.path.sep)[1:])
+                os.getcwd(),
+                SETTINGS_DIR,
+                *target.split(os.path.sep)[1:]
+            )
             other_target = settings_target_path + '.other'
             create_file_or_directory(path=other_target, is_file=is_file)
             os.symlink(other_target, settings_target_path)
@@ -231,4 +297,7 @@ def empty_testing_map_file() -> None:
 
 def get_settings_target_path(target):
     return os.path.join(
-        os.getcwd(), SETTINGS_DIR, *target.split(os.path.sep)[1:])
+        os.getcwd(),
+        SETTINGS_DIR,
+        *target.split(os.path.sep)[1:]
+    )
