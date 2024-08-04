@@ -94,7 +94,7 @@ class TestAdd:
         ending_separator=booleans()
     )
     @settings(max_examples=100, deadline=None)
-    def test_raises_OS_error(
+    def test_raises_os_error(
         self,
         target_label,
         target_path,
