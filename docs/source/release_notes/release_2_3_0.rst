@@ -5,8 +5,8 @@ Version 2.3.0
 *************
 
 
-Enhancements
-------------
+Release
+-------
 
 * Extend support to Python 3.14
 
