@@ -70,7 +70,7 @@ parser.add_argument(
     '-v', '--version',
     action='version',
     version=f"%(prog)s {__version__}",
-    help="Show program\"s version number and exit"
+    help="Show program's version number and exit"
 )
 
 command_parser = parser.add_subparsers(
