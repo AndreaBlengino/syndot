@@ -200,7 +200,7 @@ def unlink_dotfiles(
         print_dotfiles_to_manage(
             targets_list=targets_list,
             many_targets_sentence=many_targets_sentence,
-            single_file_sentence=single_directory_sentence,
+            single_file_sentence=single_file_sentence,
             single_directory_sentence=single_directory_sentence,
             symbol='-x->'
         )
