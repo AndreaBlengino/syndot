@@ -40,7 +40,7 @@ def link(args: Namespace) -> None:
             target=target
         )
 
-        if _check_tartgets_to_be_linked(
+        if _check_targets_to_be_linked(
             system_target_path=system_target_path,
             settings_target_path=settings_target_path
         ):
@@ -246,7 +246,7 @@ def link_dotfiles(
         print('\n')
 
 
-def _check_tartgets_to_be_linked(
+def _check_targets_to_be_linked(
     system_target_path: str,
     settings_target_path: str
 ) -> bool:
