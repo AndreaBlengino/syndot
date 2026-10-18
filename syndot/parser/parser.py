@@ -75,5 +75,6 @@ parser.add_argument(
 
 command_parser = parser.add_subparsers(
     dest='command',
-    title='commands'
+    title='commands',
+    required=True
 )
