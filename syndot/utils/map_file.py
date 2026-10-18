@@ -67,7 +67,7 @@ def get_map_info(
     return settings_dir, targets
 
 
-def write_map_file(map_file_path: str | None, config: ConfigParser) -> None:
+def write_map_file(map_file_path: str, config: ConfigParser) -> None:
     with open(map_file_path, 'w') as map_file:
         config.write(map_file)
 
@@ -75,7 +75,7 @@ def write_map_file(map_file_path: str | None, config: ConfigParser) -> None:
 def _get_available_targets(
     config: ConfigParser,
     args: Namespace
-) -> tuple[list[str], [list[str], list[str]]]:
+) -> tuple[list[str], list[str], list[str]]:
     targets = []
 
     available_labels = list(config['Targets'].keys())
