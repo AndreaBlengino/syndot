@@ -2,7 +2,7 @@ name: Linux Tests
 on: [push, pull_request]
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -25,11 +25,50 @@ jobs:
           python -m build --wheel
 
       - name: Package differences computation
+        shell: bash
         run: |
-          if [[ $(diff -r ./syndot ./build/lib/syndot | grep -v __pycache__ | wc -m) == 0 ]]; then 
-               echo "packages_are_equal=true" >> $GITHUB_ENV
+          if [ ! -d ./syndot ] || [ ! -d ./build/lib/syndot ]; then
+            echo "ERROR: Source or build directory does not exist."
+            exit 1
+          fi
+
+          set +e
+          diff_status=0
+
+          while IFS= read -r -d '' file; do
+            relative_path="${file#./syndot/}"
+            build_file="./build/lib/syndot/$relative_path"
+
+            if [ ! -f "$build_file" ]; then
+              echo "Missing in build: $relative_path"
+              diff_status=1
+              continue
+            fi
+
+            if ! cmp -s "$file" "$build_file"; then
+              echo "Different: $relative_path"
+              diff_status=1
+            fi
+          done < <(find ./syndot -type f ! -path '*/__pycache__/*' ! -name '*.pyc' -print0)
+
+          while IFS= read -r -d '' file; do
+            relative_path="${file#./build/lib/syndot/}"
+            source_file="./syndot/$relative_path"
+
+            if [ ! -f "$source_file" ]; then
+              echo "Extra in build: $relative_path"
+              diff_status=1
+            fi
+          done < <(find ./build/lib/syndot -type f ! -path '*/__pycache__/*' ! -name '*.pyc' -print0)
+
+          set -e
+
+          if [ "$diff_status" -eq 0 ]; then
+            echo "packages_are_equal=true" >> "$GITHUB_ENV"
+            echo "Source and build packages are identical."
           else
-               echo "packages_are_equal=false" >> $GITHUB_ENV
+            echo "packages_are_equal=false" >> "$GITHUB_ENV"
+            echo "Source and build packages differ."
           fi
 
       - name: Condition check
@@ -37,21 +76,29 @@ jobs:
         uses: actions/github-script@v9
         with:
           script: |
-              core.setFailed('Compiled package different from source package.')
+            core.setFailed('Compiled package different from source package.')
 
       - name: Install build package
         run: |
-          pip install .[test]
-
-      - name: Fetch
-        uses: actions/checkout@master
+          pip install ".[test]"
 
       - name: Run tests
+        env:
+          MPLBACKEND: Agg
+        shell: bash
         run: |
-          python -m pytest --verbose --disable-pytest-warnings --cov=syndot --cov-report=xml:linux_coverage.xml
+          python -m pytest \
+            --verbose \
+            --disable-pytest-warnings \
+            --cov=syndot \
+            --cov-report=xml:linux_coverage.xml \
+            --durations=20 \
+            -o faulthandler_timeout=60
 
       - name: Upload
         uses: codecov/codecov-action@v7
         with:
           files: ./linux_coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
+
+
