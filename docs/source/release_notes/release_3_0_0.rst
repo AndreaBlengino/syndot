@@ -1,8 +1,14 @@
 .. include:: substitutions.rst
 
 *************
-Version 2.3.2
+Version 3.0.0
 *************
+
+
+Breaking Changes
+----------------
+
+* Drop support to MacOS
 
 
 Bugfix
@@ -10,6 +16,7 @@ Bugfix
 
 * Fix a bug on printed text to user
 * Fix a bug on style directory path
+* Fix a bug on GitHub workflow OS selection
 
 
 Enhancements
