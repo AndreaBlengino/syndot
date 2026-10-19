@@ -13,7 +13,7 @@ Dotfiles Management
    * - Versioning
      - |supported_python_versions| |semver|
    * - Tests
-     - |linux_tests| |macos_tests| |test_coverage|
+     - |linux_tests| |test_coverage|
    * - Documentation
      - |docs|
    * - Code Quality
@@ -47,10 +47,6 @@ Dotfiles Management
 .. |linux_tests| image:: https://img.shields.io/github/actions/workflow/status/AndreaBlengino/syndot/linux_test.yml.svg?logo=linux&logoColor=white&label=Linux
    :target: https://github.com/AndreaBlengino/syndot/actions/workflows/linux_test.yml
    :alt: Linux Tests
-
-.. |macos_tests| image:: https://img.shields.io/github/actions/workflow/status/AndreaBlengino/syndot/macos_test.yml.svg?logo=apple&label=macOS
-   :target: https://github.com/AndreaBlengino/syndot/actions/workflows/macos_test.yml
-   :alt: macOS Tests
 
 .. |test_coverage| image:: https://img.shields.io/codecov/c/github/AndreaBlengino/syndot/master?logo=codecov
    :target: https://codecov.io/gh/AndreaBlengino/syndot

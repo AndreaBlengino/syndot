@@ -6,7 +6,7 @@ from syndot.utils.colors import Color
 
 STYLE_PATH = os.path.join(
     CONFIG_DIR_PATH,
-    '_templates',
+    'templates',
     'style.ini'
 )
 if not os.path.exists(CONFIG_DIR_PATH) or not os.path.exists(STYLE_PATH):
